@@ -1,0 +1,21 @@
+﻿{
+  "AllowedHosts": "*",
+  "Kestrel": {
+    "EndPoints": {
+      "Server": {
+        "Url": "http://*:11102" //本服务url
+      }
+    }
+  },
+  "DBConnStr": "server=127.0.0.1;database=tdb.password;user id=root;password=123456",
+  "Token": {
+    "Issuer": "tdb",
+    "Audience": "tdb",
+    "SecretKey": "0123456789223456",
+    "TimeoutSeconds": 360000,
+    "Client": {
+      "AppID": "1234567"
+    }
+  },
+  "ConcurrentNum": 10
+}

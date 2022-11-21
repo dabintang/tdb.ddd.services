@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
+    <PackageReference Include="tdb.ddd.domain" Version="7.0.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\tdb.account.domain.contracts\tdb.account.domain.contracts.csproj" />
+    <ProjectReference Include="..\tdb.account.infrastructure\tdb.account.infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

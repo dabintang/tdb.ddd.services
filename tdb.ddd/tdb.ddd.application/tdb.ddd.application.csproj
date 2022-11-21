@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>tdb.ddd.application</Title>
+    <Version>7.0.0.3</Version>
+    <Authors>tangdabin</Authors>
+    <Company>tdb</Company>
+    <Product>tdb.ddd</Product>
+    <Description>ddd应用层</Description>
+    <PackageReleaseNotes>ddd应用层</PackageReleaseNotes>
+    <PackageTags>tdb.ddd</PackageTags>
+  </PropertyGroup>
+
+</Project>

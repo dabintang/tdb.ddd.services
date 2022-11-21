@@ -1,0 +1,19 @@
+//账户微服务：10001 - 19999
+{
+  "IncorrectPassword": {
+    "Code": 10001,
+    "Msg": "登录名或密码不对"
+  },
+  "Disableduser": {
+    "Code": 10002,
+    "Msg": "用户已被禁用"
+  },
+  "ExpiredRefreshToken": {
+    "Code": 10003,
+    "Msg": "刷新令牌已失效"
+  },
+  "UserNotExist": {
+    "Code": 10004,
+    "Msg": "用户不存在"
+  }
+}

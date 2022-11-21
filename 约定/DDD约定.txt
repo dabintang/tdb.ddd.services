@@ -1,0 +1,41 @@
+﻿//后端项目结构一般如下划分：
+tdb.xxx.webapi                  对外提供api接口；
+tdb.xxx.application             应用层，业务编排处理、事务；
+tdb.xxx.application.contracts   应用服务接口、对外数据结构定义；
+tdb.xxx.domain                  领域层，聚合、聚合服务、仓储接口；
+tdb.xxx.domain.contracts        枚举等定义；
+tdb.xxx.repository.xxxx         仓储，持久化数据；
+tdb.ddd.infrastructure		    一些通用基础设施服务，持久化、缓存、配置、ioc等；
+tdb.ddd.contracts		        一些通用的包装类、消息体、枚举等；
+tdb.xxx.tools		            一些工具，生成数据表实体、初始化表数据；
+
+//项目间依赖关系：
+tdb.xxx.webapi（tdb.xxx.application.contracts、[tdb.xxx.application]）
+tdb.xxx.application（tdb.xxx.application.contracts、tdb.xxx.domain、tdb.ddd.infrastructure）
+tdb.xxx.application.contracts（tdb.ddd.contracts、[tdb.xxx.domain.contracts]）
+tdb.xxx.domain（tdb.ddd.contracts、tdb.ddd.infrastructure、tdb.xxx.domain.contracts）
+tdb.xxx.domain.contracts（[tdb.ddd.contracts]）
+tdb.xxx.repository.xxxx（tdb.xxx.domain、tdb.ddd.infrastructure）
+tdb.ddd.infrastructure
+tdb.ddd.contracts
+
+//聚合、聚合根、实体、值
+聚合组成：聚合根（唯一）、实体、值
+聚合根是实体
+实体对象由ID区分彼此
+通过聚合根ID获取聚合
+聚合是最小操作对象，不能跳过聚合直接操作里面的实体、值
+聚合之间通过聚合根ID持有对方
+
+//应用层
+应用层不要直接操作仓储，应通过领域层操作（包括查询）
+
+//领域层
+所有写操作必须通过聚合根操作
+一些读操作可适当跳过聚合，直接查询仓储获得数据对象（这是为了性能做的妥协，一般只适用于展示用的数据，如列表等）
+
+//进程内bus
+在应用层发送的一般是和当前业务弱相关的通知，接收方是否处理成功和当前业务影响不大。（如：登录成功发邮件等）
+在领域层发送的一般是和当前业务强相关的请求，一般要确保同时完成或失败。（如：新增支出记录后要变更账户信息等）
+
+

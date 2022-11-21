@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Version>7.0.0.2</Version>
+    <Authors>tangdabin</Authors>
+    <Company>tdb</Company>
+    <Product>tdb.ddd</Product>
+    <Description>ddd一些通用的包装类、消息体、枚举等</Description>
+    <PackageTags>tdb.ddd</PackageTags>
+    <PackageReleaseNotes>ddd一些通用的包装类、消息体、枚举等</PackageReleaseNotes>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+</Project>
