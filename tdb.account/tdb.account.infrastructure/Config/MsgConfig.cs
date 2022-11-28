@@ -31,5 +31,20 @@ namespace tdb.account.infrastructure.Config
         /// 用户不存在
         /// </summary>
         public TdbResMsgInfo UserNotExist { get; set; }
+
+        /// <summary>
+        /// 登录名已存在
+        /// </summary>
+        public TdbResMsgInfo LoginNameExist { get; set; }
+
+        /// <summary>
+        /// 角色不存在
+        /// </summary>
+        public TdbResMsgInfo RoleNotExist { get; set; }
+
+        /// <summary>
+        /// 权限不存在
+        /// </summary>
+        public TdbResMsgInfo AuthorityNotExist { get; set; }
     }
 }

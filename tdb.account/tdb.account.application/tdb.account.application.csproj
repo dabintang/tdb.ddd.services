@@ -14,6 +14,7 @@
     <ProjectReference Include="..\tdb.account.application.contracts\tdb.account.application.contracts.csproj" />
     <ProjectReference Include="..\tdb.account.domain\tdb.account.domain.csproj" />
     <ProjectReference Include="..\tdb.account.infrastructure\tdb.account.infrastructure.csproj" />
+    <ProjectReference Include="..\tdb.account.repository\tdb.account.repository.csproj" />
   </ItemGroup>
 
 </Project>

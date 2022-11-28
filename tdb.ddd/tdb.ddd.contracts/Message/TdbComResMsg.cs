@@ -25,5 +25,15 @@ namespace tdb.ddd.contracts
         /// 非法参数
         /// </summary>
         public static readonly TdbResMsgInfo InvalidParam = new(2, "非法参数");
+
+        /// <summary>
+        /// 权限不足
+        /// </summary>
+        public static readonly TdbResMsgInfo InsufficientPermissions = new (3, "权限不足");
+
+        /// <summary>
+        /// 操作用户不存在
+        /// </summary>
+        public static readonly TdbResMsgInfo UserNotExist = new(4, "操作用户不存在");
     }
 }

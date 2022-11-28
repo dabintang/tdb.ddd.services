@@ -24,7 +24,7 @@ namespace tdb.test.xUnit.Domain
             val11.Age += 1;
             Assert.False(val1.Equals(val11));
             Assert.False(val11.BigValue.IsLoaded);
-            val11.BigValue.Value = "abc";
+            val11.BigValue.SetValue("abc");
             Assert.True(val11.BigValue.IsLoaded);
             Assert.Equal("abc", val11.BigValue.Value);
 
@@ -106,6 +106,15 @@ namespace tdb.test.xUnit.Domain
             protected override string Load()
             {
                 return "big data";
+            }
+
+            /// <summary>
+            /// 赋值
+            /// </summary>
+            /// <param name="value">值</param>
+            public void SetValue(string value)
+            {
+                this.Value = value;
             }
         }
 

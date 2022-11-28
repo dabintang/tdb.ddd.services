@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,12 +9,12 @@ using System.Threading.Tasks;
 using tdb.account.domain.BusMediatR;
 using tdb.account.domain.contracts.Enum;
 using tdb.account.domain.contracts.User;
-using tdb.account.domain.Role;
 using tdb.account.infrastructure.Config;
 using tdb.common;
 using tdb.ddd.contracts;
 using tdb.ddd.domain;
 using tdb.ddd.infrastructure;
+using tdb.ddd.infrastructure.Services;
 
 namespace tdb.account.domain.User.Aggregate
 {
@@ -29,12 +28,12 @@ namespace tdb.account.domain.User.Aggregate
         /// <summary>
         /// 姓名
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; internal set; }
 
         /// <summary>
         /// 昵称
         /// </summary>
-        public string NickName { get; set; }
+        public string NickName { get; internal set; }
 
         /// <summary>
         /// 登录名
@@ -129,13 +128,10 @@ namespace tdb.account.domain.User.Aggregate
 
             //用户权限ID
             var lstAuthorityID = new List<int>();
-
-            //中介者
-            var mediator = TdbIOC.GetService<IMediator>();
             foreach (var roleID in this.LstRoleID.Value)
             {
                 //获取角色权限ID
-                var lstRoleAuthorityID = await mediator.Send(new GetRoleAuthorityIDRequest() { RoleID = roleID });
+                var lstRoleAuthorityID = await TdbMediatR.Send(new GetRoleAuthorityIDRequest() { RoleID = roleID });
                 lstAuthorityID.AddRange(lstRoleAuthorityID);
             }
 
@@ -152,6 +148,48 @@ namespace tdb.account.domain.User.Aggregate
             TdbCache.Ins.Set(res.RefreshToken, this.ID, TimeSpan.FromSeconds(res.RefreshTokenValidSeconds));
 
             return TdbRes.Success(res);
+        }
+
+        /// <summary>
+        /// 赋予角色（全量赋值）
+        /// </summary>
+        /// <param name="lstRoleID">角色ID</param>
+        public TdbRes<bool> SetLstRoleID(List<int> lstRoleID)
+        {
+            lstRoleID ??= new List<int>();
+            return this.LstRoleID.SetValue(lstRoleID);
+        }
+
+        /// <summary>
+        /// 赋值姓名
+        /// </summary>
+        /// <param name="name">姓名</param>
+        public void SetName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                this.Name = TdbHashID.EncodeLong(this.ID);
+            }
+            else
+            {
+                this.Name = name;
+            }
+        }
+
+        /// <summary>
+        /// 赋值昵称
+        /// </summary>
+        /// <param name="nickName">昵称</param>
+        public void SetNickName(string nickName)
+        {
+            if (string.IsNullOrWhiteSpace(nickName))
+            {
+                this.NickName = TdbHashID.EncodeLong(this.ID);
+            }
+            else
+            {
+                this.NickName = nickName;
+            }
         }
 
         #endregion

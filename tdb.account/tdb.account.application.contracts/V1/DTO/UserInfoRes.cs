@@ -38,6 +38,7 @@ namespace tdb.account.application.contracts.V1.DTO
         /// 生日
         /// </summary>
         public DateTime? Birthday { get; set; }
+
         /// <summary>
         /// 手机号码
         /// </summary>

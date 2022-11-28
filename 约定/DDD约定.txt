@@ -15,7 +15,7 @@ tdb.xxx.application（tdb.xxx.application.contracts、tdb.xxx.domain、tdb.ddd.i
 tdb.xxx.application.contracts（tdb.ddd.contracts、[tdb.xxx.domain.contracts]）
 tdb.xxx.domain（tdb.ddd.contracts、tdb.ddd.infrastructure、tdb.xxx.domain.contracts）
 tdb.xxx.domain.contracts（[tdb.ddd.contracts]）
-tdb.xxx.repository.xxxx（tdb.xxx.domain、tdb.ddd.infrastructure）
+tdb.xxx.repository.xxxx（tdb.xxx.domain、tdb.ddd.infrastructure、[tdb.xxx.domain.contracts]）
 tdb.ddd.infrastructure
 tdb.ddd.contracts
 
@@ -24,7 +24,7 @@ tdb.ddd.contracts
 聚合根是实体
 实体对象由ID区分彼此
 通过聚合根ID获取聚合
-聚合是最小操作对象，不能跳过聚合直接操作里面的实体、值
+聚合是最小操作对象，理论上不能跳过聚合直接操作里面的实体、值（实际情况是如果给值赋值时没有任何逻辑处理，还是可以直接赋值）
 聚合之间通过聚合根ID持有对方
 
 //应用层

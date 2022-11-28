@@ -55,14 +55,11 @@ namespace tdb.account.repository
         /// 获取用户聚合
         /// </summary>
         /// <param name="loginName">登录名</param>
-        /// <param name="password">密码（MD5）</param>
         /// <returns></returns>
-        public async Task<UserAgg> GetUserAggAsync(string loginName, string password)
+        public async Task<UserAgg> GetUserAggAsync(string loginName)
         {
-            TdbLogger.Ins.Debug($"UserRepos ContextID：{this.Context.ContextID}");
-
             //获取用户信息
-            var userInfo = await this.GetFirstAsync(m => m.LoginName == loginName && m.Password == password && m.IsDeleted == false);
+            var userInfo = await this.GetFirstAsync(m => m.LoginName == loginName && m.IsDeleted == false);
             if (userInfo == null)
             {
                 return null;
@@ -145,8 +142,6 @@ namespace tdb.account.repository
                 ClientIP = clientIP,
                 LoginTime = loginTime
             };
-
-            TdbLogger.Ins.Debug($"UserRepos ContextID：{this.Context.ContextID}");
 
             await this.Change<LoginRecord>().AsInsertable(loginRecord).ExecuteCommandAsync();
         }

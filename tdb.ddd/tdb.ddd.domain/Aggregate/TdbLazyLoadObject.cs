@@ -31,7 +31,7 @@ namespace tdb.ddd.domain
 
                 return this._value;
             }
-            set
+            protected set
             {
                 this.IsLoaded = true;
                 this._value = value;

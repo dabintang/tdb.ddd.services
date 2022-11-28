@@ -91,7 +91,7 @@ CREATE TABLE `table1`  (
                 Name = "名称2"
             };
 
-            TdbRepositoryTran.BeginTran();
+            TdbRepositoryTran.BeginTranOnAsyncFunc();
 
             var repo1 = new Table1Repository();
             repo1.InsertOrUpdate(info);
@@ -124,7 +124,7 @@ CREATE TABLE `table1`  (
                 Name = "名称3"
             };
 
-            TdbRepositoryTran.BeginTran();
+            TdbRepositoryTran.BeginTranOnAsyncFunc();
 
             var repo1 = new Table1Repository();
             repo1.InsertOrUpdate(info);
@@ -149,37 +149,107 @@ CREATE TABLE `table1`  (
         }
 
         /// <summary>
-        /// 同一请求下是否用的同一个数据库连接
+        /// 同一请求下是否用的同一个数据库连接（是）
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<TdbRes<bool>> IsSameDBConnect()
+        public async Task<TdbRes<bool>> IsSameDBConnectAsync()
         {
-            //TdbRepositoryTran.BeginTran();
-
-
-            #region 同一个连接
-
-            //var repo1 = await GetTable1Repository();
-            //repo1.GetContextID();
-
-            //var repo2 = await GetTable1Repository();
-            //repo2.GetContextID();
-
-            //var repo3 = await GetTable1Repository();
-            //repo3.GetContextID();
-
-            #endregion
-
-            #region 不同连接
+            TdbRepositoryTran.BeginTranOnAsyncFunc();
 
             await PrintRepositoryContextID();
             await PrintRepositoryContextID();
             await PrintRepositoryContextID();
 
-            #endregion
+            TdbRepositoryTran.CommitTran();
 
             return TdbRes.Success(true);
+        }
+
+        /// <summary>
+        /// 同一请求下是否用的同一个数据库连接2（是）
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public TdbRes<bool> IsSameDBConnect2()
+        {
+            TdbRepositoryTran.BeginTranOnAsyncFunc();
+
+            var task1 = PrintRepositoryContextID();
+            var task2 = PrintRepositoryContextID();
+            var task3 = PrintRepositoryContextID();
+
+            Task.WhenAll(task1, task2, task3);
+
+            TdbRepositoryTran.CommitTran();
+
+            return TdbRes.Success(true);
+        }
+
+        /// <summary>
+        /// 同一请求下是否用的同一个数据库连接3（不是）
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public TdbRes<bool> IsSameDBConnect3()
+        {
+            //Parallel.For(0, 10, (index, state) =>
+            //{
+            //    PrintRepositoryContextID3();
+            //});
+
+            Parallel.Invoke(() => { PrintRepositoryContextID3(); }, () => { PrintRepositoryContextID3(); });
+
+            return TdbRes.Success(true);
+        }
+
+        /// <summary>
+        /// 同一请求下是否用的同一个数据库连接4（同一次方法调用内：是）
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public TdbRes<bool> IsSameDBConnect4()
+        {
+            //Parallel.For(0, 10, (index, state) =>
+            //{
+            //    PrintRepositoryContextID4();
+            //});
+
+            Parallel.Invoke(async () => { await PrintRepositoryContextID4(); }, async () => { await PrintRepositoryContextID4(); });
+
+            return TdbRes.Success(true);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void PrintRepositoryContextID3()
+        {
+            TdbRepositoryTran.BeginTranOnAsyncFunc();
+
+            var task1 = PrintRepositoryContextID();
+            var task2 = PrintRepositoryContextID();
+            var task3 = PrintRepositoryContextID();
+
+            Task.WhenAll(task1, task2, task3);
+
+            TdbRepositoryTran.CommitTran();
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private async Task PrintRepositoryContextID4()
+        {
+            TdbRepositoryTran.BeginTranOnAsyncFunc();
+
+            await PrintRepositoryContextID();
+            await PrintRepositoryContextID();
+            await PrintRepositoryContextID();
+
+            TdbRepositoryTran.CommitTran();
         }
 
         /// <summary>

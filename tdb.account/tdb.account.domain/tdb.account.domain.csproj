@@ -7,8 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>tdb.account.repository</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
-    <PackageReference Include="tdb.ddd.domain" Version="7.0.0.3" />
+    <PackageReference Include="tdb.ddd.domain" Version="7.0.0.4" />
   </ItemGroup>
 
   <ItemGroup>

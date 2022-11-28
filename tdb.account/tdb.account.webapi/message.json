@@ -15,5 +15,17 @@
   "UserNotExist": {
     "Code": 10004,
     "Msg": "用户不存在"
+  },
+  "LoginNameExist": {
+    "Code": 10005,
+    "Msg": "登录名已存在"
+  },
+  "RoleNotExist": {
+    "Code": 10006,
+    "Msg": "角色不存在"
+  },
+  "AuthorityNotExist": {
+    "Code": 10007,
+    "Msg": "权限不存在"
   }
 }

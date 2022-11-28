@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tdb.account.domain.BusMediatR;
+using tdb.account.infrastructure.Config;
 using tdb.ddd.contracts;
 using tdb.ddd.domain;
 using tdb.ddd.infrastructure;
+using tdb.ddd.infrastructure.Services;
 
 namespace tdb.account.domain.User.Aggregate
 {
@@ -57,6 +60,27 @@ namespace tdb.account.domain.User.Aggregate
             }
 
             return this.UserRepos.GetRoleIDsAsync(this.userAgg.ID).Result;
+        }
+
+        /// <summary>
+        /// 赋值
+        /// </summary>
+        /// <param name="lstRoleID">角色ID</param>
+        internal TdbRes<bool> SetValue(List<int> lstRoleID)
+        {
+            //判断角色ID是否存在
+            foreach (var roleID in lstRoleID)
+            {
+                if (TdbMediatR.Send(new IsRoleExistRequest() { RoleID = roleID }).Result == false)
+                {
+                    return new TdbRes<bool>(AccountConfig.Msg.RoleNotExist.FromNewMsg($"角色不存在[{roleID}]"), false);
+                }
+            }
+
+            //赋值
+            this.Value = lstRoleID;
+
+            return TdbRes.Success(true);
         }
     }
 }

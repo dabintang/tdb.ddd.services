@@ -1,5 +1,4 @@
-﻿using HashidsNet;
-using System;
+﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using tdb.ddd.contracts;
@@ -11,8 +10,6 @@ namespace tdb.ddd.application.contracts
     /// </summary>
     public class TdbHashIDJsonConverter : JsonConverter<long>
     {
-        readonly Hashids hashids = new("tangdabinok");//加盐
-
         /// <summary>
         /// 读
         /// </summary>
@@ -25,7 +22,7 @@ namespace tdb.ddd.application.contracts
             try
             {
                 var str = JsonSerializer.Deserialize<string>(ref reader, options);
-                return hashids.DecodeLong(str)[0];
+                return TdbHashID.DecodeSingleLong(str ?? "");
             }
             catch (Exception ex)
             {
@@ -41,7 +38,7 @@ namespace tdb.ddd.application.contracts
         /// <param name="options"></param>
         public override void Write(Utf8JsonWriter writer, long value, JsonSerializerOptions options)
         {
-            JsonSerializer.Serialize(writer, hashids.EncodeLong(value), options);
+            JsonSerializer.Serialize(writer, TdbHashID.EncodeLong(value), options);
         }
     }
 }

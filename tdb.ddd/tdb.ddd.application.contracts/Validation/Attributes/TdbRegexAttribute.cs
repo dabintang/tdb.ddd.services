@@ -5,7 +5,7 @@ using tdb.common;
 namespace tdb.ddd.application.contracts
 {
     /// <summary>
-    /// 正则表达式验证
+    /// 正则表达式验证（空字符串都可通过）
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class TdbRegexAttribute : ValidationAttribute
@@ -38,8 +38,13 @@ namespace tdb.ddd.application.contracts
         /// <returns></returns>
         public override bool IsValid(object? value)
         {
+            if (string.IsNullOrEmpty(value.ToStr()))
+            {
+                return true;
+            }
+
             var reg = new Regex(this.RegexText);
-            return reg.IsMatch(Convert.ToString(value) ?? "");
+            return reg.IsMatch(value.ToStr());
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.account.domain.Authority.Aggregate;
+using tdb.account.domain.Role.Aggregate;
 using tdb.ddd.contracts;
 
 namespace tdb.account.domain.Authority
@@ -13,6 +14,13 @@ namespace tdb.account.domain.Authority
     /// </summary>
     public interface IAuthorityRepos : ITdbIOCScoped
     {
+        /// <summary>
+        /// 获取权限聚合
+        /// </summary>
+        /// <param name="authorityID">权限ID</param>
+        /// <returns></returns>
+        Task<AuthorityAgg> GetAuthorityAggAsync(int authorityID);
+
         /// <summary>
         /// 保存修改
         /// </summary>

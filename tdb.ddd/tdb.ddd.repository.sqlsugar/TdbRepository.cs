@@ -21,10 +21,10 @@ namespace tdb.ddd.repository.sqlsugar
         public TdbRepository(ISqlSugarClient? context = null) : base(context)//注意这里要有默认值等于null，不然无参方式 IOC 不好注入
         {
             //base.Context = context;//ioc注入的对象
-            //base.Context = DbScoped.SugarScope; //SqlSugar.Ioc这样写
+            base.Context = DbScoped.SugarScope.ScopedContext; //SqlSugar.Ioc这样写
             // base.Context=DbHelper.GetDbInstance();//当然也可以手动去赋值
 
-            base.Context = TdbDbScoped.GetScopedContext();
+            //base.Context = TdbDbScoped.GetScopedContext();
         }
 
         /// <summary>

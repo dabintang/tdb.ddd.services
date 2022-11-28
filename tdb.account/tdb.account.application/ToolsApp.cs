@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +14,7 @@ using tdb.account.domain.User.Aggregate;
 using tdb.common.Crypto;
 using tdb.ddd.domain;
 using tdb.ddd.infrastructure;
+using tdb.ddd.repository.sqlsugar;
 
 namespace tdb.account.application
 {
@@ -28,22 +28,24 @@ namespace tdb.account.application
         /// <summary>
         /// 初始化数据
         /// </summary>
-        public static void InitData()
+        public async Task InitDataAsync()
         {
             TdbLogger.Ins.Info("初始化数据【开始】");
 
-            /*
-             * TODO：打印【SqlSugarScope.ContextID】,看异步操作下数据库上下文是否一致。（debug、release）
-             */
+            //开启事务
+            TdbRepositoryTran.BeginTranOnAsyncFunc();
 
             // 初始化权限数据
-            InitDataAuthority();
+            await InitDataAuthorityAsync();
 
             //初始化角色数据
-            InitDataRole();
+            await InitDataRoleAsync();
 
             //初始化用户数据
-            InitDataUser();
+            await InitDataUserAsync();
+
+            //提交事务
+            TdbRepositoryTran.CommitTran();
 
             TdbLogger.Ins.Info("初始化数据【完成】");
         }
@@ -51,7 +53,7 @@ namespace tdb.account.application
         /// <summary>
         /// 初始化权限数据
         /// </summary>
-        private static void InitDataAuthority()
+        private async Task InitDataAuthorityAsync()
         {
             TdbLogger.Ins.Info("初始化权限数据【开始】");
 
@@ -67,7 +69,7 @@ namespace tdb.account.application
                 Name = "用户增删改权限",
                 Remark = "账户微服务"
             };
-            authorityService.SaveAsync(userManageAuthority).Wait();
+            await authorityService.SaveAsync(userManageAuthority);
             TdbLogger.Ins.Info("初始化权限数据（账户微服务->用户增删改权限）");
 
             #endregion
@@ -78,7 +80,7 @@ namespace tdb.account.application
         /// <summary>
         /// 初始化角色数据
         /// </summary>
-        private static void InitDataRole()
+        private async Task InitDataRoleAsync()
         {
             TdbLogger.Ins.Info("初始化角色数据【开始】");
 
@@ -94,8 +96,8 @@ namespace tdb.account.application
                 Name = "超级管理员",
                 Remark = "账户微服务"
             };
-            superAdminRole.LstAuthorityID.Value = new List<int>() { Cst.AuthorityID.AccountUserManage };
-            roleService.SaveAsync(superAdminRole).Wait();
+            superAdminRole.SetLstAuthorityID(new List<int>() { Cst.AuthorityID.AccountUserManage });
+            await roleService.SaveAsync(superAdminRole);
             TdbLogger.Ins.Info("初始化角色数据（账户微服务->超级管理员）");
 
             //账户微服务管理员
@@ -105,8 +107,8 @@ namespace tdb.account.application
                 Name = "账户微服务管理员",
                 Remark = "账户微服务"
             };
-            accountAdminRole.LstAuthorityID.Value = new List<int>() { Cst.AuthorityID.AccountUserManage };
-            roleService.SaveAsync(accountAdminRole).Wait();
+            accountAdminRole.SetLstAuthorityID(new List<int>() { Cst.AuthorityID.AccountUserManage });
+            await roleService.SaveAsync(accountAdminRole);
             TdbLogger.Ins.Info("初始化角色数据（账户微服务->账户微服务管理员）");
 
             #endregion
@@ -117,7 +119,7 @@ namespace tdb.account.application
         /// <summary>
         /// 初始化用户数据
         /// </summary>
-        private static void InitDataUser()
+        private async Task InitDataUserAsync()
         {
             TdbLogger.Ins.Info("初始化用户数据【开始】");
 
@@ -130,8 +132,6 @@ namespace tdb.account.application
             var superAdminUser = new UserAgg()
             {
                 ID = Cst.UserID.SuperAdmin,
-                Name = "超级管理员",
-                NickName = "超级管理员",
                 LoginName = "superadmin",
                 Password = EncryptHelper.Md5("8888888"),
                 GenderCode = EnmGender.Unknown,
@@ -143,8 +143,10 @@ namespace tdb.account.application
                 CreateInfo = new CreateInfoValueObject() { CreatorID = 0, CreateTime = DateTime.Now },
                 UpdateInfo = new UpdateInfoValueObject() { UpdaterID = 0, UpdateTime = DateTime.Now }
             };
-            superAdminUser.LstRoleID.Value = new List<int>() { Cst.RoleID.SuperAdmin };
-            userService.SaveAsync(superAdminUser).Wait();
+            superAdminUser.SetName("超级管理员");
+            superAdminUser.SetNickName("超级管理员");
+            superAdminUser.SetLstRoleID(new List<int>() { Cst.RoleID.SuperAdmin });
+            await userService.SaveAsync(superAdminUser);
             TdbLogger.Ins.Info("初始化用户数据（账户微服务->超级管理员）");
 
             #endregion

@@ -24,9 +24,8 @@ namespace tdb.account.domain.User
         /// 获取用户聚合
         /// </summary>
         /// <param name="loginName">登录名</param>
-        /// <param name="password">密码（MD5）</param>
         /// <returns></returns>
-        Task<UserAgg> GetUserAggAsync(string loginName, string password);
+        Task<UserAgg> GetUserAggAsync(string loginName);
 
         /// <summary>
         /// 获取用户拥有的角色ID

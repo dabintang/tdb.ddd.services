@@ -48,12 +48,11 @@ namespace tdb.account.domain.User
         /// 获取用户聚合
         /// </summary>
         /// <param name="loginName">登录名</param>
-        /// <param name="password">密码（MD5）</param>
         /// <returns></returns>
-        public async Task<UserAgg> GetAsync(string loginName, string password)
+        public async Task<UserAgg> GetAsync(string loginName)
         {
             //获取用户聚合
-            var userAgg = await this.UserRepos.GetUserAggAsync(loginName, password);
+            var userAgg = await this.UserRepos.GetUserAggAsync(loginName);
             return userAgg;
         }
 
@@ -76,6 +75,17 @@ namespace tdb.account.domain.User
         public async Task AddLoginRecordAsync(long userID, string clientIP, DateTime loginTime)
         {
             await this.UserRepos.AddLoginRecordAsync(userID, clientIP, loginTime);
+        }
+
+        /// <summary>
+        /// 判断指定登录名是否已存在
+        /// </summary>
+        /// <param name="loginName">登录名</param>
+        /// <returns></returns>
+        public async Task<bool> IsExistLoginName(string loginName)
+        {
+            var userAgg = await this.GetAsync(loginName);
+            return (userAgg != null);
         }
 
         #endregion

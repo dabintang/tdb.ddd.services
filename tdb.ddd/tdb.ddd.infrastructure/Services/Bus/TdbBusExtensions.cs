@@ -18,11 +18,14 @@ namespace tdb.ddd.infrastructure.Services
         /// 添加MediatR服务
         /// </summary>
         /// <param name="services">服务容器</param>
-        /// <param name="assemblies">含实现了总线相关接口的类的程序集</param>
-        public static void AddTdbBusMediatR(this IServiceCollection services, params Assembly[] assemblies)
+        /// <param name="module">用到MediatR的程序集模块</param>
+        public static void AddTdbBusMediatR(this IServiceCollection services, TdbMediatRAssemblyModule? module = null)
         {
+            module ??= new TdbMediatRAssemblyModule();
+            var assemblies = module.GetRegisterAssemblys();
+
             //添加MediatR服务
-            services.AddMediatR(assemblies);
+            services.AddMediatR(assemblies.ToArray());
         }
     }
 }

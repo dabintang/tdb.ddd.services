@@ -56,6 +56,17 @@ namespace tdb.account.domain.Role
             await this.RoleRepos.SaveChangedAsync(agg);
         }
 
+        /// <summary>
+        /// 判断指定角色是否已存在
+        /// </summary>
+        /// <param name="roleID">角色ID</param>
+        /// <returns></returns>
+        public async Task<bool> IsExist(int roleID)
+        {
+            var roleAgg = await this.GetAsync(roleID);
+            return (roleAgg != null);
+        }
+
         #endregion
     }
 }

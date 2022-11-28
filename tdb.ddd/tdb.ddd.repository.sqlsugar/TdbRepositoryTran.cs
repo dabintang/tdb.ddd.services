@@ -13,11 +13,13 @@ namespace tdb.ddd.repository.sqlsugar
     public class TdbRepositoryTran
     {
         /// <summary>
-        /// 开始事务
+        /// 开始事务，可保证从调用位置开始至方法结束期间内用的数据库上下文为同一个。
+        /// （注：需在[异步方法]上调用才会起效）
         /// </summary>
-        public static void BeginTran()
+        public static void BeginTranOnAsyncFunc()
         {
-            TdbDbScoped.GetScopedContext().AsTenant().BeginTran();
+            //TdbDbScoped.GetScopedContext().AsTenant().BeginTran();
+            DbScoped.SugarScope.ScopedContext.AsTenant().BeginTran();
         }
 
         /// <summary>
@@ -25,7 +27,8 @@ namespace tdb.ddd.repository.sqlsugar
         /// </summary>
         public static void CommitTran()
         {
-            TdbDbScoped.GetScopedContext().AsTenant().CommitTran();
+            //TdbDbScoped.GetScopedContext().AsTenant().CommitTran();
+            DbScoped.SugarScope.ScopedContext.AsTenant().CommitTran();
         }
 
         /// <summary>
@@ -33,7 +36,8 @@ namespace tdb.ddd.repository.sqlsugar
         /// </summary>
         public static void RollbackTran()
         {
-            TdbDbScoped.GetScopedContext().AsTenant().RollbackTran();
+            //TdbDbScoped.GetScopedContext().AsTenant().RollbackTran();
+            DbScoped.SugarScope.ScopedContext.AsTenant().RollbackTran();
         }
     }
 }

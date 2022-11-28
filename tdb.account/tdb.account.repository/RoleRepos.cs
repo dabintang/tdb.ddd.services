@@ -29,8 +29,6 @@ namespace tdb.account.repository
         /// <returns></returns>
         public async Task<RoleAgg> GetRoleAggAsync(int roleID)
         {
-            TdbLogger.Ins.Debug($"RoleRepos ContextID：{this.Context.ContextID}");
-
             //获取角色信息
             var roleInfo = await TdbCache.Ins.CacheShellAsync(this.CacheKeyRoleInfo(roleID), TimeSpan.FromDays(1), async () => await this.GetByIdAsync(roleID));
 

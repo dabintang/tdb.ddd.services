@@ -52,15 +52,13 @@ namespace tdb.ddd.repository.sqlsugar
             });
         }
 
-
-        /// <summary>
-        /// 使用SqlSugar服务（IOC模式）
-        /// </summary>
-        /// <param name="app"></param>
-        public static void UseTdbSqlSugar(this IApplicationBuilder app)
-        {
-            TdbDbScoped.Init(app.ApplicationServices);
-        }
-
+        ///// <summary>
+        ///// 使用SqlSugar服务（IOC模式）
+        ///// </summary>
+        ///// <param name="app"></param>
+        //public static void UseTdbSqlSugar(this IApplicationBuilder app)
+        //{
+        //    TdbDbScoped.Init(app.ApplicationServices);
+        //}
     }
 }

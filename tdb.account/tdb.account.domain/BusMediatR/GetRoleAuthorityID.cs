@@ -2,14 +2,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.account.domain.Role;
-using static tdb.account.domain.contracts.Const.Cst;
 
 namespace tdb.account.domain.BusMediatR
 {
+    /// <summary>
+    /// 获取角色拥有的权限ID 请求参数
+    /// </summary>
+    public class GetRoleAuthorityIDRequest : IRequest<List<int>>
+    {
+        /// <summary>
+        /// 角色ID
+        /// </summary>
+        public int RoleID { get; set; }
+    }
+
     /// <summary>
     /// 获取角色拥有的权限ID
     /// </summary>

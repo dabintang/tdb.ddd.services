@@ -3,9 +3,11 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.IdentityModel.Tokens;
 using SqlSugar.IOC;
+using System.Diagnostics;
 using System.IO.Compression;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using tdb.account.infrastructure.Config;
 using tdb.common;
 using tdb.ddd.infrastructure;
@@ -68,7 +70,7 @@ builder.Services.AddTdbSwaggerGenApiVer(o =>
 });
 
 //总线
-builder.Services.AddTdbBusMediatR(Assembly.Load("tdb.account.domain"), Assembly.Load("tdb.account.application"));
+builder.Services.AddTdbBusMediatR();
 
 //添加SqlSugar服务（IOC模式）
 builder.Services.AddTdbSqlSugar(c =>
@@ -146,9 +148,6 @@ app.UseResponseCompression();
 
 //swagger
 app.UseTdbSwaggerAndUIApiVer();
-
-//使用SqlSugar服务（IOC模式）
-app.UseTdbSqlSugar();
 
 app.MapControllers();
 

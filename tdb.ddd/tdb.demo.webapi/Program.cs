@@ -66,7 +66,7 @@ builder.Services.AddTdbSwaggerGenApiVer(o =>
 });
 
 //总线
-builder.Services.AddTdbBusMediatR(Assembly.GetExecutingAssembly());
+builder.Services.AddTdbBusMediatR();
 
 //添加SqlSugar服务（IOC模式）
 builder.Services.AddTdbSqlSugar(c =>
@@ -145,8 +145,8 @@ app.UseResponseCompression();
 //swagger
 app.UseTdbSwaggerAndUIApiVer();
 
-//使用SqlSugar服务（IOC模式）
-app.UseTdbSqlSugar();
+////使用SqlSugar服务（IOC模式）
+//app.UseTdbSqlSugar();
 
 app.MapControllers();
 

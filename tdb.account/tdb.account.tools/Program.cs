@@ -6,6 +6,8 @@ using tdb.ddd.infrastructure.Services;
 using tdb.ddd.repository.sqlsugar;
 using tdb.account.tools.Configs;
 using SqlSugar.IOC;
+using System.Threading;
+using System.Diagnostics;
 
 namespace tdb.account.tools
 {
@@ -45,6 +47,9 @@ namespace tdb.account.tools
             //缓存
             builder.Services.AddTdbMemoryCache();
 
+            //总线
+            builder.Services.AddTdbBusMediatR();
+
             //添加SqlSugar服务（IOC模式）
             builder.Services.AddTdbSqlSugar(c =>
             {
@@ -65,9 +70,6 @@ namespace tdb.account.tools
 
             // Configure the HTTP request pipeline.
 
-            //使用SqlSugar服务（IOC模式）
-            app.UseTdbSqlSugar();
-
             /******************************* 配置管道 end *************************************/
 
             Console.WriteLine("请输入指令");
@@ -78,7 +80,7 @@ namespace tdb.account.tools
             switch (command)
             {
                 case "1": //1：初始化数据
-                    ToolsApp.InitData();
+                    new ToolsApp().InitDataAsync().Wait();
                     break;
                 default:
                     Console.WriteLine("退出");

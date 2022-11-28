@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace tdb.ddd.infrastructure.Services.Bus
+namespace tdb.ddd.infrastructure.Services
 {
     /// <summary>
     /// MediatR扩展
     /// </summary>
-    public static class MediatRExtensions
+    public static class TdbMediatRExtensions
     {
         /// <summary>
         /// 无等待通知

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.account.domain.Authority.Aggregate;
+using tdb.account.domain.Role.Aggregate;
 using tdb.ddd.infrastructure;
 
 namespace tdb.account.domain.Authority
@@ -37,6 +38,16 @@ namespace tdb.account.domain.Authority
         #region 公开方法
 
         /// <summary>
+        /// 根据权限ID获取权限聚合
+        /// </summary>
+        /// <param name="authorityID">权限ID</param>
+        /// <returns></returns>
+        public async Task<AuthorityAgg> GetAsync(int authorityID)
+        {
+            return await this.AuthorityRepos.GetAuthorityAggAsync(authorityID);
+        }
+
+        /// <summary>
         /// 持久化
         /// </summary>
         /// <param name="agg">权限聚合</param>
@@ -44,6 +55,17 @@ namespace tdb.account.domain.Authority
         public async Task SaveAsync(AuthorityAgg agg)
         {
             await this.AuthorityRepos.SaveChangedAsync(agg);
+        }
+
+        /// <summary>
+        /// 判断指定权限是否已存在
+        /// </summary>
+        /// <param name="authorityID">权限ID</param>
+        /// <returns></returns>
+        public async Task<bool> IsExist(int authorityID)
+        {
+            var authorityAgg = await this.GetAsync(authorityID);
+            return (authorityAgg != null);
         }
 
         #endregion

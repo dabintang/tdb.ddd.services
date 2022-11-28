@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tdb.account.domain.BusMediatR;
+using tdb.account.infrastructure.Config;
 using tdb.ddd.contracts;
 using tdb.ddd.domain;
 using tdb.ddd.infrastructure;
+using tdb.ddd.infrastructure.Services;
 
 namespace tdb.account.domain.Role.Aggregate
 {
@@ -57,6 +60,27 @@ namespace tdb.account.domain.Role.Aggregate
             }
 
             return this.RoleRepos.GetAuthorityIDsAsync(this.roleAgg.ID).Result;
+        }
+
+        /// <summary>
+        /// 赋值
+        /// </summary>
+        /// <param name="lstAuthorityID">权限ID</param>
+        internal TdbRes<bool> SetValue(List<int> lstAuthorityID)
+        {
+            //判断权限ID是否存在
+            foreach (var authorityID in lstAuthorityID)
+            {
+                if (TdbMediatR.Send(new IsAuthorityExistRequest() { AuthorityID = authorityID }).Result == false)
+                {
+                    return new TdbRes<bool>(AccountConfig.Msg.AuthorityNotExist.FromNewMsg($"权限不存在[{authorityID}]"), false);
+                }
+            }
+
+            //赋值
+            this.Value = lstAuthorityID;
+
+            return TdbRes.Success(true);
         }
     }
 }
