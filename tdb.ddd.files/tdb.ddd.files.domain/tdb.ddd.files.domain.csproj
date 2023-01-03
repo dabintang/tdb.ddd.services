@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>tdb.ddd.files.repository</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="tdb.ddd.domain" Version="7.0.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\tdb.ddd.files.domain.contracts\tdb.ddd.files.domain.contracts.csproj" />
+    <ProjectReference Include="..\tdb.ddd.files.infrastructure\tdb.ddd.files.infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

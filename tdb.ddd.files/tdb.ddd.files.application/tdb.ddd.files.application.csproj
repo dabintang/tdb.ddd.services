@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\tdb.ddd.files.application.contracts\tdb.ddd.files.application.contracts.csproj" />
+    <ProjectReference Include="..\tdb.ddd.files.domain\tdb.ddd.files.domain.csproj" />
+    <ProjectReference Include="..\tdb.ddd.files.repository\tdb.ddd.files.repository.csproj" />
+  </ItemGroup>
+
+</Project>

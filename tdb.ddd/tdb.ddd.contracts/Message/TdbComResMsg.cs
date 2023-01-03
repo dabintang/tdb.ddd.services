@@ -34,6 +34,6 @@ namespace tdb.ddd.contracts
         /// <summary>
         /// 操作用户不存在
         /// </summary>
-        public static readonly TdbResMsgInfo UserNotExist = new(4, "操作用户不存在");
+        public static readonly TdbResMsgInfo OperatorNotExist = new(4, "操作用户不存在");
     }
 }

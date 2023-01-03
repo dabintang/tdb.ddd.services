@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Const\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="tdb.ddd.contracts" Version="7.0.0.4" />
+  </ItemGroup>
+
+</Project>

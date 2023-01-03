@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>tdb.ddd.repository.sqlsugar</Title>
-    <Version>7.0.0.4</Version>
+    <Version>7.0.0.5</Version>
     <Authors>tangdabin</Authors>
     <Company>tdb</Company>
     <Product>tdb.ddd</Product>

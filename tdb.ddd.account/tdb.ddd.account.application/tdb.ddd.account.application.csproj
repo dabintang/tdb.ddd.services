@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\tdb.ddd.account.application.contracts\tdb.ddd.account.application.contracts.csproj" />
+    <ProjectReference Include="..\tdb.ddd.account.domain\tdb.ddd.account.domain.csproj" />
+    <ProjectReference Include="..\tdb.ddd.account.repository\tdb.ddd.account.repository.csproj" />
+  </ItemGroup>
+
+</Project>

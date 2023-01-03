@@ -27,6 +27,16 @@ namespace tdb.ddd.application.contracts
         public DateTime OperationTime { get; set; } = DateTime.Now;
 
         /// <summary>
+        /// 操作人拥有的角色ID
+        /// </summary>
+        public List<long> OperatorRoleIDs { get; set; } = new List<long>();
+
+        /// <summary>
+        /// 操作人拥有的权限ID
+        /// </summary>
+        public List<long> OperatorAuthorityIDs { get; set; } = new List<long>();
+
+        /// <summary>
         /// 参数
         /// </summary>
         public T? Param { get; set; }
