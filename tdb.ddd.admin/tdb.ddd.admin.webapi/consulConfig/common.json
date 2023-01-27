@@ -1,0 +1,24 @@
+{
+  //口令
+  "Token": {
+    "Issuer": "tdb.ddd", //发行者
+    "SecretKey": "0123456789223456" //秘钥
+  },
+  //账户服务
+  "AccountService": {
+    "WebapiRootURL": "http://127.0.0.1:31010" //webapi根地址
+  },
+  //文件服务
+  "FilesService": {
+    "WebapiRootURL": "http://127.0.0.1:31020" //webapi根地址
+  },
+  //运维服务
+  "AdminService": {
+    "WebapiRootURL": "http://127.0.0.1:31030" //webapi根地址
+  },
+  //HashID
+  "HashID": {
+    "Salt": "tangdabinok"
+  },
+  "WhiteListIP": [ "127.0.0.1", "localhost", "::ffff:127.0.0.1" ] //白名单IP
+}

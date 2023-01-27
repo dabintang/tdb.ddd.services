@@ -36,7 +36,7 @@ namespace tdb.ddd.files.application.contracts.V1.DTO
         /// <summary>
         /// 删除详情
         /// </summary>
-        public List<DeleteTempFileRes> Details { get; set; }
+        public List<DeleteTempFileRes> Details { get; set; } = new List<DeleteTempFileRes>();
     }
 
     /// <summary>

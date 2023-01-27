@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using tdb.ddd.account.application.contracts.V1.DTO;
 using tdb.ddd.account.application.contracts.V1.Interface;
-using tdb.ddd.application.contracts;
 using tdb.ddd.contracts;
 using tdb.ddd.webapi;
 
@@ -39,7 +37,6 @@ namespace tdb.ddd.account.webapi.Controllers.V1
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        [TdbAPILog]
         public async Task<TdbRes<UserLoginRes>> Login([FromBody] UserLoginDTO req)
         {
             //客户端IP
@@ -90,6 +87,7 @@ namespace tdb.ddd.account.webapi.Controllers.V1
         /// <param name="req">参数</param>
         /// <returns></returns>
         [HttpGet]
+        [TdbAuthAuthority(TdbCst.AuthorityID.AccountUserManage)]
         public async Task<TdbRes<UserInfoRes>> GetUserInfo([FromQuery]GetUserInfoByIDReq req)
         {
             var res = await this.userApp.GetUserInfoByIDAsync(req);
@@ -102,6 +100,7 @@ namespace tdb.ddd.account.webapi.Controllers.V1
         /// <param name="req">请求参数</param>
         /// <returns></returns>
         [HttpPost]
+        [TdbAuthAuthority(TdbCst.AuthorityID.AccountUserManage)]
         [TdbAPILog]
         public async Task<TdbRes<AddUserRes>> AddUser([FromBody] AddUserReq req)
         {

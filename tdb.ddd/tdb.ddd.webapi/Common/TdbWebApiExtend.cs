@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
+using System.Reflection;
+using tdb.common;
 
 namespace tdb.ddd.webapi
 {
@@ -45,6 +47,40 @@ namespace tdb.ddd.webapi
             //取过滤器管道中的特性
             attr = context.Filters.Where(m => m is T).FirstOrDefault() as T;
             return attr;
+        }
+
+        /// <summary>
+        /// 获取接口指定的特性
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static List<T> GetAttributes<T>(this FilterContext context) where T : Attribute
+        {
+            var list = new List<T>();
+
+            if (context == null || context.ActionDescriptor == null)
+            {
+                return list;
+            }
+
+            //类和方法中的特性
+            if (context.ActionDescriptor is ControllerActionDescriptor actionDescriptor)
+            {
+                //取方法上的特性
+                var lstMethodAttr = actionDescriptor.MethodInfo.GetCustomAttributes(typeof(T), true).Cast<T>();
+                list.AddRange(lstMethodAttr);
+
+                //取控制器上的特性
+                var lstCtlAttr = actionDescriptor.ControllerTypeInfo.GetCustomAttributes(typeof(T), true).Cast<T>();
+                list.AddRange(lstCtlAttr);
+            }
+
+            //取过滤器管道中的特性
+            var lstFilterAttr = context.Filters.Where(m => m is T).Cast<T>();
+            list.AddRange(lstFilterAttr);
+
+            return list;
         }
 
         /// <summary>

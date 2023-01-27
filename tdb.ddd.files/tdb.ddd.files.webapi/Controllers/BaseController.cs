@@ -13,8 +13,8 @@ namespace tdb.ddd.files.webapi.Controllers
     /// </summary>
     [ApiController]
     [Authorize]
-    [TdbClientIPAuth()]
-    [Route("tdb/files/v{api-version:apiVersion}/[controller]/[action]")]
+    [TdbAuthClientIP()]
+    [Route("tdb.ddd.files/v{api-version:apiVersion}/[controller]/[action]")]
     public class BaseController : ControllerBase
     {
         private OperatorInfo _curUser;

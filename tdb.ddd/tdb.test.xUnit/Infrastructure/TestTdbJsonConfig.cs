@@ -26,7 +26,7 @@ namespace tdb.test.xUnit.Infrastructure
         [Fact]
         public void TestGetConfig()
         {
-            var configService = new TdbJsonConfig(cfg =>
+            var configService = TdbConfigFactory.CreateJsonConfig(cfg =>
             {
                 cfg.Path = "Configs\\jsonConfig.json";
                 cfg.ReloadOnChange = true;

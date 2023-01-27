@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using tdb.common;
 using tdb.ddd.domain;
 using tdb.ddd.infrastructure;
 
@@ -84,13 +85,13 @@ namespace tdb.ddd.webapi
         }
 
         /// <summary>
-        /// 客户端IP要求与token中一致
+        /// 要求接口调用方IP为白名单IP
         /// </summary>
         /// <param name="options">授权认证配置</param>
-        public static void AddTdbAuthClientIP(this AuthorizationOptions options)
+        /// <param name="whiteListIP">白名单IP集合</param>
+        public static void AddTdbAuthWhiteListIP(this AuthorizationOptions options, IEnumerable<string> whiteListIP)
         {
-            //客户端IP要求与token中一致
-            options.AddPolicy(TdbClientIPAuthAttribute.PolicyName, policy => policy.Requirements.Add(new TdbClientIPRequirement()));
+            options.AddPolicy(TdbAuthWhiteListIPAttribute.PolicyName, policy => policy.Requirements.Add(new TdbAuthWhiteListIPRequirement(whiteListIP)));
         }
     }
 }

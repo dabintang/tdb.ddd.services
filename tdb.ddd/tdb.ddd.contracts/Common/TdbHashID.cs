@@ -13,9 +13,21 @@ namespace tdb.ddd.contracts
     public class TdbHashID
     {
         /// <summary>
+        /// 初始化
+        /// </summary>
+        /// <param name="salt"></param>
+        /// <param name="minHashLength">最小长度</param>
+        /// <param name="alphabet">hash字母表</param>
+        /// <param name="seps"></param>
+        public static void Init(string salt, int minHashLength = 6, string alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", string seps = "cfhistuCFHISTU")
+        {
+            hashids = new(salt, minHashLength, alphabet, seps);
+        }
+
+        /// <summary>
         /// Hashids
         /// </summary>
-        private readonly static Hashids hashids = new("tangdabinok", 6);//加盐
+        private static Hashids? hashids;
 
         /// <summary>
         /// 编码
@@ -24,6 +36,11 @@ namespace tdb.ddd.contracts
         /// <returns></returns>
         public static string EncodeLong(long value)
         {
+            if (hashids == null)
+            {
+                throw new TdbException("请先初始化[TdbHashID.Init]");
+            }
+
             return hashids.EncodeLong(value);
         }
 
@@ -34,6 +51,11 @@ namespace tdb.ddd.contracts
         /// <returns></returns>
         public static long DecodeSingleLong(string value)
         {
+            if (hashids == null)
+            {
+                throw new TdbException("请先初始化[TdbHashID.Init]");
+            }
+
             return hashids.DecodeSingleLong(value);
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using tdb.consul.kv;
 
 namespace tdb.ddd.infrastructure.Services
 {
@@ -8,7 +9,7 @@ namespace tdb.ddd.infrastructure.Services
     /// 配置Key特性
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public class TdbConfigKeyAttribute : Attribute
+    public class TdbConfigKeyAttribute : Attribute, IConsulConfigAttribute
     {
         /// <summary>
         /// 配置key

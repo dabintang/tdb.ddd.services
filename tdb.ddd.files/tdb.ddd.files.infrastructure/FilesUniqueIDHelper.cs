@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tdb.ddd.contracts;
 using tdb.ddd.files.infrastructure.Config;
 using tdb.ddd.infrastructure;
 
@@ -19,7 +20,7 @@ namespace tdb.ddd.files.infrastructure
         /// <returns></returns>
         public static long CreateID()
         {
-            return TdbUniqueIDHelper.CreateID(FilesConfig.App.Server.ID, FilesConfig.App.Server.Seq);
+            return TdbUniqueIDHelper.CreateID(TdbCst.ServerID.Files, FilesConfig.App.Server.Seq);
         }
     }
 }

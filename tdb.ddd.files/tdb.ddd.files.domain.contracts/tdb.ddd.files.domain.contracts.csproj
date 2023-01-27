@@ -8,11 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Const\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="tdb.ddd.contracts" Version="7.0.0.4" />
+    <PackageReference Include="tdb.ddd.contracts" Version="7.0.0.5" />
   </ItemGroup>
 
 </Project>

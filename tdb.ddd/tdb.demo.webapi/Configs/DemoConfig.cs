@@ -1,5 +1,6 @@
 ﻿using tdb.common;
 using tdb.ddd.infrastructure;
+using tdb.ddd.infrastructure.Services;
 
 namespace tdb.demo.webapi.Configs
 {
@@ -8,15 +9,19 @@ namespace tdb.demo.webapi.Configs
     /// </summary>
     public static class DemoConfig
     {
+        private static ITdbJsonConfig JsonConfigService { get; set; }
+
         /// <summary>
         /// 初始化配置
         /// </summary>
         public static void Init()
         {
+            JsonConfigService = TdbConfigFactory.CreateAppsettingsConfig();
+
             //读取appsettings.json配置
             ReadAppConfig();
             //配置有改动时重新读取
-            TdbConfig.Ins.ConfigReload += RefreshAppConfig;
+            JsonConfigService.ConfigReload += RefreshAppConfig;
 
             //消息配置
             var msgFullFileName = CommHelper.GetFullFileName("message.json");
@@ -29,7 +34,7 @@ namespace tdb.demo.webapi.Configs
         /// </summary>
         private static void ReadAppConfig()
         {
-            App = TdbConfig.Ins.GetConfig<AppConfig>();
+            App = JsonConfigService.GetConfig<AppConfig>();
         }
 
         /// <summary>

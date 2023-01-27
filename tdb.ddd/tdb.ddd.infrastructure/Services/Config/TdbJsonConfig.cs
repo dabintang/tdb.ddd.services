@@ -12,9 +12,9 @@ using tdb.common;
 namespace tdb.ddd.infrastructure.Services
 {
     /// <summary>
-    /// json配置服务实现
+    /// json配置接口实现
     /// </summary>
-    public class TdbJsonConfig : ITdbConfig
+    public class TdbJsonConfig : ITdbJsonConfig
     {
         /// <summary>
         /// 配置
@@ -54,7 +54,7 @@ namespace tdb.ddd.infrastructure.Services
         /// <summary>
         /// 配置重新加载事件
         /// </summary>
-        public event ITdbConfig._ConfigReload? ConfigReload;
+        public event DelegateConfigReload? ConfigReload;
 
         #endregion
 

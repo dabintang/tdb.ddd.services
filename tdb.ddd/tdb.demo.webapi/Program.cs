@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Reflection;
 using System.Text;
 using tdb.common;
+using tdb.ddd.contracts;
 using tdb.ddd.infrastructure;
 using tdb.ddd.infrastructure.Services;
 using tdb.ddd.repository.sqlsugar;
@@ -31,10 +32,11 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 //日志
 builder.Services.AddTdbNLogger();
 
-//配置服务
-builder.Services.AddTdbAppsettingsConfig();
 //初始化配置
 DemoConfig.Init();
+
+//hashid初始化
+TdbHashID.Init("tangdabinokde");
 
 //缓存服务
 builder.Services.AddTdbMemoryCache();
@@ -46,10 +48,10 @@ builder.Services.AddTdbParamValidate();
 builder.Services.AddTdbAuthJwtBearer(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(DemoConfig.App.Token.SecretKey)));
 
 //授权
-builder.Services.AddAuthorization(options =>
+builder.Services.AddAuthorization(option =>
 {
-    //客户端IP要求与token中一致
-    options.AddTdbAuthClientIP();
+    //要求接口调用方IP为白名单IP
+    option.AddTdbAuthWhiteListIP(new List<string>() { "127.0.0.1", "localhost", "::ffff:127.0.0.1" });
 });
 
 //设置允许所有来源跨域

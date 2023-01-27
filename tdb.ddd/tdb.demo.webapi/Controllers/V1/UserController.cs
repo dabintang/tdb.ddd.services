@@ -82,6 +82,7 @@ namespace tdb.demo.webapi.Controllers.V1
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [TdbAuthWhiteListIP]
         public TdbRes<UserRes> GetCurrentUserInfo()
         {
             //用户列表

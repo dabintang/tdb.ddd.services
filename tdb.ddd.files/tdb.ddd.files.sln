@@ -20,6 +20,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{DAC0231A-1DB8-46B6-BB91-47D467FF9DB7}"
 	ProjectSection(SolutionItems) = preProject
 		doc\remarks.txt = doc\remarks.txt
+		doc\tdb.ddd.files.sql = doc\tdb.ddd.files.sql
 	EndProjectSection
 EndProject
 Global

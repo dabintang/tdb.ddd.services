@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.contracts;
 using tdb.ddd.domain;
-using tdb.ddd.files.domain.contracts.Const;
 using tdb.ddd.files.domain.contracts.Enum;
 using tdb.ddd.files.infrastructure.Config;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace tdb.ddd.files.domain.Files.Aggregate
 {
@@ -153,7 +150,7 @@ namespace tdb.ddd.files.domain.Files.Aggregate
             }
 
             //是否文件创建者/超级管理员
-            if (this.CreateInfo.CreatorID == userID || (lstRoleID?.Contains(Cst.RoleID.SuperAdmin) ?? false))
+            if (this.CreateInfo.CreatorID == userID || (lstRoleID?.Contains(TdbCst.RoleID.SuperAdmin) ?? false))
             {
                 return true;
             }
@@ -172,7 +169,7 @@ namespace tdb.ddd.files.domain.Files.Aggregate
         public bool IsAuthorizedModify(long userID, IEnumerable<long> lstRoleID)
         {
             //是否文件创建者/超级管理员
-            if (this.CreateInfo.CreatorID == userID || (lstRoleID?.Contains(Cst.RoleID.SuperAdmin) ?? false))
+            if (this.CreateInfo.CreatorID == userID || (lstRoleID?.Contains(TdbCst.RoleID.SuperAdmin) ?? false))
             {
                 return true;
             }
@@ -260,10 +257,10 @@ namespace tdb.ddd.files.domain.Files.Aggregate
             var extension = Path.GetExtension(this.Name);
 
             //文件名
-            var fileName = $"{fileNameWithoutExtension}_{DateTime.Now.ToString("yyyyMMddHHmmss")}_{Guid.NewGuid().ToString("N")}{extension}";
+            var fileName = $"{fileNameWithoutExtension}_{DateTime.Now:yyyyMMddHHmmss}_{Guid.NewGuid():N}{extension}";
 
             //文件夹
-            var path = FilesConfig.App.FilesPath;
+            var path = FilesConfig.Distributed.FilesPath;
             //文件夹不存在则创建
             if (Directory.Exists(path) == false)
             {

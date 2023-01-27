@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using tdb.ddd.account.application.contracts;
 using tdb.common;
 using tdb.ddd.domain;
 using tdb.ddd.webapi;
 using tdb.ddd.application.contracts;
-using Org.BouncyCastle.Ocsp;
-using tdb.ddd.account.application.contracts.V1.DTO;
+using Microsoft.AspNetCore.Authorization;
+using Autofac.Core;
+using Microsoft.Extensions.Options;
+using System.Threading;
 
 namespace tdb.ddd.account.webapi.Controllers
 {
@@ -16,8 +16,8 @@ namespace tdb.ddd.account.webapi.Controllers
     /// </summary>
     [ApiController]
     [Authorize]
-    [TdbClientIPAuth()]
-    [Route("tdb.ddd.account.v{api-version:apiVersion}/[controller]/[action]")]
+    [TdbAuthClientIP()]
+    [Route("tdb.ddd.account/v{api-version:apiVersion}/[controller]/[action]")]
     public class BaseController : ControllerBase
     {
         private OperatorInfo _curUser;

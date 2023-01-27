@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.account.infrastructure.Config;
+using tdb.ddd.contracts;
 using tdb.ddd.infrastructure;
 
 namespace tdb.ddd.account.infrastructure
@@ -19,7 +20,7 @@ namespace tdb.ddd.account.infrastructure
         /// <returns></returns>
         public static long CreateID()
         {
-            return TdbUniqueIDHelper.CreateID(AccountConfig.App.Server.ID, AccountConfig.App.Server.Seq);
+            return TdbUniqueIDHelper.CreateID(TdbCst.ServerID.Account, AccountConfig.App.Server.Seq);
         }
     }
 }

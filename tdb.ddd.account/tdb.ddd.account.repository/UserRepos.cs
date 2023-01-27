@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using tdb.ddd.account.domain.Authority.Aggregate;
-using tdb.ddd.account.domain.Role;
-using tdb.ddd.account.domain.Role.Aggregate;
 using tdb.ddd.account.domain.User;
 using tdb.ddd.account.domain.User.Aggregate;
 using tdb.ddd.account.repository.DBEntity;
 using tdb.common;
 using tdb.ddd.infrastructure;
 using tdb.ddd.repository.sqlsugar;
-using static tdb.ddd.account.domain.contracts.Const.Cst;
 
 namespace tdb.ddd.account.repository
 {

@@ -224,7 +224,7 @@ CREATE TABLE `table1`  (
         /// <summary>
         /// 
         /// </summary>
-        private void PrintRepositoryContextID3()
+        private static void PrintRepositoryContextID3()
         {
             TdbRepositoryTran.BeginTranOnAsyncFunc();
 
@@ -241,7 +241,7 @@ CREATE TABLE `table1`  (
         /// <summary>
         /// 
         /// </summary>
-        private async Task PrintRepositoryContextID4()
+        private static async Task PrintRepositoryContextID4()
         {
             TdbRepositoryTran.BeginTranOnAsyncFunc();
 
@@ -256,7 +256,7 @@ CREATE TABLE `table1`  (
         /// 
         /// </summary>
         /// <returns></returns>
-        private async Task PrintRepositoryContextID()
+        private static async Task PrintRepositoryContextID()
         {
             await Task.Delay(300);
             //await Task.CompletedTask;

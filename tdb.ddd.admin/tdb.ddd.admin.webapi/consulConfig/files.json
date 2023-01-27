@@ -1,0 +1,12 @@
+//files服务配置
+{
+  "FilesPath": "E:\\tdb\\files", //本地文件夹路径
+  //数据库配置
+  "DB": {
+    "ConnStr": "server=127.0.0.1;database=tdb.ddd.files;user id=root;password=123456;Pooling=True;Allow User Variables=True;" //连接字符串
+  },
+  //redis配置
+  "Redis": {
+    "ConnStr": [ "127.0.0.1,defaultDatabase=1,idleTimeout=30000,poolsize=10,prefix=Files_" ] //连接字符串
+  }
+}

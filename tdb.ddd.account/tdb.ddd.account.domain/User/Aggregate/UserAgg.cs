@@ -141,9 +141,9 @@ namespace tdb.ddd.account.domain.User.Aggregate
             var res = new UserLoginResult
             {
                 AccessToken = CreateAccessToken(lstAuthorityID, clientIP),
-                AccessTokenValidSeconds = AccountConfig.App.Token.AccessTokenValidSeconds,
+                AccessTokenValidSeconds = AccountConfig.Distributed.Token.AccessTokenValidSeconds,
                 RefreshToken = Guid.NewGuid().ToString("N"),
-                RefreshTokenValidSeconds = AccountConfig.App.Token.RefreshTokenValidSeconds
+                RefreshTokenValidSeconds = AccountConfig.Distributed.Token.RefreshTokenValidSeconds
             };
 
             //缓存刷新令牌
@@ -251,10 +251,10 @@ namespace tdb.ddd.account.domain.User.Aggregate
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(lstClaim),
-                Issuer = AccountConfig.App.Token.Issuer,
+                Issuer = AccountConfig.Common.Token.Issuer,
                 //Audience = AccConfig.Consul.Token.Audience,
-                Expires = DateTime.UtcNow.AddSeconds(AccountConfig.App.Token.AccessTokenValidSeconds),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(AccountConfig.App.Token.SecretKey)), SecurityAlgorithms.HmacSha256Signature)
+                Expires = DateTime.UtcNow.AddSeconds(AccountConfig.Distributed.Token.AccessTokenValidSeconds),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(AccountConfig.Common.Token.SecretKey)), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);

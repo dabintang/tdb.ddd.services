@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +8,6 @@ using System.Threading.Tasks;
 using tdb.ddd.account.application.BusMediatR;
 using tdb.ddd.account.application.contracts.V1.DTO;
 using tdb.ddd.account.application.contracts.V1.Interface;
-using tdb.ddd.account.domain.contracts.Const;
 using tdb.ddd.account.domain.contracts.Enum;
 using tdb.ddd.account.domain.contracts.User;
 using tdb.ddd.account.domain.User;
@@ -134,7 +132,7 @@ namespace tdb.ddd.account.application.V1
             }
 
             //只能赋予操作人拥有的角色[超级管理员除外]
-            if (param.LstRoleID != null && req.OperatorRoleIDs.Contains(Cst.RoleID.SuperAdmin) == false && param.LstRoleID.Except(req.OperatorRoleIDs)?.Count() > 0)
+            if (param.LstRoleID != null && req.OperatorRoleIDs.Contains(TdbCst.RoleID.SuperAdmin) == false && param.LstRoleID.Except(req.OperatorRoleIDs)?.Count() > 0)
             {
                 return new TdbRes<AddUserRes>(TdbComResMsg.InsufficientPermissions, null);
             }
@@ -187,7 +185,7 @@ namespace tdb.ddd.account.application.V1
             var userService = new UserService();
 
             //判断权限（用户自己或拥有[用户增删改权限]者可以修改）
-            if (req.OperatorID != param.ID && req.OperatorAuthorityIDs.Contains(Cst.AuthorityID.AccountUserManage) == false)
+            if (req.OperatorID != param.ID && req.OperatorAuthorityIDs.Contains(TdbCst.AuthorityID.AccountUserManage) == false)
             {
                 return new TdbRes<bool>(TdbComResMsg.InsufficientPermissions, false);
             }
@@ -234,7 +232,7 @@ namespace tdb.ddd.account.application.V1
             var userService = new UserService();
 
             //判断权限（用户自己或拥有[用户增删改权限]者可以修改）
-            if (req.OperatorID != param.ID && req.OperatorAuthorityIDs.Contains(Cst.AuthorityID.AccountUserManage) == false)
+            if (req.OperatorID != param.ID && req.OperatorAuthorityIDs.Contains(TdbCst.AuthorityID.AccountUserManage) == false)
             {
                 return new TdbRes<bool>(TdbComResMsg.InsufficientPermissions, false);
             }

@@ -14,6 +14,9 @@ using tdb.ddd.infrastructure;
 using tdb.ddd.infrastructure.Services;
 using tdb.ddd.repository.sqlsugar;
 using tdb.ddd.webapi;
+using tdb.ddd.contracts;
+using tdb.ddd.account.webapi.Controllers;
+using System.Reflection.Metadata;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,10 +35,11 @@ builder.Host.ConfigureContainer<ContainerBuilder>(builder =>
 //日志
 builder.Services.AddTdbNLogger();
 
-//配置服务
-builder.Services.AddTdbAppsettingsConfig();
 //初始化配置
 AccountConfig.Init();
+
+//初始化hash id
+TdbHashID.Init(AccountConfig.Common.HashID.Salt);
 
 //缓存服务
 builder.Services.AddTdbMemoryCache();
@@ -45,13 +49,13 @@ builder.Services.AddTdbMemoryCache();
 builder.Services.AddTdbParamValidate();
 
 //验权
-builder.Services.AddTdbAuthJwtBearer(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(AccountConfig.App.Token.SecretKey)));
+builder.Services.AddTdbAuthJwtBearer(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(AccountConfig.Common.Token.SecretKey)));
 
 //授权
 builder.Services.AddAuthorization(options =>
 {
-    //客户端IP要求与token中一致
-    options.AddTdbAuthClientIP();
+    //要求接口调用方IP为白名单IP
+    options.AddTdbAuthWhiteListIP(AccountConfig.Common.WhiteListIP);
 });
 
 //设置允许所有来源跨域
@@ -75,7 +79,7 @@ builder.Services.AddTdbBusMediatR();
 //添加SqlSugar服务（IOC模式）
 builder.Services.AddTdbSqlSugar(c =>
 {
-    c.ConnectionString = AccountConfig.App.DB.ConnStr; //数据库连接字符串
+    c.ConnectionString = AccountConfig.Distributed.DB.ConnStr; //数据库连接字符串
     c.DbType = IocDbType.MySql;
     c.IsAutoCloseConnection = true;    //开启自动释放模式
 });

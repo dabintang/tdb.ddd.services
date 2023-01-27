@@ -1,6 +1,4 @@
-﻿using Autofac.Extras.DynamicProxy;
-using SqlSugar.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +7,7 @@ using tdb.ddd.account.domain.Role;
 using tdb.ddd.account.domain.Role.Aggregate;
 using tdb.ddd.account.repository.DBEntity;
 using tdb.ddd.infrastructure;
-using tdb.ddd.infrastructure.Services;
 using tdb.ddd.repository.sqlsugar;
-using static tdb.ddd.account.domain.contracts.Const.Cst;
 
 namespace tdb.ddd.account.repository
 {

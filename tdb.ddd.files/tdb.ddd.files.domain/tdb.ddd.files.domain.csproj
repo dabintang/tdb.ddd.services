@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="tdb.ddd.domain" Version="7.0.0.5" />
+    <PackageReference Include="tdb.ddd.domain" Version="7.0.0.6" />
   </ItemGroup>
 
   <ItemGroup>

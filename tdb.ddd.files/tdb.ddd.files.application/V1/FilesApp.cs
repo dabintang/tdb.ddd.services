@@ -17,8 +17,6 @@ using tdb.ddd.contracts;
 using ImageMagick;
 using tdb.ddd.files.domain.contracts.Enum;
 using tdb.ddd.files.domain.contracts.DTO;
-using static tdb.ddd.files.domain.contracts.Const.Cst;
-using tdb.ddd.files.domain.contracts.Const;
 
 namespace tdb.ddd.files.application.V1
 {
@@ -65,15 +63,17 @@ namespace tdb.ddd.files.application.V1
 
                 try
                 {
-                    var agg = new FileAgg();
-                    agg.ID = FilesUniqueIDHelper.CreateID();
-                    agg.Name = file.Name;
-                    agg.AccessLevelCode = file.AccessLevelCode;
-                    agg.StorageTypeCode = file.StorageTypeCode;
-                    agg.FileStatusCode = file.FileStatusCode;
-                    agg.Remark = file.Remark;
-                    agg.CreateInfo = new CreateInfoValueObject() { CreatorID = reqDTO.OperatorID, CreateTime = reqDTO.OperationTime };
-                    agg.UpdateInfo = new UpdateInfoValueObject() { UpdaterID = reqDTO.OperatorID, UpdateTime = reqDTO.OperationTime };
+                    var agg = new FileAgg
+                    {
+                        ID = FilesUniqueIDHelper.CreateID(),
+                        Name = file.Name,
+                        AccessLevelCode = file.AccessLevelCode,
+                        StorageTypeCode = file.StorageTypeCode,
+                        FileStatusCode = file.FileStatusCode,
+                        Remark = file.Remark,
+                        CreateInfo = new CreateInfoValueObject() { CreatorID = reqDTO.OperatorID, CreateTime = reqDTO.OperationTime },
+                        UpdateInfo = new UpdateInfoValueObject() { UpdaterID = reqDTO.OperatorID, UpdateTime = reqDTO.OperationTime }
+                    };
 
                     //保存文件到物理路径
                     await agg.SaveFileAsync(file.Data);
@@ -154,11 +154,13 @@ namespace tdb.ddd.files.application.V1
                 return new TdbRes<DownloadFileRes>(TdbComResMsg.InsufficientPermissions, null);
             }
 
-            var res = new DownloadFileRes();
-            res.ID = fileAgg.ID;
-            res.Name = fileAgg.Name;
-            res.ContentType = fileAgg.GetContentType();
-            res.Data = await fileAgg.ReadFileAsync();
+            var res = new DownloadFileRes
+            {
+                ID = fileAgg.ID,
+                Name = fileAgg.Name,
+                ContentType = fileAgg.GetContentType(),
+                Data = await fileAgg.ReadFileAsync()
+            };
 
             return TdbRes.Success(res);
         }
@@ -217,11 +219,13 @@ namespace tdb.ddd.files.application.V1
                 data = img.ToByteArray();
             }
 
-            var res = new DownloadFileRes();
-            res.ID = fileAgg.ID;
-            res.Name = fileAgg.Name;
-            res.ContentType = fileAgg.GetContentType();
-            res.Data = data;
+            var res = new DownloadFileRes
+            {
+                ID = fileAgg.ID,
+                Name = fileAgg.Name,
+                ContentType = fileAgg.GetContentType(),
+                Data = data
+            };
 
             return TdbRes.Success(res);
         }
@@ -233,12 +237,6 @@ namespace tdb.ddd.files.application.V1
         /// <returns></returns>
         public async Task<TdbRes<DeleteTempFilesRes>> DeleteTempFilesAsync(TdbOperateReq<DeleteTempFilesReq> reqDTO)
         {
-            //超级管理员才有批量删除临时文件权限
-            if ((reqDTO.OperatorRoleIDs?.Contains(Cst.RoleID.SuperAdmin) ?? false) == false)
-            {
-                return new TdbRes<DeleteTempFilesRes>(TdbComResMsg.InsufficientPermissions, null);
-            }
-
             //查询需要删除的临时文件
             var reqQuery = new QueryFilesReq()
             {
@@ -250,8 +248,19 @@ namespace tdb.ddd.files.application.V1
             };
             var list = await this.FileService.QueryFileAggsAsync(reqQuery);
 
+            //结果
+            var res = new DeleteTempFilesRes();
 
-            return null;
+            //循环删除文件
+            foreach (var agg in list.Data)
+            {
+                await this.FileService.DeleteFileAsync(agg);
+
+                res.Count++;
+                res.Details.Add(new DeleteTempFileRes() { ID = agg.ID, Name = agg.Name });
+            }
+
+            return TdbRes.Success(res);
         }
 
         #endregion

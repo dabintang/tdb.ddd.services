@@ -185,10 +185,13 @@ namespace tdb.ddd.files.webapi.Controllers.V1
 
         /// <summary>
         /// 删除临时文件
+        /// （需超级管理员权限）
         /// </summary>
         /// <param name="req">请求参数</param>
         /// <returns></returns>
         [HttpPost]
+        [TdbAuthRole(TdbCst.RoleID.SuperAdmin)]
+        [TdbAPILog]
         public async Task<TdbRes<DeleteTempFilesRes>> DeleteTempFiles([FromBody] DeleteTempFilesReq req)
         {
             //请求参数

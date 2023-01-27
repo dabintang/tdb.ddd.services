@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SqlSugar;
+﻿using SqlSugar;
 using System.Diagnostics;
 using System.Reflection;
 using tdb.ddd.infrastructure;
 using tdb.ddd.repository.sqlsugar;
 using tdb.ddd.webapi;
-using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace tdb.demo.webapi.DB
 {

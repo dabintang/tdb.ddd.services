@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.account.domain.cont
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.account.repository", "tdb.ddd.account.repository\tdb.ddd.account.repository.csproj", "{5E1D2F15-0BE7-4F2D-9CE4-23531B0F4D6C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.account.tools", "tdb.ddd.account.tools\tdb.ddd.account.tools.csproj", "{C42D1689-9807-4ACC-81C7-7552DCA77BF7}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{FDDF57D3-9BDE-4676-897A-48867736C85E}"
 	ProjectSection(SolutionItems) = preProject
 		doc\tdb.ddd.account.sql = doc\tdb.ddd.account.sql
@@ -58,10 +56,6 @@ Global
 		{5E1D2F15-0BE7-4F2D-9CE4-23531B0F4D6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E1D2F15-0BE7-4F2D-9CE4-23531B0F4D6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E1D2F15-0BE7-4F2D-9CE4-23531B0F4D6C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C42D1689-9807-4ACC-81C7-7552DCA77BF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C42D1689-9807-4ACC-81C7-7552DCA77BF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C42D1689-9807-4ACC-81C7-7552DCA77BF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C42D1689-9807-4ACC-81C7-7552DCA77BF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
