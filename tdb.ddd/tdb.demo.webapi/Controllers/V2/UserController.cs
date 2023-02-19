@@ -5,6 +5,7 @@ using tdb.ddd.contracts;
 using tdb.ddd.infrastructure;
 using tdb.ddd.webapi;
 using tdb.demo.webapi.Configs;
+using tdb.demo.webapi.MockData;
 
 namespace tdb.demo.webapi.Controllers.V2
 {
@@ -24,21 +25,15 @@ namespace tdb.demo.webapi.Controllers.V2
         [HttpGet]
         public TdbRes<V1.UserController.UserRes> GetUserInfo([FromQuery] GetUserInfoReq req)
         {
-            //用户列表
-            var lstUser = TdbCache.Ins.CacheShell<List<V1.UserController.UserInfo>>(V1.UserController.CacheUsersKey, TimeSpan.FromDays(1), () =>
-            {
-                //用户
-                var lstUser = new List<V1.UserController.UserInfo>();
-                lstUser.Add(new V1.UserController.UserInfo() { ID = TdbUniqueIDHelper.CreateID(DemoConfig.App.Server.ID, DemoConfig.App.Server.Seq), Name = "a", Pwd = "a1", NickName = "<p>张三</p>" });
-                lstUser.Add(new V1.UserController.UserInfo() { ID = TdbUniqueIDHelper.CreateID(DemoConfig.App.Server.ID, DemoConfig.App.Server.Seq), Name = "b", Pwd = "b2", NickName = "<p>李四</p>" });
-                lstUser.Add(new V1.UserController.UserInfo() { ID = TdbUniqueIDHelper.CreateID(DemoConfig.App.Server.ID, DemoConfig.App.Server.Seq), Name = "c", Pwd = "c3", NickName = "<p>王五</p>" });
-                return lstUser;
-            });
             //找登录用户
-            var user = lstUser.Find(m => m.ID == req.ID);
+            UserInfo user = null;
+            if (req.ID.HasValue)
+            {
+                user = UserRepos.Ins.GetByID(req.ID.Value);
+            }
             if (user == null)
             {
-                return TdbRes.Success<V1.UserController.UserRes>(null);
+                return TdbRes.Fail<V1.UserController.UserRes>(null);
             }
 
             var userRes = new V1.UserController.UserRes()
@@ -49,6 +44,28 @@ namespace tdb.demo.webapi.Controllers.V2
             };
 
             return TdbRes.Success(userRes);
+        }
+
+        /// <summary>
+        /// 更新用户信息
+        /// </summary>
+        /// <param name="req">条件</param>
+        /// <returns></returns>
+        [HttpPost]
+        public TdbRes<bool> UpdateUserInfo([FromBody] UpdateUserInfoReq req)
+        {
+            //获取用户信息
+            var user = UserRepos.Ins.GetByID(req.ID);
+            if (user is null)
+            {
+                return new TdbRes<bool>(TdbComResMsg.Fail.FromNewMsg("用户不存在"), false);
+            }
+
+            user.Name = req.Name;
+            user.Pwd = req.Pwd;
+            user.NickName = req.NickName ?? "";
+
+            return TdbRes.Success(true);
         }
 
         #endregion
@@ -62,12 +79,37 @@ namespace tdb.demo.webapi.Controllers.V2
             /// 用户编号
             /// </summary>
             [TdbHashIDModelBinder]
+            public long? ID { get; set; }
+        }
+
+        /// <summary>
+        /// 更新用户请求条件
+        /// </summary>
+        public class UpdateUserInfoReq
+        {
+            /// <summary>
+            /// 用户编号
+            /// </summary>
+            [TdbRequired("用户编号")]
+            [TdbHashIDJsonConverter]
             public long ID { get; set; }
 
             /// <summary>
             /// 用户名
             /// </summary>
+            [TdbRequired("用户名")]
             public string Name { get; set; }
+
+            /// <summary>
+            /// 密码
+            /// </summary>
+            [TdbRequired("密码")]
+            public string Pwd { get; set; }
+
+            /// <summary>
+            /// 昵称
+            /// </summary>
+            public string NickName { get; set; }
         }
     }
 }

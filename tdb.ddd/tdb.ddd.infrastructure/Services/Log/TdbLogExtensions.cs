@@ -15,9 +15,10 @@ namespace tdb.ddd.infrastructure.Services
         /// 添加nlog日志服务（文本）
         /// </summary>
         /// <param name="services">服务容器</param>
-        public static void AddTdbNLogger(this IServiceCollection services)
+        /// <param name="configFile">配置文件名</param>
+        public static void AddTdbNLogger(this IServiceCollection services, string configFile = "")
         {
-            AddTdbLogger(services, () => new TdbNLog());
+            AddTdbLogger(services, () => new TdbNLog(configFile));
         }
 
         /// <summary>

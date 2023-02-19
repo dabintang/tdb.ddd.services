@@ -30,7 +30,7 @@ namespace tdb.ddd.webapi
                 if (TdbLogger.Ins.IsEnabled(this.Level))
                 {
                     var sb = new StringBuilder();
-                    sb.AppendLine($"进入接口[{context.ActionDescriptor.DisplayName}] 标识={context.HttpContext.GetHashCode()} UID={GetUID(context.HttpContext)}");
+                    sb.AppendLine($"进入接口[{context.ActionDescriptor.DisplayName}]，UID={GetUID(context.HttpContext)}");
                     sb.AppendLine($"入参：{context.ActionArguments.SerializeJson()}");
                     TdbLogger.Ins.Log(this.Level, sb.ToString().Trim());
                 }
@@ -57,7 +57,7 @@ namespace tdb.ddd.webapi
                 if (TdbLogger.Ins.IsEnabled(this.Level))
                 {
                     var sb = new StringBuilder();
-                    sb.AppendLine($"离开接口[{context.ActionDescriptor.DisplayName}] 标识={context.HttpContext.GetHashCode()} UID={GetUID(context.HttpContext)}");
+                    sb.AppendLine($"离开接口[{context.ActionDescriptor.DisplayName}]，UID={GetUID(context.HttpContext)}");
 
                     if (context.Exception == null)
                     {

@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using tdb.ddd.contracts;
 
-namespace tdb.ddd.application.contracts
+namespace tdb.ddd.infrastructure
 {
     /// <summary>
     /// 把IDhash加密的json转换器

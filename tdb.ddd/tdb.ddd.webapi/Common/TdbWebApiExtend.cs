@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
+using System.Net.Http.Headers;
 using System.Reflection;
 using tdb.common;
 
@@ -116,6 +117,24 @@ namespace tdb.ddd.webapi
             }
 
             return string.Empty;
+        }
+
+        /// <summary>
+        /// 获取头部身份认证信息
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public static AuthenticationHeaderValue? GetAuthenticationHeaderValue(this HttpContext context)
+        {
+            if (context.Request.Headers != null)
+            {
+                if (context.Request.Headers.TryGetValue("Authorization", out StringValues strAuthorization))
+                {
+                    return AuthenticationHeaderValue.Parse(strAuthorization);
+                }
+            }
+
+            return null;
         }
     }
 }

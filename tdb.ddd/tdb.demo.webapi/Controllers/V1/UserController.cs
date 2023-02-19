@@ -11,6 +11,7 @@ using tdb.ddd.domain;
 using tdb.ddd.infrastructure;
 using tdb.ddd.webapi;
 using tdb.demo.webapi.Configs;
+using tdb.demo.webapi.MockData;
 
 namespace tdb.demo.webapi.Controllers.V1
 {
@@ -20,11 +21,6 @@ namespace tdb.demo.webapi.Controllers.V1
     [TdbApiVersion(1)]
     public class UserController : BaseController
     {
-        /// <summary>
-        /// 缓存key
-        /// </summary>
-        public const string CacheUsersKey = "CacheUsersKey";
-
         #region 接口
 
         /// <summary>
@@ -33,22 +29,13 @@ namespace tdb.demo.webapi.Controllers.V1
         /// <param name="req">条件</param>
         /// <returns>token</returns>
         [HttpPost]
-        [AllowAnonymous]
+        //[AllowAnonymous]
+        [TdbAuthWhiteListIP]
         [TdbAPILog]
         public TdbRes<string> Login([FromBody] LoginReq req)
         {
-            //用户列表
-            var lstUser = TdbCache.Ins.CacheShell<List<V1.UserController.UserInfo>>(V1.UserController.CacheUsersKey, TimeSpan.FromDays(1), () =>
-            {
-                //用户
-                var lstUser = new List<V1.UserController.UserInfo>();
-                lstUser.Add(new V1.UserController.UserInfo() { ID = TdbUniqueIDHelper.CreateID(DemoConfig.App.Server.ID, DemoConfig.App.Server.Seq), Name = "a", Pwd = "a1", NickName = "<p>张三</p>" });
-                lstUser.Add(new V1.UserController.UserInfo() { ID = TdbUniqueIDHelper.CreateID(DemoConfig.App.Server.ID, DemoConfig.App.Server.Seq), Name = "b", Pwd = "b2", NickName = "<p>李四</p>" });
-                lstUser.Add(new V1.UserController.UserInfo() { ID = TdbUniqueIDHelper.CreateID(DemoConfig.App.Server.ID, DemoConfig.App.Server.Seq), Name = "c", Pwd = "c3", NickName = "<p>王五</p>" });
-                return lstUser;
-            });
             //找登录用户
-            var user = lstUser.Find(m => m.Name == req.LoginName && m.Pwd == req.Password);
+            var user = UserRepos.Ins.Find(req.LoginName, req.Password);
             if (user == null)
             {
                 return new TdbRes<string>(DemoConfig.Msg.IncorrectPassword, "");
@@ -85,18 +72,8 @@ namespace tdb.demo.webapi.Controllers.V1
         [TdbAuthWhiteListIP]
         public TdbRes<UserRes> GetCurrentUserInfo()
         {
-            //用户列表
-            var lstUser = TdbCache.Ins.CacheShell<List<V1.UserController.UserInfo>>(V1.UserController.CacheUsersKey, TimeSpan.FromDays(1), () =>
-            {
-                //用户
-                var lstUser = new List<V1.UserController.UserInfo>();
-                lstUser.Add(new V1.UserController.UserInfo() { ID = TdbUniqueIDHelper.CreateID(DemoConfig.App.Server.ID, DemoConfig.App.Server.Seq), Name = "a", Pwd = "a1", NickName = "<p>张三</p>" });
-                lstUser.Add(new V1.UserController.UserInfo() { ID = TdbUniqueIDHelper.CreateID(DemoConfig.App.Server.ID, DemoConfig.App.Server.Seq), Name = "b", Pwd = "b2", NickName = "<p>李四</p>" });
-                lstUser.Add(new V1.UserController.UserInfo() { ID = TdbUniqueIDHelper.CreateID(DemoConfig.App.Server.ID, DemoConfig.App.Server.Seq), Name = "c", Pwd = "c3", NickName = "<p>王五</p>" });
-                return lstUser;
-            });
             //找用户
-            var user = lstUser.Find(m => m.ID == this.CurUser.ID);
+            var user = UserRepos.Ins.GetByID(this.CurUser.ID);
             var res = new UserRes()
             {
                 ID = user?.ID ?? 0,
@@ -108,32 +85,6 @@ namespace tdb.demo.webapi.Controllers.V1
         }
 
         #endregion
-
-        /// <summary>
-        /// 用户信息
-        /// </summary>
-        public class UserInfo
-        {
-            /// <summary>
-            /// 用户编号
-            /// </summary>
-            public long ID { get; set; }
-
-            /// <summary>
-            /// 用户名
-            /// </summary>           
-            public string Name { get; set; }
-
-            /// <summary>
-            /// 密码
-            /// </summary>           
-            public string Pwd { get; set; }
-
-            /// <summary>
-            /// 昵称
-            /// </summary>
-            public string NickName { get; set; }
-        }
 
         /// <summary>
         /// 登录

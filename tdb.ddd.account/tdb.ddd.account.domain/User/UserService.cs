@@ -88,6 +88,17 @@ namespace tdb.ddd.account.domain.User
             return (userAgg != null);
         }
 
+        /// <summary>
+        /// 判断指定用户ID是否已存在
+        /// </summary>
+        /// <param name="userID">用户ID</param>
+        /// <returns></returns>
+        public async Task<bool> IsExistUserID(long userID)
+        {
+            var userAgg = await this.GetAsync(userID);
+            return (userAgg != null);
+        }
+
         #endregion
     }
 }

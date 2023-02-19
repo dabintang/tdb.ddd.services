@@ -41,14 +41,29 @@ namespace tdb.ddd.infrastructure
                 throw new TdbException("未配置IOC容器，请先调用方法[TdbIOC.Init(IServiceProvider provider)]配置IOC容器");
             }
 
-            //尝试获取当前请求访问者
-            var httpContextAccessor = Provider.GetRequiredService<IHttpContextAccessor>();
+            //获取当前请求访问器
+            var httpContextAccessor = GetHttpContextAccessor();
             if (httpContextAccessor?.HttpContext?.RequestServices == null)
             {
                 return Provider.GetService<T>();
             }
 
             return httpContextAccessor.HttpContext.RequestServices.GetService<T>();
+        }
+
+        /// <summary>
+        /// 获取当前请求访问器
+        /// </summary>
+        /// <returns></returns>
+        public static IHttpContextAccessor? GetHttpContextAccessor()
+        {
+            if (Provider == null)
+            {
+                //throw new TdbException("未配置IOC容器，请先调用方法[TdbIOC.Init(IServiceProvider provider)]配置IOC容器");
+                return null;
+            }
+
+            return Provider.GetRequiredService<IHttpContextAccessor>();
         }
     }
 }

@@ -40,7 +40,7 @@ namespace tdb.ddd.webapi
                 //写日志
                 try
                 {
-                    TdbLogger.Ins.Error(context.Exception, context.Exception.Message);
+                    TdbLogger.Ins.Error(context.Exception.ToString());
                 }
                 catch
                 {

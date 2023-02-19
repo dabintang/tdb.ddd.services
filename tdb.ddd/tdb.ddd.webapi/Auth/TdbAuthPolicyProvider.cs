@@ -89,7 +89,7 @@ namespace tdb.ddd.webapi
                         case TdbAuthWhiteListIPAttribute.PolicyName:
                             {
                                 //白名单IP，如有多个用英文逗号,隔开（如：127.0.0.1,localhost）
-                                var whiteListIP = param.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? new string[0];
+                                var whiteListIP = param.Split(',', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
                                 builder.AddRequirements(new TdbAuthWhiteListIPRequirement(whiteListIP));
                             }
                             break;

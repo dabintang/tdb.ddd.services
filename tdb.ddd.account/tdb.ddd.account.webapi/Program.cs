@@ -55,7 +55,7 @@ builder.Services.AddTdbAuthJwtBearer(new SymmetricSecurityKey(Encoding.ASCII.Get
 builder.Services.AddAuthorization(options =>
 {
     //要求接口调用方IP为白名单IP
-    options.AddTdbAuthWhiteListIP(AccountConfig.Common.WhiteListIP);
+    //options.AddTdbAuthWhiteListIP(AccountConfig.Common.WhiteListIP);  //TODO：等更新框架组件后再放开
 });
 
 //设置允许所有来源跨域

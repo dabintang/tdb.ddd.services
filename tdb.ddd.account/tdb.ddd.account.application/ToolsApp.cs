@@ -17,6 +17,8 @@ using tdb.ddd.repository.sqlsugar;
 using tdb.ddd.contracts;
 using tdb.ddd.account.application.contracts;
 using tdb.ddd.account.infrastructure.Config;
+using tdb.ddd.infrastructure.Services;
+using tdb.ddd.account.domain.BusMediatR;
 
 namespace tdb.ddd.account.application
 {
@@ -54,31 +56,6 @@ namespace tdb.ddd.account.application
         }
 
         /// <summary>
-        /// 初始化数据
-        /// </summary>
-        public async Task InitDataAsync2()
-        {
-            TdbLogger.Ins.Info("初始化数据【开始】");
-
-            //开启事务
-            TdbRepositoryTran.BeginTranOnAsyncFunc();
-
-            // 初始化权限数据
-            await InitDataAuthorityAsync();
-
-            //初始化角色数据
-            await InitDataRoleAsync();
-
-            //初始化用户数据
-            await InitDataUserAsync();
-
-            //提交事务
-            TdbRepositoryTran.CommitTran();
-
-            TdbLogger.Ins.Info("初始化数据【完成】");
-        }
-
-        /// <summary>
         /// 初始化权限数据
         /// </summary>
         /// <returns>日志</returns>
@@ -86,8 +63,9 @@ namespace tdb.ddd.account.application
         {
             var res = new StringBuilder();
 
-            TdbLogger.Ins.Info("初始化权限数据【开始】");
-            res.AppendLine("初始化权限数据【开始】");
+            var msgStart = "初始化权限数据【开始】";
+            TdbLogger.Ins.Info(msgStart);
+            res.AppendLine(msgStart);
 
             //权限领域服务
             var authorityService = new AuthorityService();
@@ -95,20 +73,32 @@ namespace tdb.ddd.account.application
             #region 账户微服务
 
             //用户增删改权限
-            var userManageAuthority = new AuthorityAgg()
+            if ((await authorityService.IsExist(TdbCst.AuthorityID.AccountUserManage)) == true)
             {
-                ID = TdbCst.AuthorityID.AccountUserManage,
-                Name = "用户增删改权限",
-                Remark = "账户微服务"
-            };
-            await authorityService.SaveAsync(userManageAuthority);
-            TdbLogger.Ins.Info("初始化权限数据（账户微服务->用户增删改权限）");
-            res.AppendLine("初始化权限数据（账户微服务->用户增删改权限）");
+                var msgAccountUserManage = "初始数据已存在（账户微服务->用户增删改权限）";
+                TdbLogger.Ins.Info(msgAccountUserManage);
+                res.AppendLine(msgAccountUserManage);
+            }
+            else
+            {
+                var userManageAuthority = new AuthorityAgg()
+                {
+                    ID = TdbCst.AuthorityID.AccountUserManage,
+                    Name = "用户增删改权限",
+                    Remark = "账户微服务"
+                };
+                await authorityService.SaveAsync(userManageAuthority);
+
+                var msgAccountUserManage = "初始化权限数据（账户微服务->用户增删改权限）";
+                TdbLogger.Ins.Info(msgAccountUserManage);
+                res.AppendLine(msgAccountUserManage);
+            }
 
             #endregion
 
-            TdbLogger.Ins.Info("初始化权限数据【完成】");
-            res.AppendLine("初始化权限数据【完成】");
+            var msgEnd = "初始化权限数据【完成】";
+            TdbLogger.Ins.Info(msgEnd);
+            res.AppendLine(msgEnd);
 
             return res.ToString();
         }
@@ -121,8 +111,9 @@ namespace tdb.ddd.account.application
         {
             var res = new StringBuilder();
 
-            TdbLogger.Ins.Info("初始化角色数据【开始】");
-            res.AppendLine("初始化角色数据【开始】");
+            var msgStart = "初始化角色数据【开始】";
+            TdbLogger.Ins.Info(msgStart);
+            res.AppendLine(msgStart);
 
             //角色领域服务
             var roleService = new RoleService();
@@ -130,33 +121,56 @@ namespace tdb.ddd.account.application
             #region 账户微服务
 
             //超级管理员
-            var superAdminRole = new RoleAgg()
+            if ((await roleService.IsExist(TdbCst.RoleID.SuperAdmin)) == true)
             {
-                ID = TdbCst.RoleID.SuperAdmin,
-                Name = "超级管理员",
-                Remark = "账户微服务"
-            };
-            superAdminRole.SetLstAuthorityID(new List<long>() { TdbCst.AuthorityID.AccountUserManage });
-            await roleService.SaveAsync(superAdminRole);
-            TdbLogger.Ins.Info("初始化角色数据（账户微服务->超级管理员）");
-            res.AppendLine("初始化角色数据（账户微服务->超级管理员）");
+                var msgSuperAdmin = "初始数据已存在（账户微服务->超级管理员）";
+                TdbLogger.Ins.Info(msgSuperAdmin);
+                res.AppendLine(msgSuperAdmin);
+            }
+            else
+            {
+                var superAdminRole = new RoleAgg()
+                {
+                    ID = TdbCst.RoleID.SuperAdmin,
+                    Name = "超级管理员",
+                    Remark = "账户微服务"
+                };
+                superAdminRole.SetLstAuthorityID(new List<long>() { TdbCst.AuthorityID.AccountUserManage });
+                await roleService.SaveAsync(superAdminRole);
+
+                var msgSuperAdmin = "初始化角色数据（账户微服务->超级管理员）";
+                TdbLogger.Ins.Info(msgSuperAdmin);
+                res.AppendLine(msgSuperAdmin);
+            }
 
             //账户微服务管理员
-            var accountAdminRole = new RoleAgg()
+            if ((await roleService.IsExist(TdbCst.RoleID.AccountAdmin)) == true)
             {
-                ID = TdbCst.RoleID.AccountAdmin,
-                Name = "账户微服务管理员",
-                Remark = "账户微服务"
-            };
-            accountAdminRole.SetLstAuthorityID(new List<long>() { TdbCst.AuthorityID.AccountUserManage });
-            await roleService.SaveAsync(accountAdminRole);
-            TdbLogger.Ins.Info("初始化角色数据（账户微服务->账户微服务管理员）");
-            res.AppendLine("初始化角色数据（账户微服务->账户微服务管理员）");
+                var msgAccountAdmin = "初始数据已存在（账户微服务->账户微服务管理员）";
+                TdbLogger.Ins.Info(msgAccountAdmin);
+                res.AppendLine(msgAccountAdmin);
+            }
+            else
+            {
+                var accountAdminRole = new RoleAgg()
+                {
+                    ID = TdbCst.RoleID.AccountAdmin,
+                    Name = "账户微服务管理员",
+                    Remark = "账户微服务"
+                };
+                accountAdminRole.SetLstAuthorityID(new List<long>() { TdbCst.AuthorityID.AccountUserManage });
+                await roleService.SaveAsync(accountAdminRole);
+
+                var msgAccountAdmin = "初始化角色数据（账户微服务->账户微服务管理员）";
+                TdbLogger.Ins.Info(msgAccountAdmin);
+                res.AppendLine(msgAccountAdmin);
+            }
 
             #endregion
 
-            TdbLogger.Ins.Info("初始化角色数据【完成】");
-            res.AppendLine("初始化角色数据【完成】");
+            var msgEnd = "初始化角色数据【完成】";
+            TdbLogger.Ins.Info(msgEnd);
+            res.AppendLine(msgEnd);
 
             return res.ToString();
         }
@@ -169,8 +183,9 @@ namespace tdb.ddd.account.application
         {
             var res = new StringBuilder();
 
-            TdbLogger.Ins.Info("初始化用户数据【开始】");
-            res.AppendLine("初始化用户数据【开始】");
+            var msgStart = "初始化用户数据【开始】";
+            TdbLogger.Ins.Info(msgStart);
+            res.AppendLine(msgStart);
 
             //用户领域服务
             var userService = new UserService();
@@ -178,31 +193,43 @@ namespace tdb.ddd.account.application
             #region 账户微服务
 
             //超级管理员
-            var superAdminUser = new UserAgg()
+            if ((await userService.IsExistUserID(TdbCst.UserID.SuperAdmin)) == true)
             {
-                ID = TdbCst.UserID.SuperAdmin,
-                LoginName = AccountConfig.Distributed.InitData.SuperAdminLoginName,
-                Password = EncryptHelper.Md5(AccountConfig.Distributed.InitData.SuperAdminDefaultPwd),
-                GenderCode = EnmGender.Unknown,
-                Birthday = DateTime.Now,
-                MobilePhoneValue = new MobilePhoneValueObject() { MobilePhone = AccountConfig.Distributed.InitData.SuperAdminMobilePhone, IsMobilePhoneVerified = true },
-                EmailValue = new EmailValueObject() { Email = AccountConfig.Distributed.InitData.SuperAdminEmail, IsEmailVerified = true },
-                StatusCode = EnmInfoStatus.Enable,
-                Remark = "内置初始用户",
-                CreateInfo = new CreateInfoValueObject() { CreatorID = 0, CreateTime = DateTime.Now },
-                UpdateInfo = new UpdateInfoValueObject() { UpdaterID = 0, UpdateTime = DateTime.Now }
-            };
-            superAdminUser.SetName("超级管理员");
-            superAdminUser.SetNickName("超级管理员");
-            superAdminUser.SetLstRoleID(new List<long>() { TdbCst.RoleID.SuperAdmin });
-            await userService.SaveAsync(superAdminUser);
-            TdbLogger.Ins.Info("初始化用户数据（账户微服务->超级管理员）");
-            res.AppendLine("初始化用户数据（账户微服务->超级管理员）");
+                var msgSuperAdmin = "初始数据已存在（账户微服务->超级管理员）";
+                TdbLogger.Ins.Info(msgSuperAdmin);
+                res.AppendLine(msgSuperAdmin);
+            }
+            else
+            {
+                var superAdminUser = new UserAgg()
+                {
+                    ID = TdbCst.UserID.SuperAdmin,
+                    LoginName = AccountConfig.Distributed.InitData.SuperAdminLoginName,
+                    Password = EncryptHelper.Md5(AccountConfig.Distributed.InitData.SuperAdminDefaultPwd),
+                    GenderCode = EnmGender.Unknown,
+                    Birthday = DateTime.Now,
+                    MobilePhoneValue = new MobilePhoneValueObject() { MobilePhone = AccountConfig.Distributed.InitData.SuperAdminMobilePhone, IsMobilePhoneVerified = true },
+                    EmailValue = new EmailValueObject() { Email = AccountConfig.Distributed.InitData.SuperAdminEmail, IsEmailVerified = true },
+                    StatusCode = EnmInfoStatus.Enable,
+                    Remark = "内置初始用户",
+                    CreateInfo = new CreateInfoValueObject() { CreatorID = 0, CreateTime = DateTime.Now },
+                    UpdateInfo = new UpdateInfoValueObject() { UpdaterID = 0, UpdateTime = DateTime.Now }
+                };
+                superAdminUser.SetName("超级管理员");
+                superAdminUser.SetNickName("超级管理员");
+                superAdminUser.SetLstRoleID(new List<long>() { TdbCst.RoleID.SuperAdmin });
+                await userService.SaveAsync(superAdminUser);
+
+                var msgSuperAdmin = "初始化用户数据（账户微服务->超级管理员）";
+                TdbLogger.Ins.Info(msgSuperAdmin);
+                res.AppendLine(msgSuperAdmin);
+            }
 
             #endregion
 
-            TdbLogger.Ins.Info("初始化用户数据【完成】");
-            res.AppendLine("初始化用户数据【完成】");
+            var msgEnd = "初始化用户数据【完成】";
+            TdbLogger.Ins.Info(msgEnd);
+            res.AppendLine(msgEnd);
 
             return res.ToString();
         }

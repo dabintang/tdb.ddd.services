@@ -18,8 +18,8 @@ namespace tdb.ddd.infrastructure
     /// ①：符号位不用
     /// ②：服务ID，可以表示256个服务
     /// ③：服务序号，可以表示128个服务序号（多开负载均衡的情况）
-    /// ④：时间戳，从2022-10-01（自定义的时间基准）到现在的毫秒数，可以表示139年左右
-    /// ⑤：序列号，每毫秒内序列号有序，每毫秒可以产生1024个序列号
+    /// ④：时间戳，从2023-01-01（自定义的时间基准）到现在的毫秒数，可以表示139年左右
+    /// ⑤：序列号，每毫秒内序列号有序，每毫秒可以产生64个序列号
     /// 最大数量  64000个/秒   64个/毫秒
     /// </summary>
     public class TdbUniqueIDHelper
@@ -37,7 +37,7 @@ namespace tdb.ddd.infrastructure
         /// <summary>
         /// 时间基准（单位：100纳秒）
         /// </summary>
-        private static long basicTicks = new DateTime(2022, 10, 1, 0, 0, 0, 0, DateTimeKind.Utc).Ticks;
+        private static long basicTicks = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).Ticks;
 
         /// <summary>
         /// 最后一次生成唯一编码使用的时间部分

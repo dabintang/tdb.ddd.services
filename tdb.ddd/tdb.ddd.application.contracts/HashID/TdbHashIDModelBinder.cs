@@ -18,7 +18,10 @@ namespace tdb.ddd.application.contracts
             var modelName = bindingContext.ModelName;
             var valueProviderResult = bindingContext.ValueProvider.GetValue(modelName);
             var str = valueProviderResult.FirstValue;
-            bindingContext.Result = ModelBindingResult.Success(TdbHashID.DecodeSingleLong(str));
+            if (string.IsNullOrEmpty(str) == false)
+            {
+                bindingContext.Result = ModelBindingResult.Success(TdbHashID.DecodeSingleLong(str));
+            }
 
             return Task.CompletedTask;
         }

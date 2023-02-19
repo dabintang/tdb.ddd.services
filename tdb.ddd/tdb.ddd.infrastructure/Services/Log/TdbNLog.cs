@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using Microsoft.AspNetCore.Http;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,13 +32,13 @@ namespace tdb.ddd.infrastructure.Services
         /// 写日志
         /// </summary>
         /// <param name="level">日志级别</param>
-        /// <param name="message">日志内容</param>
-        public void Log(EnmTdbLogLevel level, string message)
+        /// <param name="msg">日志内容</param>
+        public void Log(EnmTdbLogLevel level, string msg)
         {
             //日志级别转换
-            LogLevel logLevel = this.CvtLogLevel(level);
+            LogLevel logLevel = CvtLogLevel(level);
 
-            this.log.Log(logLevel, message);
+            this.log.Log(logLevel, AddUniqueID(msg));
         }
 
         /// <summary>
@@ -45,13 +46,13 @@ namespace tdb.ddd.infrastructure.Services
         /// </summary>
         /// <param name="level">日志级别</param>
         /// <param name="exception">异常</param>
-        /// <param name="message">日志内容</param>
-        public void Log(EnmTdbLogLevel level, Exception exception, string message)
+        /// <param name="msg">日志内容</param>
+        public void Log(EnmTdbLogLevel level, Exception exception, string msg)
         {
             //日志级别转换
-            LogLevel logLevel = this.CvtLogLevel(level);
+            LogLevel logLevel = CvtLogLevel(level);
 
-            this.log.Log(logLevel, exception, message);
+            this.log.Log(logLevel, exception, AddUniqueID(msg));
         }
 
         /// <summary>
@@ -60,7 +61,7 @@ namespace tdb.ddd.infrastructure.Services
         /// <param name="msg">日志内容</param>
         public void Trace(string msg)
         {
-            this.log.Trace(msg);
+            this.log.Trace(AddUniqueID(msg));
         }
 
         /// <summary>
@@ -69,7 +70,7 @@ namespace tdb.ddd.infrastructure.Services
         /// <param name="msg">日志内容</param>
         public void Debug(string msg)
         {
-            this.log.Debug(msg);
+            this.log.Debug(AddUniqueID(msg));
         }
 
         /// <summary>
@@ -78,7 +79,7 @@ namespace tdb.ddd.infrastructure.Services
         /// <param name="msg">日志内容</param>
         public void Info(string msg)
         {
-            this.log.Info(msg);
+            this.log.Info(AddUniqueID(msg));
         }
 
         /// <summary>
@@ -87,7 +88,7 @@ namespace tdb.ddd.infrastructure.Services
         /// <param name="msg">日志内容</param>
         public void Warn(string msg)
         {
-            this.log.Warn(msg);
+            this.log.Warn(AddUniqueID(msg));
         }
 
         /// <summary>
@@ -96,7 +97,7 @@ namespace tdb.ddd.infrastructure.Services
         /// <param name="msg">日志内容</param>
         public void Error(string msg)
         {
-            this.log.Error(msg);
+            this.log.Error(AddUniqueID(msg));
         }
 
         /// <summary>
@@ -106,7 +107,7 @@ namespace tdb.ddd.infrastructure.Services
         /// <param name="msg">日志内容</param>
         public void Error(Exception ex, string msg)
         {
-            this.log.Error(ex, msg);
+            this.log.Error(ex, AddUniqueID(msg));
         }
 
         /// <summary>
@@ -115,7 +116,7 @@ namespace tdb.ddd.infrastructure.Services
         /// <param name="msg">日志内容</param>
         public void Fatal(string msg)
         {
-            this.log.Fatal(msg);
+            this.log.Fatal(AddUniqueID(msg));
         }
 
         /// <summary>
@@ -125,7 +126,7 @@ namespace tdb.ddd.infrastructure.Services
         /// <param name="msg">日志内容</param>
         public void Fatal(Exception ex, string msg)
         {
-            this.log.Fatal(ex, msg);
+            this.log.Fatal(ex, AddUniqueID(msg));
         }
 
         /// <summary>
@@ -136,7 +137,7 @@ namespace tdb.ddd.infrastructure.Services
         public bool IsEnabled(EnmTdbLogLevel level)
         {
             //日志级别转换
-            LogLevel logLevel = this.CvtLogLevel(level);
+            LogLevel logLevel = CvtLogLevel(level);
 
             return this.log.IsEnabled(logLevel);
         }
@@ -180,7 +181,7 @@ namespace tdb.ddd.infrastructure.Services
         /// </summary>
         /// <param name="level"></param>
         /// <returns></returns>
-        private LogLevel CvtLogLevel(EnmTdbLogLevel level)
+        private static LogLevel CvtLogLevel(EnmTdbLogLevel level)
         {
             return level switch
             {
@@ -192,6 +193,23 @@ namespace tdb.ddd.infrastructure.Services
                 EnmTdbLogLevel.Fatal => LogLevel.Fatal,
                 _ => LogLevel.Off,
             };
+        }
+
+        /// <summary>
+        /// 如果当前上下文是webapi请求，尝试在日志内容开头添加当前HttpContext的hash code以作唯一标识
+        /// </summary>
+        /// <param name="msg">日志内容</param>
+        /// <returns></returns>
+        private static string AddUniqueID(string msg)
+        {
+            //获取当前请求访问器
+            var httpContextAccessor = TdbIOC.GetHttpContextAccessor();
+            if (httpContextAccessor is null || httpContextAccessor.HttpContext is null)
+            {
+                return msg;
+            }
+
+            return $"[{httpContextAccessor.HttpContext.GetHashCode()}]{msg}";
         }
 
         #endregion

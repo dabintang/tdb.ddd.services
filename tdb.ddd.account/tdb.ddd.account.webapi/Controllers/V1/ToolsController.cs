@@ -38,7 +38,7 @@ namespace tdb.ddd.account.webapi.Controllers.V1
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [TdbAuthWhiteListIP]
+        //[TdbAuthWhiteListIP] //TODO：等更新框架组件后再放开
         public async Task<TdbRes<string>> InitData()
         {
             //更新用户密码

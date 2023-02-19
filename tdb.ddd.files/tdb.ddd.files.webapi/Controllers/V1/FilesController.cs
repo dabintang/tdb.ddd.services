@@ -33,8 +33,8 @@ namespace tdb.ddd.files.webapi.Controllers.V1
         /// <summary>
         /// 上传为临时文件
         /// 附加参数：
-        /// 【[可选]，默认1]AccessLevelCode：访问级别(1：仅创建者；2：授权；3：公开)】、
-        /// 【[可选]，默认1]StorageTypeCode：存储类型（1：本地磁盘）】、
+        /// 【[可选，默认1]AccessLevelCode：访问级别(1：仅创建者；2：授权；3：公开)】、
+        /// 【[可选，默认1]StorageTypeCode：存储类型（1：本地磁盘）】、
         /// 【[可选]Remark：备注】
         /// </summary>
         /// <param name="formData">表单信息</param>
