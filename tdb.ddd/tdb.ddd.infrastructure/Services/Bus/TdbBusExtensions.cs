@@ -25,7 +25,23 @@ namespace tdb.ddd.infrastructure.Services
             var assemblies = module.GetRegisterAssemblys();
 
             //添加MediatR服务
-            services.AddMediatR(assemblies.ToArray());
+            AddTdbBusMediatR(services, module.GetRegisterAssemblys);
+        }
+
+        /// <summary>
+        /// 添加MediatR服务
+        /// </summary>
+        /// <param name="services">服务容器</param>
+        /// <param name="registerAssemblys">注册的程序集集合</param>
+        public static void AddTdbBusMediatR(this IServiceCollection services, Func<List<Assembly>> registerAssemblys)
+        {
+            var assemblies = registerAssemblys();
+
+            //添加MediatR服务
+            services.AddMediatR(o =>
+            {
+                o.RegisterServicesFromAssemblies(assemblies.ToArray());
+            });
         }
     }
 }

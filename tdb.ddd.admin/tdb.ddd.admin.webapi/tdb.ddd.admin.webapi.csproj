@@ -10,12 +10,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-    <PackageReference Include="tdb.ddd.webapi" Version="7.0.0.4" />
+    <PackageReference Include="tdb.ddd.webapi" Version="7.0.0.5" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\tdb.ddd.admin.application.remote\tdb.ddd.admin.application.remote.csproj" />
     <ProjectReference Include="..\tdb.ddd.admin.application\tdb.ddd.admin.application.csproj" />
-    <ProjectReference Include="..\tdb.ddd.admin.repository\tdb.ddd.admin.repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>

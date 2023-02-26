@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.application.contracts;
+using tdb.ddd.contracts;
 using tdb.ddd.files.domain.contracts.Enum;
 
 namespace tdb.ddd.files.application.contracts.V1.DTO

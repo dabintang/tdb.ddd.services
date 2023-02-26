@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tdb.ddd.account.domain.User;
 using tdb.ddd.account.domain.User.Aggregate;
 
 namespace tdb.ddd.account.application.BusMediatR
@@ -27,5 +28,23 @@ namespace tdb.ddd.account.application.BusMediatR
         /// 登录时间
         /// </summary>
         public DateTime LoginTime { get; set; }
+    }
+
+    /// <summary>
+    /// 用户登录后写登录记录
+    /// </summary>
+    public class UserLoginLogNotificationHandler : INotificationHandler<UserLoginNotification>
+    {
+        /// <summary>
+        /// 用户登录后写登录记录
+        /// </summary>
+        /// <param name="notification">用户登录通知消息</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task Handle(UserLoginNotification notification, CancellationToken cancellationToken)
+        {
+            var userService = new UserService();
+            await userService.AddLoginRecordAsync(notification.User.ID, notification.ClientIP, notification.LoginTime);
+        }
     }
 }

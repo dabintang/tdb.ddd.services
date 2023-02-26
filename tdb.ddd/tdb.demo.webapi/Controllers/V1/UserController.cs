@@ -29,8 +29,7 @@ namespace tdb.demo.webapi.Controllers.V1
         /// <param name="req">条件</param>
         /// <returns>token</returns>
         [HttpPost]
-        //[AllowAnonymous]
-        [TdbAuthWhiteListIP]
+        [AllowAnonymous]
         [TdbAPILog]
         public TdbRes<string> Login([FromBody] LoginReq req)
         {

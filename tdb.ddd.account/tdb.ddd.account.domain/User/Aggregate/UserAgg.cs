@@ -57,6 +57,11 @@ namespace tdb.ddd.account.domain.User.Aggregate
         public DateTime? Birthday { get; set; }
 
         /// <summary>
+        /// 头像图片ID
+        /// </summary>
+        public long? HeadImgID { get; set; }
+
+        /// <summary>
         /// 手机号码
         /// </summary>
         public MobilePhoneValueObject MobilePhoneValue { get; set; }

@@ -1,7 +1,7 @@
 ﻿using Castle.Core.Internal;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using tdb.ddd.infrastructure;
+using tdb.ddd.contracts;
 
 namespace tdb.ddd.webapi
 {

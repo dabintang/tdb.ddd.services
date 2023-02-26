@@ -51,5 +51,10 @@ namespace tdb.ddd.account.infrastructure.Config
         /// 原密码不对
         /// </summary>
         public TdbResMsgInfo IncorrectOldPassword { get; set; }
+
+        /// <summary>
+        /// 头像不存在
+        /// </summary>
+        public TdbResMsgInfo HeadImgNotExist { get; set; }
     }
 }

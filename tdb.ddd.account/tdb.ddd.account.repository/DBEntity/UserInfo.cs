@@ -57,6 +57,11 @@ namespace tdb.ddd.account.repository.DBEntity
         public DateTime? Birthday { get; set; }
 
         /// <summary>
+        /// 头像图片ID
+        /// </summary>
+        public long? HeadImgID { get; set; }
+
+        /// <summary>
         /// 手机号码
         /// </summary>
         [SugarColumn(Length = 16)]

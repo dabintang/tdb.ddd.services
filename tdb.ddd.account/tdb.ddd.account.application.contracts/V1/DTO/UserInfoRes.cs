@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.account.domain.contracts.Enum;
 using tdb.ddd.application.contracts;
+using tdb.ddd.contracts;
 
 namespace tdb.ddd.account.application.contracts.V1.DTO
 {
@@ -38,6 +39,12 @@ namespace tdb.ddd.account.application.contracts.V1.DTO
         /// 生日
         /// </summary>
         public DateTime? Birthday { get; set; }
+
+        /// <summary>
+        /// 文件ID
+        /// </summary>
+        [TdbHashIDJsonConverter]
+        public long? HeadImgID { get; set; }
 
         /// <summary>
         /// 手机号码

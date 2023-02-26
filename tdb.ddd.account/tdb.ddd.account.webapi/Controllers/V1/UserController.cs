@@ -4,6 +4,7 @@ using System.Text;
 using tdb.ddd.account.application.contracts.V1.DTO;
 using tdb.ddd.account.application.contracts.V1.Interface;
 using tdb.ddd.contracts;
+using tdb.ddd.infrastructure;
 using tdb.ddd.webapi;
 
 namespace tdb.ddd.account.webapi.Controllers.V1

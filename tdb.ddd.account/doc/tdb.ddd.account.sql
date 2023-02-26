@@ -58,6 +58,7 @@ CREATE TABLE `user_info`  (
   `Password` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码(MD5)',
   `GenderCode` tinyint NOT NULL DEFAULT 0 COMMENT '性别（1：男；2：女；3：未知）',
   `Birthday` datetime NULL DEFAULT NULL COMMENT '生日',
+  `HeadImgID` bigint NULL COMMENT '头像图片ID',
   `MobilePhone` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '手机号码',
   `IsMobilePhoneVerified` bit(1) NOT NULL COMMENT '手机号是否已验证',
   `Email` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '电子邮箱',

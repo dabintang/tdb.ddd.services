@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="tdb.ddd.domain" Version="7.0.0.6" />
+    <PackageReference Include="tdb.ddd.domain" Version="7.0.0.7" />
   </ItemGroup>
 
   <ItemGroup>

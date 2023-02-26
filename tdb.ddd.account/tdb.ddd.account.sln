@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{FDDF57D3-9BD
 		doc\tdb.ddd.account.sql = doc\tdb.ddd.account.sql
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tdb.ddd.account.application.remote", "tdb.ddd.account.application.remote\tdb.ddd.account.application.remote.csproj", "{773A7D35-66A6-4403-83BB-AD8B9DA94448}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{5E1D2F15-0BE7-4F2D-9CE4-23531B0F4D6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E1D2F15-0BE7-4F2D-9CE4-23531B0F4D6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E1D2F15-0BE7-4F2D-9CE4-23531B0F4D6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{773A7D35-66A6-4403-83BB-AD8B9DA94448}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{773A7D35-66A6-4403-83BB-AD8B9DA94448}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{773A7D35-66A6-4403-83BB-AD8B9DA94448}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{773A7D35-66A6-4403-83BB-AD8B9DA94448}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

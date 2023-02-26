@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using tdb.ddd.account.application.BusMediatR;
 using tdb.ddd.account.application.contracts.V1.DTO;
 using tdb.ddd.account.application.contracts.V1.Interface;
+using tdb.ddd.account.domain.BusMediatR;
 using tdb.ddd.account.domain.contracts.Enum;
 using tdb.ddd.account.domain.contracts.User;
 using tdb.ddd.account.domain.User;
@@ -147,15 +148,27 @@ namespace tdb.ddd.account.application.V1
                 Password = param.Password,
                 GenderCode = param.GenderCode,
                 Birthday = param.Birthday,
+                HeadImgID = param.HeadImgID,
                 StatusCode = EnmInfoStatus.Enable,
                 Remark = param.Remark ?? "",
                 CreateInfo = new CreateInfoValueObject() { CreatorID = req.OperatorID, CreateTime = DateTime.Now },
                 UpdateInfo = new UpdateInfoValueObject() { UpdaterID = req.OperatorID, UpdateTime = DateTime.Now }
             };
+
+            //确认头像文件
+            if (userAgg.HeadImgID is not null)
+            {
+                if (TdbMediatR.Send(new ConfirmFileRequest() { FileID = userAgg.HeadImgID.Value }).Result == false)
+                {
+                    return new TdbRes<AddUserRes>(AccountConfig.Msg.HeadImgNotExist, null);
+                }
+            }
+
             userAgg.SetName(param.Name);
             userAgg.SetNickName(param.NickName);
             userAgg.SetMobilePhone(param.MobilePhone);
             userAgg.SetEmail(param.Email);
+            //设置权限
             var resRole = userAgg.SetLstRoleID(param.LstRoleID);
             if (resRole.Code != TdbComResMsg.Success.Code)
             {
@@ -205,9 +218,19 @@ namespace tdb.ddd.account.application.V1
             userAgg.SetNickName(param.NickName);
             userAgg.GenderCode = param.GenderCode;
             userAgg.Birthday = param.Birthday;
+            userAgg.HeadImgID = param.HeadImgID;
             userAgg.SetMobilePhone(param.MobilePhone);
             userAgg.SetEmail(param.Email);
             userAgg.Remark = param.Remark ?? "";
+
+            //确认头像文件
+            if (userAgg.HeadImgID is not null)
+            {
+                if (TdbMediatR.Send(new ConfirmFileRequest() { FileID = userAgg.HeadImgID.Value }).Result == false)
+                {
+                    return new TdbRes<bool>(AccountConfig.Msg.HeadImgNotExist, false);
+                }
+            }
 
             //保存
             await userService.SaveAsync(userAgg);

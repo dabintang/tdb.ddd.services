@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using tdb.ddd.application.contracts;
+using tdb.ddd.contracts;
 
 namespace tdb.ddd.files.application.contracts.V1.DTO
 {

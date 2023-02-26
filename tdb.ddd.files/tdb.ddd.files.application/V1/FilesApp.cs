@@ -153,7 +153,7 @@ namespace tdb.ddd.files.application.V1
             {
                 return new TdbRes<DownloadFileRes>(TdbComResMsg.InsufficientPermissions, null);
             }
-
+            
             var res = new DownloadFileRes
             {
                 ID = fileAgg.ID,

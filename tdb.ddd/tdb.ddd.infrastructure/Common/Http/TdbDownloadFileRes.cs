@@ -14,7 +14,7 @@ namespace tdb.ddd.infrastructure.Common.Http
         /// <summary>
         /// 文件名
         /// </summary>
-        public string FileName { get; set; }
+        public string FileName { get; set; } = "";
 
         /// <summary>
         /// 内容类型

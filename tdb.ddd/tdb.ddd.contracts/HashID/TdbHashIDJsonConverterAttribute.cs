@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace tdb.ddd.infrastructure
+namespace tdb.ddd.contracts
 {
     /// <summary>
     /// 把IDhash加密的json转换特效

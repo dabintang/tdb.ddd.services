@@ -53,6 +53,12 @@ namespace tdb.ddd.account.application.contracts.V1.DTO
         public DateTime? Birthday { get; set; }
 
         /// <summary>
+        /// [可选]头像图片ID
+        /// </summary>
+        [TdbHashIDJsonConverter]
+        public long? HeadImgID { get; set; }
+
+        /// <summary>
         /// [可选]手机号码（认证后唯一）
         /// </summary>
         [TdbStringLength("手机号码", 16)]

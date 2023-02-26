@@ -31,5 +31,9 @@
   "IncorrectOldPassword": {
     "Code": 10008,
     "Msg": "原密码不对"
+  },
+  "HeadImgNotExist": {
+    "Code": 10009,
+    "Msg": "头像不存在"
   }
 }
