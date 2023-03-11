@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using DotNetCore.CAP;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,16 @@ namespace tdb.ddd.infrastructure.Services
             {
                 o.RegisterServicesFromAssemblies(assemblies.ToArray());
             });
+        }
+
+        /// <summary>
+        /// 添加CAP服务
+        /// </summary>
+        /// <param name="services">服务容器</param>
+        /// <param name="setupDotNetCoreCAP">CAP设置方法</param>
+        public static void AddTdbBusCAP(this IServiceCollection services, Action<CapOptions> setupDotNetCoreCAP)
+        {
+            services.AddCap(setupDotNetCoreCAP);
         }
     }
 }

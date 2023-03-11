@@ -33,14 +33,14 @@ namespace tdb.ddd.admin.webapi.Controllers.V1
         /// <summary>
         /// 初始化账户服务数据
         /// </summary>
-        /// <param name="req">条件</param>
         /// <returns></returns>
         [HttpPost]
         [TdbAPILog]
         [AllowAnonymous]
-        public async Task<TdbRes<string>> InitAccountData(InitAccountDataReq req)
+        [TdbAuthWhiteListIP]
+        public async Task<TdbRes<string>> InitAccountData()
         {
-            return await this.initDataApp.InitAccountDataAsync(req.Secret);
+            return await this.initDataApp.InitAccountDataAsync();
         }
 
         #endregion

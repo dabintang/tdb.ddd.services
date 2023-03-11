@@ -7,7 +7,7 @@
   },
   //数据库配置
   "DB": {
-    "ConnStr": "server=127.0.0.1;database=tdb.ddd.account;user id=root;password=123456;Pooling=True;Allow User Variables=True;" //连接字符串
+    "ConnStr": "server=127.0.0.1;database=tdb.ddd.account;user id=root;password=abc123456;Pooling=True;Allow User Variables=True;" //连接字符串
   },
   //redis配置
   "Redis": {

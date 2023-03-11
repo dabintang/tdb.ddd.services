@@ -14,23 +14,23 @@ builder.RunWebApp(option =>
     //初始化配置（注：初始化配置时，仅可使用日志和IOC）
     option.InitConfigAction = AdminConfig.Init;
     //hashid配置
-    option.ConfigureHashIDAction = (o) => o.Salt = AdminConfig.App.HashID.Salt;
+    option.SetupHashID = (o) => o.Salt = AdminConfig.App.HashID.Salt;
     //缓存
     option.CacheOption.EnmCache = TdbWebAppBuilderOption.TdbEnmCache.Memory;
     //总线-MediatR
-    option.BusOption.IsUseMediatR = true;
     option.BusOption.MediatROption = new TdbWebAppBuilderOption.TdbMediatROption();
     //跨域请求
     option.CorsOption.SetupCors = option.CorsOption.SetupCorsAllowAll;
     option.CorsOption.UseCors = option.CorsOption.UseCorsAllAllow;
     //认证授权
     option.AuthOption.SetupJwtBearer = (jwtBearerOption) => option.AuthOption.DefaultJwtBearerOptions(jwtBearerOption, () => AdminConfig.App.Token.SecretKey);
-    option.AuthOption.WhiteListIP = new List<string>() { "127.0.0.1", "localhost", "::ffff:127.0.0.1" };
+    //白名单IP
+    option.AuthOption.GetWhiteListIP = () => AdminConfig.App.WhiteListIP;
     //接口入参验证
     option.IsUseParamValidate = true;
     //压缩
-    option.CompressionOption.ConfigureCompressionOptions = option.CompressionOption.DefaultConfigureCompressionOptions;
-    option.CompressionOption.ConfigureProvider = option.CompressionOption.DefaultConfigureProvider;
+    option.CompressionOption.SetupCompression = option.CompressionOption.DefaultSetupCompression;
+    option.CompressionOption.SetupProvider = option.CompressionOption.DefaultSetupProvider;
     //swagger
     option.SwaggerOption.EnmSwagger = TdbWebAppBuilderOption.TdbEnmSwagger.ApiVer;
     option.SwaggerOption.SetupSwagger = (o) =>

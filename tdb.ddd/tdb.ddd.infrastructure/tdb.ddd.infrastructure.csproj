@@ -39,7 +39,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title></Title>
-    <Version>7.0.0.7</Version>
+    <Version>7.0.0.8</Version>
     <Authors>tangdabin</Authors>
     <Company>tdb</Company>
     <Product>tdb.ddd</Product>

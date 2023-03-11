@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,26 +24,27 @@ namespace tdb.ddd.infrastructure
         /// </summary>
         /// <param name="key">key</param>
         /// <param name="maxWaitSeconds">最多等待时间（秒）</param>
+        /// <param name="maxLockSeconds">最大上锁时间（秒）</param>
         /// <returns></returns>
-        public static TdbLocalLock Lock(string key, int maxWaitSeconds = 60)
+        public static TdbLocalLock Lock(string key, int maxWaitSeconds = 60, int maxLockSeconds = 60)
         {
             DateTime startTime = DateTime.Now;
-            string? lockVal = null;
+            int? lockThreadID = null; //上锁的线程ID
 
             //保证lock时间比较短
             lock (memoryCache)
             {
-                lockVal = memoryCache.Get<string>(key);
-                if (lockVal == null)
+                lockThreadID = memoryCache.Get<int?>(key);
+                if (lockThreadID is null)
                 {
-                    memoryCache.Set(key, "", TimeSpan.FromSeconds(MaxLockSecond));
+                    memoryCache.Set<int?>(key, Thread.CurrentThread.ManagedThreadId, TimeSpan.FromSeconds(maxLockSeconds));
                     return new TdbLocalLock(key, false);
                 }
             }
 
-            while (lockVal != null)
+            while (lockThreadID is not null)
             {
-                //超过等待
+                //超过等待时间，返回并告知锁被别人占着
                 if ((DateTime.Now - startTime).TotalSeconds > maxWaitSeconds)
                 {
                     return new TdbLocalLock(key, true);
@@ -53,17 +55,17 @@ namespace tdb.ddd.infrastructure
                 //保证lock时间比较短
                 lock (memoryCache)
                 {
-                    lockVal = memoryCache.Get<string>(key);
-                    if (lockVal == null)
+                    lockThreadID = memoryCache.Get<int?>(key);
+                    if (lockThreadID is null)
                     {
-                        memoryCache.Set(key, "", TimeSpan.FromSeconds(MaxLockSecond));
+                        memoryCache.Set<int?>(key, Thread.CurrentThread.ManagedThreadId, TimeSpan.FromSeconds(maxLockSeconds));
                         return new TdbLocalLock(key, false);
                     }
                 }
             }
 
             //代码应该不会进来到这里
-            memoryCache.Set(key, "", TimeSpan.FromSeconds(MaxLockSecond));
+            memoryCache.Set<int?>(key, Thread.CurrentThread.ManagedThreadId, TimeSpan.FromSeconds(maxLockSeconds));
             return new TdbLocalLock(key, false);
         }
 
@@ -85,10 +87,10 @@ namespace tdb.ddd.infrastructure
 
         #region 常量
 
-        /// <summary>
-        /// 最大上锁时间（10000秒）
-        /// </summary>
-        private const int MaxLockSecond = 10000;
+        ///// <summary>
+        ///// 最大上锁时间（10000秒）
+        ///// </summary>
+        //private const int MaxLockSecond = 10000;
 
         #endregion
 
@@ -116,6 +118,13 @@ namespace tdb.ddd.infrastructure
         {
             //如果锁不在此实例，不做处理
             if (this.IsLockedByOther)
+            {
+                return;
+            }
+
+            //如果不是自己上的锁，不处理
+            var lockThreadID = memoryCache.Get<int?>(this.Key);
+            if (lockThreadID is null || lockThreadID.Value != Thread.CurrentThread.ManagedThreadId)
             {
                 return;
             }

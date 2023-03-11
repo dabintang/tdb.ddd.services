@@ -71,7 +71,7 @@ namespace tdb.ddd.account.domain.User.Aggregate
             //判断角色ID是否存在
             foreach (var roleID in lstRoleID)
             {
-                if (TdbMediatR.Send(new IsRoleExistRequest() { RoleID = roleID }).Result == false)
+                if (TdbMediatR.SendAsync(new IsRoleExistRequest() { RoleID = roleID }).Result == false)
                 {
                     return new TdbRes<bool>(AccountConfig.Msg.RoleNotExist.FromNewMsg($"角色不存在[{roleID}]"), false);
                 }

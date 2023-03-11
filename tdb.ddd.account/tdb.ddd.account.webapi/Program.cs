@@ -15,15 +15,20 @@ builder.RunWebApp(option =>
     //初始化配置（注：初始化配置时，仅可使用日志和IOC）
     option.InitConfigAction = AccountConfig.Init;
     //hashid配置
-    option.ConfigureHashIDAction = (o) => o.Salt = AccountConfig.Common.HashID.Salt;
+    option.SetupHashID = (o) => o.Salt = AccountConfig.Common.HashID.Salt;
     //缓存
     option.CacheOption.EnmCache = TdbWebAppBuilderOption.TdbEnmCache.Redis;
-    option.CacheOption.ConfigureRedisAction = (o) => o.ConnectionStrings = AccountConfig.Distributed.Redis.ConnStr;
+    option.CacheOption.SetupRedis = (o) => o.ConnectionStrings = AccountConfig.Distributed.Redis.ConnStr;
     //总线-MediatR
-    option.BusOption.IsUseMediatR = true;
     option.BusOption.MediatROption = new TdbWebAppBuilderOption.TdbMediatROption();
+    //总线-DotNetCore.CAP
+    option.BusOption.SetupDotNetCoreCAP = (o) =>
+    {
+        o.UseRedis(AccountConfig.Common.CAP.RedisConnStr);
+        o.UseMySql(AccountConfig.Common.CAP.DBConnStr);
+    };
     //SqlSugar（IOC模式）
-    option.ConfigureSqlSugarAction = () => builder.Services.AddTdbSqlSugar(c =>
+    option.SetupSqlSugar = () => builder.Services.AddTdbSqlSugar(c =>
     {
         c.ConnectionString = AccountConfig.Distributed.DB.ConnStr; //数据库连接字符串
         c.DbType = IocDbType.MySql;
@@ -34,12 +39,12 @@ builder.RunWebApp(option =>
     option.CorsOption.UseCors = option.CorsOption.UseCorsAllAllow;
     //认证授权
     option.AuthOption.SetupJwtBearer = (jwtBearerOption) => option.AuthOption.DefaultJwtBearerOptions(jwtBearerOption, () => AccountConfig.Common.Token.SecretKey);
-    option.AuthOption.WhiteListIP = new List<string>() { "127.0.0.1", "localhost", "::ffff:127.0.0.1" };
+    option.AuthOption.GetWhiteListIP = () => AccountConfig.Common.WhiteListIP;
     //接口入参验证
     option.IsUseParamValidate = true;
     //压缩
-    option.CompressionOption.ConfigureCompressionOptions = option.CompressionOption.DefaultConfigureCompressionOptions;
-    option.CompressionOption.ConfigureProvider = option.CompressionOption.DefaultConfigureProvider;
+    option.CompressionOption.SetupCompression = option.CompressionOption.DefaultSetupCompression;
+    option.CompressionOption.SetupProvider = option.CompressionOption.DefaultSetupProvider;
     //响应缓存
     //option.IsUseResponseCaching = true;
     //swagger

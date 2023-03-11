@@ -37,6 +37,14 @@ namespace tdb.ddd.admin.infrastructure.Config
         public HashIDConfigInfo HashID { get; set; }
 
         /// <summary>
+        /// 白名单IP
+        /// </summary>
+        [TdbConfigKey("WhiteListIP")]
+        public List<string> WhiteListIP { get; set; }
+
+        #region 内部类
+
+        /// <summary>
         /// 服务配置信息
         /// </summary>
         public class ServerConfigInfo
@@ -89,5 +97,7 @@ namespace tdb.ddd.admin.infrastructure.Config
             /// </summary>
             public string Salt { get; set; }
         }
+
+        #endregion
     }
 }

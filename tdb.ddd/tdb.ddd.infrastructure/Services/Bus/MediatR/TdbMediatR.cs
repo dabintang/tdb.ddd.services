@@ -19,7 +19,7 @@ namespace tdb.ddd.infrastructure.Services
         /// <typeparam name="TNotification">通知消息类型</typeparam>
         /// <param name="notification">通知消息</param>
         /// <param name="cancellationToken"></param>
-        public static void PublishNotWait<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification
+        public static void Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification
         {
             var mediator = GetMediator();
             mediator.Publish<TNotification>(notification, cancellationToken);
@@ -31,7 +31,7 @@ namespace tdb.ddd.infrastructure.Services
         /// <typeparam name="TNotification">通知消息类型</typeparam>
         /// <param name="notification">通知消息</param>
         /// <param name="cancellationToken"></param>
-        public static async Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification
+        public static async Task PublishAsync<TNotification>(TNotification notification, CancellationToken cancellationToken = default) where TNotification : INotification
         {
             var mediator = GetMediator();
             await mediator.Publish<TNotification>(notification, cancellationToken);
@@ -43,7 +43,7 @@ namespace tdb.ddd.infrastructure.Services
         /// <typeparam name="TResponse">请求参数类型</typeparam>
         /// <param name="request">请求参数</param>
         /// <param name="cancellationToken"></param>
-        public static async Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
+        public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
             var mediator = GetMediator();
             return await mediator.Send<TResponse>(request, cancellationToken);

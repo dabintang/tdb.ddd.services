@@ -138,7 +138,7 @@ namespace tdb.ddd.account.domain.User.Aggregate
             foreach (var roleID in this.LstRoleID.Value)
             {
                 //获取角色权限ID
-                var lstRoleAuthorityID = await TdbMediatR.Send(new GetRoleAuthorityIDRequest() { RoleID = roleID });
+                var lstRoleAuthorityID = await TdbMediatR.SendAsync(new GetRoleAuthorityIDRequest() { RoleID = roleID });
                 lstAuthorityID.AddRange(lstRoleAuthorityID);
             }
 

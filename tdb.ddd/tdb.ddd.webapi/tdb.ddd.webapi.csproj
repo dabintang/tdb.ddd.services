@@ -11,7 +11,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>tdb.ddd.webapi</Title>
-    <Version>7.0.0.5</Version>
+    <Version>7.0.0.6</Version>
     <Authors>tangdabin</Authors>
     <Company>tdb</Company>
     <Product>tdb.ddd</Product>

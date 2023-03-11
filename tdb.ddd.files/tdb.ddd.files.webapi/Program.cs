@@ -15,20 +15,25 @@ builder.RunWebApp(option =>
     //初始化配置（注：初始化配置时，仅可使用日志和IOC）
     option.InitConfigAction = FilesConfig.Init;
     //hashid配置
-    option.ConfigureHashIDAction = (o) => o.Salt = FilesConfig.Common.HashID.Salt;
+    option.SetupHashID = (o) => o.Salt = FilesConfig.Common.HashID.Salt;
     //缓存
     option.CacheOption.EnmCache = TdbWebAppBuilderOption.TdbEnmCache.Redis;
-    option.CacheOption.ConfigureRedisAction = (o) => o.ConnectionStrings = FilesConfig.Distributed.Redis.ConnStr;
+    option.CacheOption.SetupRedis = (o) => o.ConnectionStrings = FilesConfig.Distributed.Redis.ConnStr;
     //总线-MediatR
-    option.BusOption.IsUseMediatR = true;
     option.BusOption.MediatROption = new TdbWebAppBuilderOption.TdbMediatROption();
     //SqlSugar（IOC模式）
-    option.ConfigureSqlSugarAction = () => builder.Services.AddTdbSqlSugar(c =>
+    option.SetupSqlSugar = () => builder.Services.AddTdbSqlSugar(c =>
     {
         c.ConnectionString = FilesConfig.Distributed.DB.ConnStr; //数据库连接字符串
         c.DbType = IocDbType.MySql;
         c.IsAutoCloseConnection = true;    //开启自动释放模式
     });
+    //总线-DotNetCore.CAP
+    option.BusOption.SetupDotNetCoreCAP = (o) =>
+    {
+        o.UseRedis(FilesConfig.Common.CAP.RedisConnStr);
+        o.UseMySql(FilesConfig.Common.CAP.DBConnStr);
+    };
     //跨域请求
     option.CorsOption.SetupCors = option.CorsOption.SetupCorsAllowAll;
     option.CorsOption.UseCors = option.CorsOption.UseCorsAllAllow;
@@ -37,8 +42,8 @@ builder.RunWebApp(option =>
     //接口入参验证
     option.IsUseParamValidate = true;
     //压缩
-    option.CompressionOption.ConfigureCompressionOptions = option.CompressionOption.DefaultConfigureCompressionOptions;
-    option.CompressionOption.ConfigureProvider = option.CompressionOption.DefaultConfigureProvider;
+    option.CompressionOption.SetupCompression = option.CompressionOption.DefaultSetupCompression;
+    option.CompressionOption.SetupProvider = option.CompressionOption.DefaultSetupProvider;
     //响应缓存
     option.IsUseResponseCaching = true;
     //swagger

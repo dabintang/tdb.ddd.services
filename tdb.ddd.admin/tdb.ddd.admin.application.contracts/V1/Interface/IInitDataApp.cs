@@ -17,6 +17,6 @@ namespace tdb.ddd.admin.application.contracts.V1.Interface
         /// </summary>
         /// <param name="secretKey">秘钥</param>
         /// <returns></returns>
-        Task<TdbRes<string>> InitAccountDataAsync(string secretKey);
+        Task<TdbRes<string>> InitAccountDataAsync();
     }
 }

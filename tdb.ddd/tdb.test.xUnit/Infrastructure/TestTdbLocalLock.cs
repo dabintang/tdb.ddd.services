@@ -98,7 +98,6 @@ namespace tdb.test.xUnit.Infrastructure
         private void DoSomeThing(string key, int maxWaitSeconds, int taskSeconds)
         {
             this.output.WriteLine($"[{Environment.CurrentManagedThreadId}]尝试对[{key}]上锁，{DateTime.Now:yyyy-MM-dd HH:mm:ss.ffff}");
-#pragma warning disable IDE0063 // 使用简单的 "using" 语句
             using (var localLock = TdbLocalLock.Lock(key, maxWaitSeconds))
             {
                 if (localLock.IsLockedByOther)
@@ -113,7 +112,6 @@ namespace tdb.test.xUnit.Infrastructure
                 this.output.WriteLine($"[{Environment.CurrentManagedThreadId}]完成干活[{key}]，，{DateTime.Now:yyyy-MM-dd HH:mm:ss.ffff}");
                 this.output.WriteLine($"[{Environment.CurrentManagedThreadId}]对[{key}]解锁，{DateTime.Now:yyyy-MM-dd HH:mm:ss.ffff}");
             }
-#pragma warning restore IDE0063 // 使用简单的 "using" 语句
         }
     }
 }

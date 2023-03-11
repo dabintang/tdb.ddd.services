@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.admin.domain.contra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.admin.domain", "tdb.ddd.admin.domain\tdb.ddd.admin.domain.csproj", "{FBB1CEB6-DC0A-42DE-B6F6-696DB763D493}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tdb.ddd.admin.application.remote", "tdb.ddd.admin.application.remote\tdb.ddd.admin.application.remote.csproj", "{9216C1A4-E779-446D-B6A7-0F31F5950368}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.admin.application.remote", "tdb.ddd.admin.application.remote\tdb.ddd.admin.application.remote.csproj", "{9216C1A4-E779-446D-B6A7-0F31F5950368}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

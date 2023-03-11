@@ -21,15 +21,9 @@ namespace tdb.ddd.admin.application.V1
         /// <summary>
         /// 初始化账户服务数据
         /// </summary>
-        /// <param name="secretKey">秘钥</param>
         /// <returns></returns>
-        public async Task<TdbRes<string>> InitAccountDataAsync(string secretKey)
+        public async Task<TdbRes<string>> InitAccountDataAsync()
         {
-            if (secretKey != AdminConfig.Common.Token.SecretKey)
-            {
-                return TdbRes.Fail("口令不正确");
-            }
-
             //调用账户服务初始化数据接口 
             var accountApp = TdbIOC.GetService<IAccountApp>();
             var res = await accountApp.InitDataAsync();

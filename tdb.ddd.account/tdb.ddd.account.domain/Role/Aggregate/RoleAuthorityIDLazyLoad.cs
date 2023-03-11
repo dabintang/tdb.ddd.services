@@ -71,7 +71,7 @@ namespace tdb.ddd.account.domain.Role.Aggregate
             //判断权限ID是否存在
             foreach (var authorityID in lstAuthorityID)
             {
-                if (TdbMediatR.Send(new IsAuthorityExistRequest() { AuthorityID = authorityID }).Result == false)
+                if (TdbMediatR.SendAsync(new IsAuthorityExistRequest() { AuthorityID = authorityID }).Result == false)
                 {
                     return new TdbRes<bool>(AccountConfig.Msg.AuthorityNotExist.FromNewMsg($"权限不存在[{authorityID}]"), false);
                 }

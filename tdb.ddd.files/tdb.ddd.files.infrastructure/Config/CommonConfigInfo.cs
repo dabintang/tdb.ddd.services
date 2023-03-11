@@ -47,6 +47,12 @@ namespace tdb.ddd.files.infrastructure.Config
         [TdbConfigKey("HashID")]
         public HashIDConfigInfo HashID { get; set; }
 
+        /// <summary>
+        /// CAP配置信息
+        /// </summary>
+        [TdbConfigKey("CAP")]
+        public CAPConfigInfo CAP { get; set; }
+
         #region 内部类
 
         /// <summary>
@@ -85,6 +91,22 @@ namespace tdb.ddd.files.infrastructure.Config
             /// 盐
             /// </summary>
             public string Salt { get; set; }
+        }
+
+        /// <summary>
+        /// CAP配置信息
+        /// </summary>
+        public class CAPConfigInfo
+        {
+            /// <summary>
+            /// redis链接字符串(StackExchange.Redis)
+            /// </summary>
+            public string RedisConnStr { get; set; }
+
+            /// <summary>
+            /// 数据库链接字符串(mysql)
+            /// </summary>
+            public string DBConnStr { get; set; }
         }
 
         #endregion

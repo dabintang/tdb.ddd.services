@@ -51,7 +51,7 @@ namespace tdb.ddd.account.application.V1
             var aggResult = await userAgg.LoginAsync(req.ClientIP);
 
             //广播用户登录通知
-            TdbMediatR.PublishNotWait(new UserLoginNotification() { User = userAgg, ClientIP = req.ClientIP, LoginTime = DateTime.Now });
+            TdbMediatR.Publish(new UserLoginNotification() { User = userAgg, ClientIP = req.ClientIP, LoginTime = DateTime.Now });
 
             //转为对外传输类型
             var result = DTOMapper.Map<TdbRes<UserLoginResult>, TdbRes<UserLoginRes>>(aggResult);
@@ -158,7 +158,7 @@ namespace tdb.ddd.account.application.V1
             //确认头像文件
             if (userAgg.HeadImgID is not null)
             {
-                if (TdbMediatR.Send(new ConfirmFileRequest() { FileID = userAgg.HeadImgID.Value }).Result == false)
+                if (TdbMediatR.SendAsync(new ConfirmFileRequest() { FileID = userAgg.HeadImgID.Value }).Result == false)
                 {
                     return new TdbRes<AddUserRes>(AccountConfig.Msg.HeadImgNotExist, null);
                 }
@@ -226,7 +226,7 @@ namespace tdb.ddd.account.application.V1
             //确认头像文件
             if (userAgg.HeadImgID is not null)
             {
-                if (TdbMediatR.Send(new ConfirmFileRequest() { FileID = userAgg.HeadImgID.Value }).Result == false)
+                if (TdbMediatR.SendAsync(new ConfirmFileRequest() { FileID = userAgg.HeadImgID.Value }).Result == false)
                 {
                     return new TdbRes<bool>(AccountConfig.Msg.HeadImgNotExist, false);
                 }

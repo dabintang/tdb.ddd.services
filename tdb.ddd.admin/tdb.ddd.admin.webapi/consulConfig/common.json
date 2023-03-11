@@ -20,5 +20,10 @@
   "HashID": {
     "Salt": "tangdabinok"
   },
-  "WhiteListIP": [ "127.0.0.1", "localhost", "::ffff:127.0.0.1" ] //白名单IP
+  "WhiteListIP": [ "127.0.0.1", "localhost", "::ffff:127.0.0.1" ], //白名单IP
+  //cap
+  "CAP": {
+    "RedisConnStr": "127.0.0.1,defaultDatabase=0,password=", //redis链接字符串(StackExchange.Redis)
+    "DBConnStr": "server=127.0.0.1;database=tdb.ddd.cap;user id=root;password=abc123456;Pooling=True;Allow User Variables=True;" //数据库链接字符串(mysql)
+  }
 }

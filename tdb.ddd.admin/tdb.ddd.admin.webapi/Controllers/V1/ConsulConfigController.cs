@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using tdb.ddd.admin.application.contracts.V1.Interface;
 using tdb.ddd.contracts;
@@ -34,6 +35,8 @@ namespace tdb.ddd.admin.webapi.Controllers.V1
         /// <returns></returns>
         [HttpPost]
         [TdbAPILog]
+        [AllowAnonymous]
+        [TdbAuthWhiteListIP]
         public async Task<TdbRes<string>> RestoreCommonConfigAsync()
         {
             return await this.consulConfigApp.RestoreCommonConfigAsync();
@@ -56,6 +59,8 @@ namespace tdb.ddd.admin.webapi.Controllers.V1
         /// <returns></returns>
         [HttpPost]
         [TdbAPILog]
+        [AllowAnonymous]
+        [TdbAuthWhiteListIP]
         public async Task<TdbRes<string>> RestoreAccountConfigAsync()
         {
             return await this.consulConfigApp.RestoreAccountConfigAsync();

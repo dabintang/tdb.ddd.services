@@ -2,6 +2,7 @@
 using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
 using Consul;
+using DotNetCore.CAP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IO.Compression;
 using System.Net.WebSockets;
 using System.Reflection;
@@ -86,9 +88,9 @@ namespace tdb.ddd.webapi.Common
             }
 
             //hash id
-            if (option.ConfigureHashIDAction is not null)
+            if (option.SetupHashID is not null)
             {
-                InitHashID(option.ConfigureHashIDAction);
+                InitHashID(option.SetupHashID);
             }
 
             #region 缓存
@@ -98,18 +100,18 @@ namespace tdb.ddd.webapi.Common
                 case TdbEnmCache.Memory:
                     {
                         //使用内存缓存服务
-                        UseMemoryCache(builder, option.CacheOption.ConfigureMemoryAction);
+                        UseMemoryCache(builder, option.CacheOption.SetupMemory);
                     }
                     break;
                 case TdbEnmCache.Redis:
                     {
-                        if (option.CacheOption.ConfigureRedisAction is null)
+                        if (option.CacheOption.SetupRedis is null)
                         {
                             throw new TdbException("使用redis缓存时，RedisOption选项不能为空");
                         }
 
                         //使用redis缓存
-                        UseRedisCache(builder, option.CacheOption.ConfigureRedisAction);
+                        UseRedisCache(builder, option.CacheOption.SetupRedis);
                     }
                     break;
                 default:
@@ -120,22 +122,22 @@ namespace tdb.ddd.webapi.Common
 
             #region 总线
 
-            if (option.BusOption.IsUseMediatR)
+            if (option.BusOption.MediatROption is not null)
             {
-                if (option.BusOption.MediatROption is null)
-                {
-                    throw new TdbException("使用MediatR时，MediatROption选项不能为空");
-                }
-
                 UseMediatR(builder, option.BusOption.MediatROption);
+            }
+
+            if (option.BusOption.SetupDotNetCoreCAP is not null)
+            {
+                UseDotNetCoreCAP(builder, option.BusOption.SetupDotNetCoreCAP);
             }
 
             #endregion
 
             //SqlSugar
-            if (option.ConfigureSqlSugarAction is not null)
+            if (option.SetupSqlSugar is not null)
             {
-                ConfigSqlSugar(option.ConfigureSqlSugarAction);
+                ConfigSqlSugar(option.SetupSqlSugar);
             }
 
             //添加跨域服务
@@ -193,9 +195,9 @@ namespace tdb.ddd.webapi.Common
             });
 
             //json
-            if (option.ConfigureJsonAction is not null)
+            if (option.SetupJson is not null)
             {
-                ConfigureJson(mcvBuilder, option.ConfigureJsonAction);
+                SetupJson(mcvBuilder, option.SetupJson);
             }
 
             //创建web应用
@@ -287,11 +289,11 @@ namespace tdb.ddd.webapi.Common
         /// <summary>
         /// 初始化hash id
         /// </summary>
-        /// <param name="configureHashIDAction">配置hash id的方法</param>
-        private static void InitHashID(Action<TdbHashIDOption> configureHashIDAction)
+        /// <param name="setupHashID">配置hash id的方法</param>
+        private static void InitHashID(Action<TdbHashIDOption> setupHashID)
         {
             var option = new TdbHashIDOption();
-            configureHashIDAction(option);
+            setupHashID(option);
 
             TdbHashID.Init(option.Salt, minHashLength: option.MinHashLength, option.Alphabet, option.Seps);
 
@@ -350,6 +352,19 @@ namespace tdb.ddd.webapi.Common
 
             //打日志
             TdbLogger.Ins.Info("应用MediatR");
+        }
+
+        /// <summary>
+        /// 使用DotNetCore.CAP
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="setupDotNetCoreCAP">设置DotNetCore.CAP选项的方法</param>
+        private static void UseDotNetCoreCAP(WebApplicationBuilder builder, Action<CapOptions> setupDotNetCoreCAP)
+        {
+            builder.Services.AddTdbBusCAP(setupDotNetCoreCAP);
+
+            //打日志
+            TdbLogger.Ins.Info("应用DotNetCore.CAP");
         }
 
         /// <summary>
@@ -421,10 +436,11 @@ namespace tdb.ddd.webapi.Common
 
             builder.Services.AddAuthorization(o =>
             {
-                if (option.WhiteListIP?.Count > 0)
+                if (option.GetWhiteListIP is not null)
                 {
+                    var lstWhiteListIP = option.GetWhiteListIP();
                     //要求接口调用方IP为白名单IP
-                    o.AddTdbAuthWhiteListIP(option.WhiteListIP);
+                    o.AddTdbAuthWhiteListIP(lstWhiteListIP);
 
                     //打日志
                     TdbLogger.Ins.Info("应用白名单授权");
@@ -495,15 +511,15 @@ namespace tdb.ddd.webapi.Common
         /// <param name="compressionOption">压缩选项</param>
         private static void AddCompression(WebApplicationBuilder builder, TdbCompressionOption compressionOption)
         {
-            if (compressionOption.ConfigureCompressionOptions is not null)
+            if (compressionOption.SetupCompression is not null)
             {
                 //配置压缩选项
-                builder.Services.AddResponseCompression(compressionOption.ConfigureCompressionOptions);
+                builder.Services.AddResponseCompression(compressionOption.SetupCompression);
 
-                if (compressionOption.ConfigureProvider is not null)
+                if (compressionOption.SetupProvider is not null)
                 {
                     //配置压缩算法Provider
-                    compressionOption.ConfigureProvider(builder.Services);
+                    compressionOption.SetupProvider(builder.Services);
                 }
 
                 //打日志
@@ -518,7 +534,7 @@ namespace tdb.ddd.webapi.Common
         /// <param name="compressionOption">压缩选项</param>
         private static void UseCompression(IApplicationBuilder app, TdbCompressionOption compressionOption)
         {
-            if (compressionOption.ConfigureCompressionOptions is not null)
+            if (compressionOption.SetupCompression is not null)
             {
                 //使用接口压缩
                 app.UseResponseCompression();
@@ -602,10 +618,10 @@ namespace tdb.ddd.webapi.Common
         /// json配置
         /// </summary>
         /// <param name="builder"></param>
-        /// <param name="configureJsonAction">json选项配置方法</param>
-        private static void ConfigureJson(IMvcBuilder builder, Action<Microsoft.AspNetCore.Mvc.JsonOptions> configureJsonAction)
+        /// <param name="setupJson">json选项配置方法</param>
+        private static void SetupJson(IMvcBuilder builder, Action<Microsoft.AspNetCore.Mvc.JsonOptions> setupJson)
         {
-            builder.AddJsonOptions(configureJsonAction);
+            builder.AddJsonOptions(setupJson);
 
             //打日志
             TdbLogger.Ins.Info("配置json选项");
@@ -635,7 +651,7 @@ namespace tdb.ddd.webapi.Common
         /// <summary>
         /// 配置hash id的方法
         /// </summary>
-        public Action<TdbHashIDOption>? ConfigureHashIDAction { get; set; }
+        public Action<TdbHashIDOption>? SetupHashID { get; set; }
 
         /// <summary>
         /// 缓存选项
@@ -650,7 +666,7 @@ namespace tdb.ddd.webapi.Common
         /// <summary>
         /// 配置SqlSugar的方法
         /// </summary>
-        public Action? ConfigureSqlSugarAction { get; set; }
+        public Action? SetupSqlSugar { get; set; }
 
         /// <summary>
         /// 跨域请求选项
@@ -685,7 +701,7 @@ namespace tdb.ddd.webapi.Common
         /// <summary>
         /// json选项配置方法
         /// </summary>
-        public Action<Microsoft.AspNetCore.Mvc.JsonOptions>? ConfigureJsonAction { get; set; } = (o) =>
+        public Action<Microsoft.AspNetCore.Mvc.JsonOptions>? SetupJson { get; set; } = (o) =>
         {
             //以下序列化选项使用通用库中一样的设置
             o.JsonSerializerOptions.PropertyNamingPolicy = CvtHelper.DefaultOptions.PropertyNamingPolicy;
@@ -840,12 +856,12 @@ namespace tdb.ddd.webapi.Common
             /// <summary>
             /// 设置内存缓存选项的方法
             /// </summary>
-            public Action<MemoryCacheOptions>? ConfigureMemoryAction { get; set; }
+            public Action<MemoryCacheOptions>? SetupMemory { get; set; }
 
             /// <summary>
             /// 设置redis缓存选项的方法
             /// </summary>
-            public Action<TdbRedisOption>? ConfigureRedisAction { get; set; }
+            public Action<TdbRedisOption>? SetupRedis { get; set; }
         }
 
         /// <summary>
@@ -869,14 +885,14 @@ namespace tdb.ddd.webapi.Common
         public class TdbBusOption
         {
             /// <summary>
-            /// 是否启用MediatR
-            /// </summary>
-            public bool IsUseMediatR { get; set; }
-
-            /// <summary>
             /// 启用MediatR时必须有值
             /// </summary>
             public TdbMediatROption? MediatROption { get; set; }
+
+            /// <summary>
+            /// 设置DotNetCore.CAP选项的方法
+            /// </summary>
+            public Action<CapOptions>? SetupDotNetCoreCAP { get; set; }
         }
 
         /// <summary>
@@ -962,9 +978,9 @@ namespace tdb.ddd.webapi.Common
         public class TdbAuthOption
         {
             /// <summary>
-            /// ip白名单集合
+            /// 获取ip白名单的方法
             /// </summary>
-            public List<string>? WhiteListIP { get; set; }
+            public Func<List<string>>? GetWhiteListIP { get; set; }
 
             /// <summary>
             /// 设置jwt bearer配置
@@ -1045,18 +1061,18 @@ namespace tdb.ddd.webapi.Common
             /// <summary>
             /// 配置压缩选项方法
             /// </summary>
-            public Action<ResponseCompressionOptions>? ConfigureCompressionOptions { get; set; }
+            public Action<ResponseCompressionOptions>? SetupCompression { get; set; }
 
             /// <summary>
             /// 配置压缩算法Provider的方法
             /// </summary>
-            public Action<IServiceCollection>? ConfigureProvider { get; set; }
+            public Action<IServiceCollection>? SetupProvider { get; set; }
 
             /// <summary>
             /// 默认的压缩选项配置方法
             /// </summary>
             /// <param name="options">压缩选项</param>
-            public void DefaultConfigureCompressionOptions(ResponseCompressionOptions options)
+            public void DefaultSetupCompression(ResponseCompressionOptions options)
             {
                 options.Providers.Add<BrotliCompressionProvider>();
                 options.Providers.Add<GzipCompressionProvider>();
@@ -1070,7 +1086,7 @@ namespace tdb.ddd.webapi.Common
             /// 默认的压缩算法Provider配置方法
             /// </summary>
             /// <param name="services"></param>
-            public void DefaultConfigureProvider(IServiceCollection services)
+            public void DefaultSetupProvider(IServiceCollection services)
             {
                 //针对不同的压缩类型，设置对应的压缩级别
                 services.Configure<BrotliCompressionProviderOptions>(options =>
