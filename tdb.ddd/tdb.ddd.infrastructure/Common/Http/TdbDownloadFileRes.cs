@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace tdb.ddd.infrastructure.Common.Http
+namespace tdb.ddd.infrastructure
 {
     /// <summary>
     /// 下载文件结果

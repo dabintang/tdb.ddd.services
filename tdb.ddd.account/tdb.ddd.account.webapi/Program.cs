@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using SqlSugar.IOC;
 using tdb.ddd.account.infrastructure.Config;
 using tdb.ddd.repository.sqlsugar;
@@ -26,6 +27,8 @@ builder.RunWebApp(option =>
     {
         o.UseRedis(AccountConfig.Common.CAP.RedisConnStr);
         o.UseMySql(AccountConfig.Common.CAP.DBConnStr);
+        option.BusOption.DefaultCapOptionsWithoutTransportAndStorage(o);
+        o.DefaultGroupName = "account";
     };
     //SqlSugar£¨IOCÄ£Ê½£©
     option.SetupSqlSugar = () => builder.Services.AddTdbSqlSugar(c =>

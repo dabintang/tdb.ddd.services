@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using tdb.ddd.application.contracts;
 using tdb.ddd.contracts;
 using tdb.ddd.infrastructure;
-using tdb.ddd.infrastructure.Common.Http;
 using tdb.ddd.webapi;
 using tdb.demo.webapi.Configs;
 using tdb.demo.webapi.MockData;

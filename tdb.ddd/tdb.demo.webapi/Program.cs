@@ -25,6 +25,7 @@ builder.RunWebApp(option =>
     {
         o.UseRedis("127.0.0.1,defaultDatabase=0,password=");
         o.UseMySql("server=127.0.0.1;database=tdb.ddd.cap;user id=root;password=abc123456;Pooling=True;Allow User Variables=True;");
+        option.BusOption.DefaultCapOptionsWithoutTransportAndStorage(o);
     };
     //SqlSugar£¨IOCÄ£Ê½£©
     option.SetupSqlSugar = () => builder.Services.AddTdbSqlSugar(c =>

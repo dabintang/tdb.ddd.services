@@ -153,8 +153,10 @@ namespace tdb.ddd.files.webapi.Controllers.V1
             }
 
             //返回文件
-            var fileResult = new FileContentResult(result.Data.Data, result.Data.ContentType);
-            fileResult.FileDownloadName = result.Data.Name;
+            var fileResult = new FileContentResult(result.Data.Data, result.Data.ContentType)
+            {
+                FileDownloadName = result.Data.Name
+            };
             return fileResult;
         }
 
@@ -178,8 +180,10 @@ namespace tdb.ddd.files.webapi.Controllers.V1
             }
 
             //返回文件
-            var fileResult = new FileContentResult(result.Data.Data, result.Data.ContentType);
-            fileResult.FileDownloadName = result.Data.Name;
+            var fileResult = new FileContentResult(result.Data.Data, result.Data.ContentType)
+            {
+                FileDownloadName = result.Data.Name
+            };
             return fileResult;
         }
 

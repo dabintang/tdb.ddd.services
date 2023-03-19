@@ -11,10 +11,6 @@ using System.Net.Http.Headers;
 using tdb.common;
 using System.Net.Http.Json;
 using System.Text.Json;
-using tdb.ddd.infrastructure.Common.Http;
-using MediatR;
-using Microsoft.AspNetCore.Http;
-using System.Reflection.PortableExecutable;
 
 namespace tdb.ddd.infrastructure
 {

@@ -33,6 +33,8 @@ builder.RunWebApp(option =>
     {
         o.UseRedis(FilesConfig.Common.CAP.RedisConnStr);
         o.UseMySql(FilesConfig.Common.CAP.DBConnStr);
+        option.BusOption.DefaultCapOptionsWithoutTransportAndStorage(o);
+        o.DefaultGroupName = "files";
     };
     //øÁ”Ú«Î«Û
     option.CorsOption.SetupCors = option.CorsOption.SetupCorsAllowAll;

@@ -155,15 +155,6 @@ namespace tdb.ddd.account.application.V1
                 UpdateInfo = new UpdateInfoValueObject() { UpdaterID = req.OperatorID, UpdateTime = DateTime.Now }
             };
 
-            //确认头像文件
-            if (userAgg.HeadImgID is not null)
-            {
-                if (TdbMediatR.SendAsync(new ConfirmFileRequest() { FileID = userAgg.HeadImgID.Value }).Result == false)
-                {
-                    return new TdbRes<AddUserRes>(AccountConfig.Msg.HeadImgNotExist, null);
-                }
-            }
-
             userAgg.SetName(param.Name);
             userAgg.SetNickName(param.NickName);
             userAgg.SetMobilePhone(param.MobilePhone);
@@ -180,6 +171,19 @@ namespace tdb.ddd.account.application.V1
 
             //提交事务
             TdbRepositoryTran.CommitTran();
+
+            //更新头像图片状态
+            if (userAgg.HeadImgID is not null)
+            {
+                var updateHeadImgStatusMsg = new UpdateFilesStatusMsg()
+                {
+                    OperatorID = req.OperatorID,
+                    OperatorName = req.OperatorName,
+                    OperationTime = req.OperationTime
+                };
+                updateHeadImgStatusMsg.LstFileStatus.Add(new UpdateFilesStatusMsg.FileStatus() { ID = userAgg.HeadImgID.Value, FileStatusCode = EnmFileStatus.Formal });
+                await CAPPublisher.UpdateFilesStatusAsync(updateHeadImgStatusMsg);
+            }
 
             return TdbRes.Success(new AddUserRes() { ID = userAgg.ID });
         }
@@ -213,6 +217,9 @@ namespace tdb.ddd.account.application.V1
                 return new TdbRes<bool>(AccountConfig.Msg.UserNotExist, false);
             }
 
+            //备份原头像图片ID
+            var oldHeadImgID = userAgg.HeadImgID;
+
             //更新用户信息
             userAgg.SetName(param.Name);
             userAgg.SetNickName(param.NickName);
@@ -223,20 +230,36 @@ namespace tdb.ddd.account.application.V1
             userAgg.SetEmail(param.Email);
             userAgg.Remark = param.Remark ?? "";
 
-            //确认头像文件
-            if (userAgg.HeadImgID is not null)
-            {
-                if (TdbMediatR.SendAsync(new ConfirmFileRequest() { FileID = userAgg.HeadImgID.Value }).Result == false)
-                {
-                    return new TdbRes<bool>(AccountConfig.Msg.HeadImgNotExist, false);
-                }
-            }
-
             //保存
             await userService.SaveAsync(userAgg);
 
             //提交事务
             TdbRepositoryTran.CommitTran();
+
+            //更新头像图片状态
+            if (userAgg.HeadImgID is not null || oldHeadImgID is not null)
+            {
+                var updateHeadImgStatusMsg = new UpdateFilesStatusMsg()
+                {
+                    OperatorID = req.OperatorID,
+                    OperatorName = req.OperatorName,
+                    OperationTime = req.OperationTime
+                };
+
+                //如果更新前存在头像，且头像被更新
+                if (oldHeadImgID is not null && oldHeadImgID != userAgg.HeadImgID)
+                {
+                    //把原头像状态设置为临时
+                    updateHeadImgStatusMsg.LstFileStatus.Add(new UpdateFilesStatusMsg.FileStatus() { ID = oldHeadImgID.Value, FileStatusCode = EnmFileStatus.Temp });
+                }
+                //如果有新头像，且头像被更新
+                if (userAgg.HeadImgID is not null && oldHeadImgID != userAgg.HeadImgID)
+                {
+                    updateHeadImgStatusMsg.LstFileStatus.Add(new UpdateFilesStatusMsg.FileStatus() { ID = userAgg.HeadImgID.Value, FileStatusCode = EnmFileStatus.Formal });
+                }
+                   
+                await CAPPublisher.UpdateFilesStatusAsync(updateHeadImgStatusMsg);
+            }
 
             return TdbRes.Success(true);
         }
@@ -287,10 +310,6 @@ namespace tdb.ddd.account.application.V1
 
             return TdbRes.Success(true);
         }
-
-        #endregion
-
-        #region 私有方法
 
         #endregion
     }

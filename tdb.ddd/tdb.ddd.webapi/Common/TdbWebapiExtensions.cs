@@ -20,7 +20,6 @@ using tdb.ddd.contracts;
 using tdb.ddd.domain;
 using tdb.ddd.infrastructure;
 using tdb.ddd.infrastructure.Services;
-using static tdb.ddd.webapi.Common.TdbWebAppBuilderOption;
 
 namespace tdb.ddd.webapi.Common
 {
@@ -45,7 +44,7 @@ namespace tdb.ddd.webapi.Common
 
             switch (option.LogOption.EnmLog)
             {
-                case TdbEnmLog.NLog:
+                case TdbWebAppBuilderOption.TdbEnmLog.NLog:
                     if (option.LogOption.NLogOption is null)
                     {
                         throw new TdbException("使用nlog日志时，NLogOption选项不能为空");
@@ -64,7 +63,7 @@ namespace tdb.ddd.webapi.Common
 
             switch (option.IOCOption.EnmIOC)
             {
-                case TdbEnmIOC.Autofac:
+                case TdbWebAppBuilderOption.TdbEnmIOC.Autofac:
                     {
                         if (option.IOCOption.AutofacOption is null)
                         {
@@ -97,13 +96,13 @@ namespace tdb.ddd.webapi.Common
 
             switch (option.CacheOption.EnmCache)
             {
-                case TdbEnmCache.Memory:
+                case TdbWebAppBuilderOption.TdbEnmCache.Memory:
                     {
                         //使用内存缓存服务
                         UseMemoryCache(builder, option.CacheOption.SetupMemory);
                     }
                     break;
-                case TdbEnmCache.Redis:
+                case TdbWebAppBuilderOption.TdbEnmCache.Redis:
                     {
                         if (option.CacheOption.SetupRedis is null)
                         {
@@ -168,11 +167,11 @@ namespace tdb.ddd.webapi.Common
 
             switch (option.SwaggerOption.EnmSwagger)
             {
-                case TdbEnmSwagger.None:
+                case TdbWebAppBuilderOption.TdbEnmSwagger.None:
                     TdbLogger.Ins.Info("不应用swagger");
                     break;
-                case TdbEnmSwagger.Only:
-                case TdbEnmSwagger.ApiVer:
+                case TdbWebAppBuilderOption.TdbEnmSwagger.Only:
+                case TdbWebAppBuilderOption.TdbEnmSwagger.ApiVer:
                     AddSwagger(builder, option.SwaggerOption);
                     break;
                 default:
@@ -228,8 +227,8 @@ namespace tdb.ddd.webapi.Common
 
             switch (option.SwaggerOption.EnmSwagger)
             {
-                case TdbEnmSwagger.Only:
-                case TdbEnmSwagger.ApiVer:
+                case TdbWebAppBuilderOption.TdbEnmSwagger.Only:
+                case TdbWebAppBuilderOption.TdbEnmSwagger.ApiVer:
                     UseSwagger(app, option.SwaggerOption);
                     break;
             }
@@ -246,7 +245,7 @@ namespace tdb.ddd.webapi.Common
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="option">nlog配置</param>
-        private static void UseNlog(WebApplicationBuilder builder, TdbNLogOption option)
+        private static void UseNlog(WebApplicationBuilder builder, TdbWebAppBuilderOption.TdbNLogOption option)
         {
             //日志
             builder.Services.AddTdbNLogger(option.ConfigFile);
@@ -260,7 +259,7 @@ namespace tdb.ddd.webapi.Common
         /// </summary>
         /// <param name="builder">A builder for web applications and services.</param>
         /// <param name="option">autofac选项</param>
-        private static void UseAutofac(WebApplicationBuilder builder, TdbAutofacOption option)
+        private static void UseAutofac(WebApplicationBuilder builder, TdbWebAppBuilderOption.TdbAutofacOption option)
         {
             //autofac容器注册
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -290,9 +289,9 @@ namespace tdb.ddd.webapi.Common
         /// 初始化hash id
         /// </summary>
         /// <param name="setupHashID">配置hash id的方法</param>
-        private static void InitHashID(Action<TdbHashIDOption> setupHashID)
+        private static void InitHashID(Action<TdbWebAppBuilderOption.TdbHashIDOption> setupHashID)
         {
-            var option = new TdbHashIDOption();
+            var option = new TdbWebAppBuilderOption.TdbHashIDOption();
             setupHashID(option);
 
             TdbHashID.Init(option.Salt, minHashLength: option.MinHashLength, option.Alphabet, option.Seps);
@@ -325,9 +324,9 @@ namespace tdb.ddd.webapi.Common
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="setOption">设置redis缓存配置的方法</param>
-        private static void UseRedisCache(WebApplicationBuilder builder, Action<TdbRedisOption> setOption)
+        private static void UseRedisCache(WebApplicationBuilder builder, Action<TdbWebAppBuilderOption.TdbRedisOption> setOption)
         {
-            var option = new TdbRedisOption();
+            var option = new TdbWebAppBuilderOption.TdbRedisOption();
             setOption(option);
 
             if (option.ConnectionStrings is null || option.ConnectionStrings.Count == 0)
@@ -346,7 +345,7 @@ namespace tdb.ddd.webapi.Common
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="option">MediatR配置</param>
-        private static void UseMediatR(WebApplicationBuilder builder, TdbMediatROption option)
+        private static void UseMediatR(WebApplicationBuilder builder, TdbWebAppBuilderOption.TdbMediatROption option)
         {
             builder.Services.AddTdbBusMediatR(() => option.RegisterAssemblys);
 
@@ -410,7 +409,7 @@ namespace tdb.ddd.webapi.Common
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="option">认证授权选项</param>
-        private static void AddAuth(WebApplicationBuilder builder, TdbAuthOption option)
+        private static void AddAuth(WebApplicationBuilder builder, TdbWebAppBuilderOption.TdbAuthOption option)
         {
             #region 认证
 
@@ -509,7 +508,7 @@ namespace tdb.ddd.webapi.Common
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="compressionOption">压缩选项</param>
-        private static void AddCompression(WebApplicationBuilder builder, TdbCompressionOption compressionOption)
+        private static void AddCompression(WebApplicationBuilder builder, TdbWebAppBuilderOption.TdbCompressionOption compressionOption)
         {
             if (compressionOption.SetupCompression is not null)
             {
@@ -532,7 +531,7 @@ namespace tdb.ddd.webapi.Common
         /// </summary>
         /// <param name="app"></param>
         /// <param name="compressionOption">压缩选项</param>
-        private static void UseCompression(IApplicationBuilder app, TdbCompressionOption compressionOption)
+        private static void UseCompression(IApplicationBuilder app, TdbWebAppBuilderOption.TdbCompressionOption compressionOption)
         {
             if (compressionOption.SetupCompression is not null)
             {
@@ -549,7 +548,7 @@ namespace tdb.ddd.webapi.Common
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="option">swagger选项</param>
-        private static void AddSwagger(WebApplicationBuilder builder, TdbSwaggerOption option)
+        private static void AddSwagger(WebApplicationBuilder builder, TdbWebAppBuilderOption.TdbSwaggerOption option)
         {
             if (option.SetupSwagger is null)
             {
@@ -558,7 +557,7 @@ namespace tdb.ddd.webapi.Common
 
             switch (option.EnmSwagger)
             {
-                case TdbEnmSwagger.Only:
+                case TdbWebAppBuilderOption.TdbEnmSwagger.Only:
                     {
                         builder.Services.AddTdbSwaggerGen(o => option.SetupSwagger(o));
 
@@ -566,7 +565,7 @@ namespace tdb.ddd.webapi.Common
                         TdbLogger.Ins.Info("添加swagger服务");
                     }
                     break;
-                case TdbEnmSwagger.ApiVer:
+                case TdbWebAppBuilderOption.TdbEnmSwagger.ApiVer:
                     {
                         //添加api版本控制及浏览服务
                         builder.Services.AddTdbApiVersionExplorer();
@@ -586,7 +585,7 @@ namespace tdb.ddd.webapi.Common
         /// </summary>
         /// <param name="app"></param>
         /// <param name="option">swagger选项</param>
-        private static void UseSwagger(IApplicationBuilder app, TdbSwaggerOption option)
+        private static void UseSwagger(IApplicationBuilder app, TdbWebAppBuilderOption.TdbSwaggerOption option)
         {
             if (option.SetupSwagger is null)
             {
@@ -595,7 +594,7 @@ namespace tdb.ddd.webapi.Common
 
             switch (option.EnmSwagger)
             {
-                case TdbEnmSwagger.Only:
+                case TdbWebAppBuilderOption.TdbEnmSwagger.Only:
                     {
                         app.UseTdbSwaggerAndUI(option.RoutePrefix);
 
@@ -603,7 +602,7 @@ namespace tdb.ddd.webapi.Common
                         TdbLogger.Ins.Info("应用swagger服务");
                     }
                     break;
-                case TdbEnmSwagger.ApiVer:
+                case TdbWebAppBuilderOption.TdbEnmSwagger.ApiVer:
                     {
                         app.UseTdbSwaggerAndUIApiVer(option.RoutePrefix);
 
@@ -893,6 +892,45 @@ namespace tdb.ddd.webapi.Common
             /// 设置DotNetCore.CAP选项的方法
             /// </summary>
             public Action<CapOptions>? SetupDotNetCoreCAP { get; set; }
+
+            /// <summary>
+            /// 设置DotNetCore.CAP默认选项，Transport和Storage除外。
+            /// </summary>
+            /// <param name="options">DotNetCore.CAP选项</param>
+            public void DefaultCapOptionsWithoutTransportAndStorage(CapOptions options)
+            {
+                //默认分组名称
+                options.DefaultGroupName = "default";
+                //分组名称前缀
+                options.GroupNamePrefix = "tdb.ddd.group";
+                //主题名称前缀
+                options.TopicNamePrefix = "tdb.ddd.topic";
+                ////版本号
+                //options.Version = "v1";
+                ////成功消息过期时间（秒数）
+                //options.SucceedMessageExpiredAfter = 24 * 3600;
+                //已失败消息过期时间（秒数）
+                options.FailedMessageExpiredAfter = 30 * 24 * 3600;
+                ////投递/处理失败的消息重试间隔（秒数）
+                //options.FailedRetryInterval = 60;
+                ////重试失败后回调函数
+                //options.FailedThresholdCallback = null;
+                ////重试次数
+                //options.FailedRetryCount = 50;
+                ////消费者线程数，如果值大于1则不保证消息的执行顺序
+                //options.ConsumerThreadCount = 1;
+                //是否每组独立调度
+                options.UseDispatchingPerGroup = true;
+                //生产者线程数，如值大于1则不保证消息的执行顺序
+                //options.ProducerThreadCount = 1;
+                //json序列号选项
+                options.JsonSerializerOptions.IncludeFields = CvtHelper.DefaultOptions.IncludeFields;
+                //删除过期消息间隔（秒数）
+                options.CollectorCleaningInterval = 3600;
+
+                //仪表板
+                options.UseDashboard();
+            }
         }
 
         /// <summary>

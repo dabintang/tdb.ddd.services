@@ -99,5 +99,38 @@ namespace tdb.ddd.contracts
             // 文件服务 20001-29999
 			// 运维服务 30001-39999
         }
+
+        /// <summary>
+        /// cap头部消息key
+        /// </summary>
+        public class CAPHeaders
+        {
+            /// <summary>
+            /// 服务ID
+            /// </summary>
+            public const string ServerID = "tdb-cap-server-id";
+
+            /// <summary>
+            /// 服务序号
+            /// </summary>
+            public const string ServerSeq = "tdb-cap-server-seq";
+
+            /// <summary>
+            /// 触发CAP的事件描述
+            /// </summary>
+            public const string Source = "tdb-cap-source";
+        }
+
+        /// <summary>
+        /// cap主题名称常量
+        /// （注：主题名称一般由推送方定义，但对于一些支撑服务订阅提供的服务，统一定义）
+        /// </summary>
+        public class CAPTopic
+        {
+            /// <summary>
+            /// 修改文件状态
+            /// </summary>
+            public const string UpdateFilesStatus = "UpdateFilesStatus";
+        }
     }
 }

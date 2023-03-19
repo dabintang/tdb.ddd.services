@@ -50,9 +50,9 @@ namespace tdb.ddd.infrastructure.Services
         /// </summary>
         /// <param name="services">服务容器</param>
         /// <param name="setupDotNetCoreCAP">CAP设置方法</param>
-        public static void AddTdbBusCAP(this IServiceCollection services, Action<CapOptions> setupDotNetCoreCAP)
+        public static CapBuilder AddTdbBusCAP(this IServiceCollection services, Action<CapOptions> setupDotNetCoreCAP)
         {
-            services.AddCap(setupDotNetCoreCAP);
+            return services.AddCap(setupDotNetCoreCAP).AddSubscribeFilter<TdbCAPSubscribeFilter>();
         }
     }
 }

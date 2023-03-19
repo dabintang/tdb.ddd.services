@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ImageMagick;
 using tdb.common;
 using tdb.ddd.application.contracts;
 using tdb.ddd.domain;
@@ -14,7 +15,6 @@ using tdb.ddd.files.domain.Files;
 using tdb.ddd.files.domain.Files.Aggregate;
 using tdb.ddd.files.infrastructure;
 using tdb.ddd.contracts;
-using ImageMagick;
 using tdb.ddd.files.domain.contracts.Enum;
 using tdb.ddd.files.domain.contracts.DTO;
 
@@ -124,7 +124,7 @@ namespace tdb.ddd.files.application.V1
             }
 
             //改为正式文件
-            fileAgg.FileStatusCode = domain.contracts.Enum.EnmFileStatus.Formal;
+            fileAgg.FileStatusCode = EnmFileStatus.Formal;
             fileAgg.UpdateInfo.UpdaterID = reqDTO.OperatorID;
             fileAgg.UpdateInfo.UpdateTime = reqDTO.OperationTime;
 
