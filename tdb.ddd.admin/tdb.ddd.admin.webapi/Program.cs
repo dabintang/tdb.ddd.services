@@ -14,11 +14,18 @@ builder.RunWebApp(option =>
     //初始化配置（注：初始化配置时，仅可使用日志和IOC）
     option.InitConfigAction = AdminConfig.Init;
     //hashid配置
-    option.SetupHashID = (o) => o.Salt = AdminConfig.App.HashID.Salt;
+    option.SetupHashID = (o) => o.Salt = AdminConfig.Common?.HashID?.Salt ?? AdminConfig.App.HashID.Salt;
     //缓存
     option.CacheOption.EnmCache = TdbWebAppBuilderOption.TdbEnmCache.Memory;
     //总线-MediatR
     option.BusOption.MediatROption = new TdbWebAppBuilderOption.TdbMediatROption();
+    //总线-DotNetCore.CAP
+    option.BusOption.CAPOption = new TdbWebAppBuilderOption.TdbDotNetCoreCAPOption((o) =>
+    {
+        o.UseRedis(AdminConfig.Common.CAP.RedisConnStr);
+        o.UseMySql(AdminConfig.Common.CAP.DBConnStr);
+        o.DefaultGroupName = "admin";
+    });
     //跨域请求
     option.CorsOption.SetupCors = option.CorsOption.SetupCorsAllowAll;
     option.CorsOption.UseCors = option.CorsOption.UseCorsAllAllow;

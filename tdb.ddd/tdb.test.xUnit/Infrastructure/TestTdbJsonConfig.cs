@@ -52,25 +52,25 @@ namespace tdb.test.xUnit.Infrastructure
         /// 允许访问的主机
         /// </summary>
         [TdbConfigKey("AllowedHosts")]
-        public string AllowedHosts { get; set; }
+        public string? AllowedHosts { get; set; }
 
         /// <summary>
         /// 本服务URL
         /// </summary>
         [TdbConfigKey("Kestrel:EndPoints:Server:Url")]
-        public string URL { get; set; }
+        public string? URL { get; set; }
 
         /// <summary>
         /// 数据库连接字符串
         /// </summary>
         [TdbConfigKey("DBConnStr")]
-        public string DBConnStr { get; set; }
+        public string? DBConnStr { get; set; }
 
         /// <summary>
         /// token配置信息
         /// </summary>
         [TdbConfigKey("Token")]
-        public TokenConfig Token { get; set; }
+        public TokenConfig? Token { get; set; }
 
         /// <summary>
         /// 并发数
@@ -86,17 +86,17 @@ namespace tdb.test.xUnit.Infrastructure
             /// <summary>
             /// 发行者
             /// </summary>
-            public string Issuer { get; set; }
+            public string? Issuer { get; set; }
 
             /// <summary>
             /// 受众
             /// </summary>
-            public string Audience { get; set; }
+            public string? Audience { get; set; }
 
             /// <summary>
             /// 秘钥
             /// </summary>
-            public string SecretKey { get; set; }
+            public string? SecretKey { get; set; }
 
             /// <summary>
             /// 超时时间（秒）
@@ -106,7 +106,7 @@ namespace tdb.test.xUnit.Infrastructure
             /// <summary>
             /// client配置信息
             /// </summary>
-            public ClientConfig Client { get; set; }
+            public ClientConfig? Client { get; set; }
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace tdb.test.xUnit.Infrastructure
             /// <summary>
             /// AppID
             /// </summary>
-            public string AppID { get; set; }
+            public string? AppID { get; set; }
         }
     }
 }

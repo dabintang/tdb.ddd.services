@@ -8,6 +8,7 @@ using tdb.ddd.infrastructure;
 using tdb.ddd.infrastructure.Services;
 using tdb.ddd.webapi;
 using tdb.demo.webapi.Configs;
+using static tdb.demo.webapi.Controllers.V1.CAPController;
 
 namespace tdb.demo.webapi.Controllers.V1
 {
@@ -33,36 +34,10 @@ namespace tdb.demo.webapi.Controllers.V1
         public async Task<TdbRes<string>> PublishOK()
         {
             var msg = new MsgTimeInfo();
-            var header = this.GetCAPHeader("发布(ok)", callbackOK);
+            var header = GetCAPHeader("发布(ok)", callbackOK);
             await TdbCAP.PublishAsync(topicOK, msg, header);
 
             return TdbRes.Success(msg.ToString());
-        }
-
-        /// <summary>
-        /// 订阅(ok)
-        /// </summary>
-        /// <returns></returns>
-        [NonAction]
-        [CapSubscribe(topicOK)]
-        public TdbRes<MsgTimeInfo> SubscribeOK(MsgTimeInfo msg)
-        {
-            TdbLogger.Ins.Debug($"接收到消息[ok]：{msg}");
-
-            return TdbRes.Success(msg);
-        }
-
-        /// <summary>
-        /// 回调(ok)
-        /// </summary>
-        /// <returns></returns>
-        [NonAction]
-        [CapSubscribe(callbackOK)]
-        public TdbRes<bool> CallbackOK(TdbRes<MsgTimeInfo> res)
-        {
-            TdbLogger.Ins.Debug($"接收到消息[callback.ok]：{res.SerializeJson()}");
-
-            return TdbRes.Success(true);
         }
 
         #endregion
@@ -80,7 +55,7 @@ namespace tdb.demo.webapi.Controllers.V1
         public async Task<TdbRes<string>> PublishError()
         {
             var msg = new MsgTimeInfo();
-            var header = this.GetCAPHeader("发布(error)", callbackError);
+            var header = GetCAPHeader("发布(error)", callbackError);
             await TdbCAP.PublishAsync(topicError, msg, header);
 
             return TdbRes.Success(msg.ToString());
@@ -133,38 +108,10 @@ namespace tdb.demo.webapi.Controllers.V1
         public async Task<TdbRes<string>> PublishLongTime()
         {
             var msg = new MsgTimeInfo();
-            var header = this.GetCAPHeader("发布(longtime)", callbackLongTime);
+            var header = GetCAPHeader("发布(longtime)", callbackLongTime);
             await TdbCAP.PublishAsync(topicLongTime, msg, header);
 
             return TdbRes.Success(msg.ToString());
-        }
-
-        /// <summary>
-        /// 订阅(longtime)
-        /// </summary>
-        /// <returns></returns>
-        [NonAction]
-        [CapSubscribe(topicLongTime)]
-        public TdbRes<MsgTimeInfo> SubscribeLongTime(MsgTimeInfo msg)
-        {
-            TdbLogger.Ins.Debug($"接收到消息[longtime]：{msg}");
-
-            Thread.Sleep(1000);
-
-            return TdbRes.Success(msg);
-        }
-
-        /// <summary>
-        /// 回调(longtime)
-        /// </summary>
-        /// <returns></returns>
-        [NonAction]
-        [CapSubscribe(callbackLongTime)]
-        public TdbRes<bool> CallbackLongTime(TdbRes<MsgTimeInfo> res)
-        {
-            TdbLogger.Ins.Debug($"接收到消息[callback.longtime]：{res.SerializeJson()}");
-
-            return TdbRes.Success(true);
         }
 
         #endregion
@@ -182,7 +129,7 @@ namespace tdb.demo.webapi.Controllers.V1
         public async Task<TdbRes<string>> PublishGroup()
         {
             var msg = new MsgTimeInfo();
-            var header = this.GetCAPHeader("发布(group)", callbackGroup);
+            var header = GetCAPHeader("发布(group)", callbackGroup);
             await TdbCAP.PublishAsync(topicGroup, msg, header);
 
             return TdbRes.Success(msg.ToString());
@@ -229,7 +176,7 @@ namespace tdb.demo.webapi.Controllers.V1
             for (int i = 0; i < count; i++)
             {
                 var msg = new MsgTimeInfo();
-                var header = this.GetCAPHeader("发布大量(ok)", null);
+                var header = GetCAPHeader("发布大量(ok)", null);
                 await TdbCAP.PublishAsync(topicOK, msg, header);
                 //await TdbCAP.PublishAsync(topicLongTime, msg, header);
                 //await TdbCAP.PublishAsync(topicLongTime, msg, header);
@@ -244,11 +191,11 @@ namespace tdb.demo.webapi.Controllers.V1
         /// <param name="triggerEventDesc">触发事件描述</param>
         /// <param name="callbackName">回调主题名称</param>
         /// <returns></returns>
-        private Dictionary<string, string> GetCAPHeader(string triggerEventDesc, string callbackName)
+        private static Dictionary<string, string?> GetCAPHeader(string triggerEventDesc, string? callbackName)
         {
-            return new Dictionary<string, string>()
+            return new Dictionary<string, string?>()
             {
-                { TdbCst.CAPHeaders.ServerID, DemoConfig.App.Server.ID.ToStr() },
+                { TdbCst.CAPHeaders.ServerID, DemoConfig.App!.Server!.ID.ToStr() },
                 { TdbCst.CAPHeaders.ServerSeq, DemoConfig.App.Server.Seq.ToStr() },
                 { TdbCst.CAPHeaders.Source, triggerEventDesc },
                 { Headers.CallbackName, callbackName }
@@ -280,10 +227,78 @@ namespace tdb.demo.webapi.Controllers.V1
             /// <returns></returns>
             public override string ToString()
             {
-                return $"{this.GuidNO}.{this.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}";
+                return $"{this.GuidNO}.{this.Now:yyyy-MM-dd HH:mm:ss.fff}";
             }
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// cap订阅者
+    /// </summary>
+    public class CAPOKSubscriber : ICapSubscribe
+    {
+        private const string topicOK = "test.time.ok";
+        private const string callbackOK = "test.time.ok.callback";
+
+        /// <summary>
+        /// 订阅(ok)
+        /// </summary>
+        /// <returns></returns>
+        [CapSubscribe(topicOK)]
+        public TdbRes<MsgTimeInfo> SubscribeOK(MsgTimeInfo msg)
+        {
+            TdbLogger.Ins.Debug($"接收到消息[ok]：{msg}");
+
+            return TdbRes.Success(msg);
+        }
+
+        /// <summary>
+        /// 回调(ok)
+        /// </summary>
+        /// <returns></returns>
+        [CapSubscribe(callbackOK)]
+        public TdbRes<bool> CallbackOK(TdbRes<MsgTimeInfo> res)
+        {
+            TdbLogger.Ins.Debug($"接收到消息[callback.ok]：{res.SerializeJson()}");
+
+            return TdbRes.Success(true);
+        }
+    }
+
+    /// <summary>
+    /// cap订阅者
+    /// </summary>
+    public class CAPLongTimeSubscriber : ICapSubscribe
+    {
+        private const string topicLongTime = "test.time.longtime";
+        private const string callbackLongTime = "test.time.longtime.callback";
+
+        /// <summary>
+        /// 订阅(longtime)
+        /// </summary>
+        /// <returns></returns>
+        [CapSubscribe(topicLongTime)]
+        public TdbRes<MsgTimeInfo> SubscribeLongTime(MsgTimeInfo msg)
+        {
+            TdbLogger.Ins.Debug($"接收到消息[longtime]：{msg}");
+
+            Thread.Sleep(1000);
+
+            return TdbRes.Success(msg);
+        }
+
+        /// <summary>
+        /// 回调(longtime)
+        /// </summary>
+        /// <returns></returns>
+        [CapSubscribe(callbackLongTime)]
+        public TdbRes<bool> CallbackLongTime(TdbRes<MsgTimeInfo> res)
+        {
+            TdbLogger.Ins.Debug($"接收到消息[callback.longtime]：{res.SerializeJson()}");
+
+            return TdbRes.Success(true);
+        }
     }
 }

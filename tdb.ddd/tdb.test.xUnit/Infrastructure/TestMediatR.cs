@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static tdb.test.xUnit.Infrastructure.TestTdbConsulConfig;
 using tdb.ddd.infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 using tdb.ddd.infrastructure;
@@ -24,7 +23,7 @@ namespace tdb.test.xUnit.Infrastructure
         {
             var services = new ServiceCollection();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTdbBusMediatR(() => new TdbMediatRAssemblyModule().GetRegisterAssemblys());
+            services.AddTdbBusMediatR(() => new TdbBusAssemblyModule().GetRegisterAssemblys());
             var provider = services.BuildServiceProvider();
 
             TdbIOC.Init(provider);
@@ -52,13 +51,10 @@ namespace tdb.test.xUnit.Infrastructure
         [Fact]
         public async void TestPublish()
         {
-            var req = new SetNotification()
-            {
-                Guid = Guid.NewGuid().ToString()
-            };
+            var req = new SetNotification();
 
             await TdbMediatR.PublishAsync(req);
-            Assert.Equal(GuidValue, req.Guid);
+            Assert.Equal(GuidValue, req.GuidValue);
         }
 
         #region IRequest
@@ -109,7 +105,7 @@ namespace tdb.test.xUnit.Infrastructure
             /// <summary>
             /// Guid
             /// </summary>
-            public string Guid { get; set; }
+            public string GuidValue { get; set; } = Guid.NewGuid().ToString();
         }
 
         /// <summary>
@@ -126,7 +122,7 @@ namespace tdb.test.xUnit.Infrastructure
             public async Task Handle(SetNotification notification, CancellationToken cancellationToken)
             {
                 await Task.CompletedTask;
-                GuidValue = notification.Guid;
+                GuidValue = notification.GuidValue;
             }
         }
 

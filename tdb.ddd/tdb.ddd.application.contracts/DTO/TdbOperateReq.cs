@@ -9,7 +9,29 @@ namespace tdb.ddd.application.contracts
     /// <summary>
     /// 操作条件包装类
     /// </summary>
-    public class TdbOperateReq<T>
+    public class TdbOperateReq<T> : TdbOperateReq
+    {
+        /// <summary>
+        /// 参数
+        /// </summary>
+        public T Param { get; set; }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="param">条件</param>
+        /// <param name="operatorID">操作人ID</param>
+        /// <param name="operatorName">操作人姓名</param>
+        public TdbOperateReq(T param, long operatorID, string operatorName) : base(operatorID, operatorName)
+        {
+            this.Param = param;
+        }
+    }
+
+    /// <summary>
+    /// 操作条件
+    /// </summary>
+    public class TdbOperateReq
     {
         /// <summary>
         /// 操作人ID
@@ -37,8 +59,14 @@ namespace tdb.ddd.application.contracts
         public List<long> OperatorAuthorityIDs { get; set; } = new List<long>();
 
         /// <summary>
-        /// 参数
+        /// 构造函数
         /// </summary>
-        public T? Param { get; set; }
+        /// <param name="operatorID">操作人ID</param>
+        /// <param name="operatorName">操作人姓名</param>
+        public TdbOperateReq(long operatorID, string operatorName)
+        {
+            this.OperatorID = operatorID;
+            this.OperatorName = operatorName;
+        }
     }
 }

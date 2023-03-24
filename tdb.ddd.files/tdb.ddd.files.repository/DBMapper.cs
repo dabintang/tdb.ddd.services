@@ -65,6 +65,8 @@ namespace tdb.ddd.files.repository
         /// <param name="cfg">映射配置表达式</param>
         private static void TempFileMapping(IMapperConfigurationExpression cfg)
         {
+#pragma warning disable CS8602 // 解引用可能出现空引用。
+
             cfg.CreateMap<FileAgg, DBEntity.FileInfo>()
                 .ForMember(dest => dest.CreatorID, opts => opts.MapFrom(src => src.CreateInfo.CreatorID))
                 .ForMember(dest => dest.CreateTime, opts => opts.MapFrom(src => src.CreateInfo.CreateTime))
@@ -73,6 +75,8 @@ namespace tdb.ddd.files.repository
             cfg.CreateMap<DBEntity.FileInfo, FileAgg>()
                 .ForMember(dest => dest.CreateInfo, opts => opts.MapFrom(src => new CreateInfoValueObject() { CreatorID = src.CreatorID, CreateTime = src.CreateTime }))
                 .ForMember(dest => dest.UpdateInfo, opts => opts.MapFrom(src => new UpdateInfoValueObject() { UpdaterID = src.UpdaterID, UpdateTime = src.UpdateTime }));
+
+#pragma warning restore CS8602 // 解引用可能出现空引用。
         }
     }
 }

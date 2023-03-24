@@ -19,16 +19,16 @@ namespace tdb.ddd.files.application.contracts
         /// <summary>
         /// 姓名
         /// </summary>           
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// 用户拥有的角色ID
         /// </summary>
-        public List<long> LstRoleID { get; set; }
+        public List<long> LstRoleID { get; set; } = new List<long>();
 
         /// <summary>
         /// 用户拥有的权限ID
         /// </summary>
-        public List<long> LstAuthorityID { get; set; }
+        public List<long> LstAuthorityID { get; set; } = new List<long>();
     }
 }

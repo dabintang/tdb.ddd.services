@@ -16,8 +16,8 @@ namespace tdb.ddd.files.application.contracts.V1.DTO
     {
         /// <summary>
         /// 文件名（含后缀）
-        /// </summary>           
-        public string Name { get; set; }
+        /// </summary>
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// 访问级别(1：仅创建者；2：授权；3：公开)
@@ -42,7 +42,7 @@ namespace tdb.ddd.files.application.contracts.V1.DTO
         /// <summary>
         /// 文件数据
         /// </summary>
-        public byte[] Data { get; set; }
+        public byte[] Data { get; set; } = new byte[0];
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ namespace tdb.ddd.files.application.contracts.V1.DTO
         /// <summary>
         /// 文件名
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// 是否上传成功
@@ -69,6 +69,6 @@ namespace tdb.ddd.files.application.contracts.V1.DTO
         /// <summary>
         /// 结果描述
         /// </summary>
-        public string Msg { get; set; }
+        public string Msg { get; set; } = "";
     }
 }

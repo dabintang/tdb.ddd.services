@@ -30,7 +30,7 @@ namespace tdb.ddd.account.application.remote.Files
             var auth = TdbIOC.GetHttpContextAccessor()?.HttpContext?.GetAuthenticationHeaderValue();
 
             var res = await TdbHttpClient.PostAsJsonAsync<ConfirmFileReq, TdbRes<bool>>(url, reqParam: req, authentication: auth);
-            return res;
+            return res is null ? throw new TdbException("调用文件服务确认文件接口异常") : res;
         }
 
         #endregion

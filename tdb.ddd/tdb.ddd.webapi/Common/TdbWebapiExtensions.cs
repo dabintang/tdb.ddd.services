@@ -1,25 +1,24 @@
 ﻿using Autofac;
 using Autofac.Core;
 using Autofac.Extensions.DependencyInjection;
-using Consul;
 using DotNetCore.CAP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO.Compression;
-using System.Net.WebSockets;
-using System.Reflection;
 using System.Text;
 using tdb.common;
 using tdb.ddd.contracts;
 using tdb.ddd.domain;
 using tdb.ddd.infrastructure;
 using tdb.ddd.infrastructure.Services;
+using static tdb.ddd.webapi.Common.TdbWebAppBuilderOption;
 
 namespace tdb.ddd.webapi.Common
 {
@@ -126,9 +125,9 @@ namespace tdb.ddd.webapi.Common
                 UseMediatR(builder, option.BusOption.MediatROption);
             }
 
-            if (option.BusOption.SetupDotNetCoreCAP is not null)
+            if (option.BusOption.CAPOption is not null)
             {
-                UseDotNetCoreCAP(builder, option.BusOption.SetupDotNetCoreCAP);
+                UseDotNetCoreCAP(builder, option.BusOption.CAPOption);
             }
 
             #endregion
@@ -347,7 +346,7 @@ namespace tdb.ddd.webapi.Common
         /// <param name="option">MediatR配置</param>
         private static void UseMediatR(WebApplicationBuilder builder, TdbWebAppBuilderOption.TdbMediatROption option)
         {
-            builder.Services.AddTdbBusMediatR(() => option.RegisterAssemblys);
+            builder.Services.AddTdbBusMediatR(option.AssemblyModule);
 
             //打日志
             TdbLogger.Ins.Info("应用MediatR");
@@ -357,10 +356,10 @@ namespace tdb.ddd.webapi.Common
         /// 使用DotNetCore.CAP
         /// </summary>
         /// <param name="builder"></param>
-        /// <param name="setupDotNetCoreCAP">设置DotNetCore.CAP选项的方法</param>
-        private static void UseDotNetCoreCAP(WebApplicationBuilder builder, Action<CapOptions> setupDotNetCoreCAP)
+        /// <param name="capOption">DotNetCore.CAP选项</param>
+        private static void UseDotNetCoreCAP(WebApplicationBuilder builder, TdbDotNetCoreCAPOption capOption)
         {
-            builder.Services.AddTdbBusCAP(setupDotNetCoreCAP);
+            builder.Services.AddTdbBusCAP(capOption.SetupDotNetCoreCAP, capOption.AssemblyModule);
 
             //打日志
             TdbLogger.Ins.Info("应用DotNetCore.CAP");
@@ -889,9 +888,60 @@ namespace tdb.ddd.webapi.Common
             public TdbMediatROption? MediatROption { get; set; }
 
             /// <summary>
+            /// 启用DotNetCore.CAP时必须有值
+            /// </summary>
+            public TdbDotNetCoreCAPOption? CAPOption { get; set; }
+        }
+
+        /// <summary>
+        /// MediatR选项
+        /// </summary>
+        public class TdbMediatROption
+        {
+            /// <summary>
+            /// 获取需注册程序集
+            /// </summary>
+            public TdbBusAssemblyModule AssemblyModule { get; set; }
+
+            /// <summary>
+            /// 构造函数
+            /// </summary>
+            /// <param name="assemblyModule">获取需注册程序集</param>
+            public TdbMediatROption(TdbBusAssemblyModule ? assemblyModule = null)
+            {
+                this.AssemblyModule = assemblyModule ?? new TdbBusAssemblyModule();
+            }
+        }
+
+        /// <summary>
+        /// DotNetCore.CAP选项
+        /// </summary>
+        public class TdbDotNetCoreCAPOption
+        {
+            /// <summary>
             /// 设置DotNetCore.CAP选项的方法
             /// </summary>
-            public Action<CapOptions>? SetupDotNetCoreCAP { get; set; }
+            public Action<CapOptions> SetupDotNetCoreCAP { get; set; }
+
+            /// <summary>
+            /// 获取需注册程序集
+            /// </summary>
+            public TdbBusAssemblyModule AssemblyModule { get; set; }
+
+            /// <summary>
+            /// 构造函数
+            /// </summary>
+            /// <param name="setupDotNetCoreCAP">设置DotNetCore.CAP选项的方法</param>
+            /// <param name="assemblyModule">获取需注册程序集</param>
+            public TdbDotNetCoreCAPOption(Action<CapOptions> setupDotNetCoreCAP, TdbBusAssemblyModule? assemblyModule = null)
+            {
+                this.AssemblyModule = assemblyModule ?? new TdbBusAssemblyModule();
+                this.SetupDotNetCoreCAP = (o) =>
+                {
+                    DefaultCapOptionsWithoutTransportAndStorage(o);
+                    setupDotNetCoreCAP(o);
+                };
+            }
 
             /// <summary>
             /// 设置DotNetCore.CAP默认选项，Transport和Storage除外。
@@ -930,31 +980,6 @@ namespace tdb.ddd.webapi.Common
 
                 //仪表板
                 options.UseDashboard();
-            }
-        }
-
-        /// <summary>
-        /// MediatR选项
-        /// </summary>
-        public class TdbMediatROption
-        {
-            /// <summary>
-            /// 需注册的程序集集合
-            /// </summary>
-            public List<Assembly> RegisterAssemblys { get; set; }
-
-            /// <summary>
-            /// 构造函数
-            /// </summary>
-            /// <param name="registerAssemblys">需注册的程序集集合</param>
-            public TdbMediatROption(List<Assembly>? registerAssemblys = null)
-            {
-                if (registerAssemblys is null || registerAssemblys.Count == 0)
-                {
-                    registerAssemblys = new TdbMediatRAssemblyModule().GetRegisterAssemblys();
-                }
-
-                this.RegisterAssemblys = registerAssemblys;
             }
         }
 

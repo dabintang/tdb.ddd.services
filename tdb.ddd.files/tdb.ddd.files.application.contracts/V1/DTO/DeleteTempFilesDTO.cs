@@ -53,6 +53,6 @@ namespace tdb.ddd.files.application.contracts.V1.DTO
         /// <summary>
         /// 文件名
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
     }
 }

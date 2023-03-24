@@ -29,22 +29,22 @@ namespace tdb.ddd.account.domain.User.Aggregate
         /// <summary>
         /// 姓名
         /// </summary>
-        public string Name { get; internal set; }
+        public string Name { get; internal set; } = "";
 
         /// <summary>
         /// 昵称
         /// </summary>
-        public string NickName { get; internal set; }
+        public string NickName { get; internal set; } = "";
 
         /// <summary>
         /// 登录名
         /// </summary>
-        public string LoginName { get; set; }
+        public string LoginName { get; set; } = "";
 
         /// <summary>
         /// 密码(MD5)
         /// </summary>
-        public string Password { get; set; }
+        public string Password { get; set; } = "";
 
         /// <summary>
         /// 性别（1：男；2：女；3：未知）
@@ -64,12 +64,12 @@ namespace tdb.ddd.account.domain.User.Aggregate
         /// <summary>
         /// 手机号码
         /// </summary>
-        public MobilePhoneValueObject MobilePhoneValue { get; set; }
+        public MobilePhoneValueObject MobilePhoneValue { get; set; } = new MobilePhoneValueObject();
 
         /// <summary>
         /// 电子邮箱
         /// </summary>
-        public EmailValueObject EmailValue { get; set; }
+        public EmailValueObject EmailValue { get; set; } = new EmailValueObject();
 
         /// <summary>
         /// 状态（1：激活；2：禁用）
@@ -79,17 +79,17 @@ namespace tdb.ddd.account.domain.User.Aggregate
         /// <summary>
         /// 备注
         /// </summary>
-        public string Remark { get; set; }
+        public string Remark { get; set; } = "";
 
         /// <summary>
         /// 创建信息
         /// </summary>
-        public CreateInfoValueObject CreateInfo { get; set; }
+        public CreateInfoValueObject CreateInfo { get; set; } = new CreateInfoValueObject();
 
         /// <summary>
         /// 更新信息
         /// </summary>
-        public UpdateInfoValueObject UpdateInfo { get; set; }
+        public UpdateInfoValueObject UpdateInfo { get; set; } = new UpdateInfoValueObject();
 
         /// <summary>
         /// 用户拥有的角色ID
@@ -135,7 +135,7 @@ namespace tdb.ddd.account.domain.User.Aggregate
 
             //用户权限ID
             var lstAuthorityID = new List<long>();
-            foreach (var roleID in this.LstRoleID.Value)
+            foreach (var roleID in this.LstRoleID.Value!)
             {
                 //获取角色权限ID
                 var lstRoleAuthorityID = await TdbMediatR.SendAsync(new GetRoleAuthorityIDRequest() { RoleID = roleID });
@@ -161,7 +161,7 @@ namespace tdb.ddd.account.domain.User.Aggregate
         /// 赋予角色（全量赋值）
         /// </summary>
         /// <param name="lstRoleID">角色ID</param>
-        public TdbRes<bool> SetLstRoleID(List<long> lstRoleID)
+        public TdbRes<bool> SetLstRoleID(List<long>? lstRoleID)
         {
             lstRoleID ??= new List<long>();
             return this.LstRoleID.SetValue(lstRoleID);
@@ -171,7 +171,7 @@ namespace tdb.ddd.account.domain.User.Aggregate
         /// 设置姓名
         /// </summary>
         /// <param name="name">姓名</param>
-        public void SetName(string name)
+        public void SetName(string? name)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -187,7 +187,7 @@ namespace tdb.ddd.account.domain.User.Aggregate
         /// 设置昵称
         /// </summary>
         /// <param name="nickName">昵称</param>
-        public void SetNickName(string nickName)
+        public void SetNickName(string? nickName)
         {
             if (string.IsNullOrWhiteSpace(nickName))
             {
@@ -203,7 +203,7 @@ namespace tdb.ddd.account.domain.User.Aggregate
         /// 设置手机号码
         /// </summary>
         /// <param name="mobilePhone">手机号码</param>
-        public void SetMobilePhone(string mobilePhone)
+        public void SetMobilePhone(string? mobilePhone)
         {
             if (this.MobilePhoneValue?.MobilePhone == mobilePhone)
             {
@@ -217,7 +217,7 @@ namespace tdb.ddd.account.domain.User.Aggregate
         /// 设置电子邮箱
         /// </summary>
         /// <param name="email">电子邮箱</param>
-        public void SetEmail(string email)
+        public void SetEmail(string? email)
         {
             if (this.EmailValue?.Email == email)
             {

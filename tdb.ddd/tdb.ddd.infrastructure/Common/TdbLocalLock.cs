@@ -15,7 +15,7 @@ namespace tdb.ddd.infrastructure
         /// <summary>
         /// 内存缓存
         /// </summary>
-        private static MemoryCache memoryCache = new MemoryCache(new MemoryCacheOptions());
+        private static readonly MemoryCache memoryCache = new(new MemoryCacheOptions());
 
         #region 静态方法
 
@@ -24,49 +24,51 @@ namespace tdb.ddd.infrastructure
         /// </summary>
         /// <param name="key">key</param>
         /// <param name="maxWaitSeconds">最多等待时间（秒）</param>
-        /// <param name="maxLockSeconds">最大上锁时间（秒）</param>
+        /// <param name="maxLockSeconds">最大上锁时间（秒）【预防宕机导致一直锁着】</param>
         /// <returns></returns>
         public static TdbLocalLock Lock(string key, int maxWaitSeconds = 60, int maxLockSeconds = 60)
         {
             DateTime startTime = DateTime.Now;
-            int? lockThreadID = null; //上锁的线程ID
+            var localLock = new TdbLocalLock(key);
+            Guid? lockValue = null; //锁内容
 
             //保证lock时间比较短
             lock (memoryCache)
             {
-                lockThreadID = memoryCache.Get<int?>(key);
-                if (lockThreadID is null)
+                lockValue = memoryCache.Get<Guid?>(key);
+                if (lockValue is null)
                 {
-                    memoryCache.Set<int?>(key, Thread.CurrentThread.ManagedThreadId, TimeSpan.FromSeconds(maxLockSeconds));
-                    return new TdbLocalLock(key, false);
+                    localLock.Lock(maxLockSeconds);
+                    return localLock;
                 }
             }
 
-            while (lockThreadID is not null)
+            //如果被别人锁着，等待其释放锁或等待超时
+            while (lockValue is not null)
             {
                 //超过等待时间，返回并告知锁被别人占着
                 if ((DateTime.Now - startTime).TotalSeconds > maxWaitSeconds)
                 {
-                    return new TdbLocalLock(key, true);
+                    return localLock;
                 }
 
-                Thread.Sleep(30);
+                Thread.Sleep(10);
 
                 //保证lock时间比较短
                 lock (memoryCache)
                 {
-                    lockThreadID = memoryCache.Get<int?>(key);
-                    if (lockThreadID is null)
+                    lockValue = memoryCache.Get<Guid?>(key);
+                    if (lockValue is null)
                     {
-                        memoryCache.Set<int?>(key, Thread.CurrentThread.ManagedThreadId, TimeSpan.FromSeconds(maxLockSeconds));
-                        return new TdbLocalLock(key, false);
+                        localLock.Lock(maxLockSeconds);
+                        return localLock;
                     }
                 }
             }
 
             //代码应该不会进来到这里
-            memoryCache.Set<int?>(key, Thread.CurrentThread.ManagedThreadId, TimeSpan.FromSeconds(maxLockSeconds));
-            return new TdbLocalLock(key, false);
+            localLock.Lock(maxLockSeconds);
+            return localLock;
         }
 
         #endregion
@@ -79,18 +81,14 @@ namespace tdb.ddd.infrastructure
         private string Key { get; set; }
 
         /// <summary>
+        /// 上锁的内容
+        /// </summary>
+        private Guid LockValue { get; set; } = Guid.NewGuid();
+
+        /// <summary>
         /// 是否被他人锁着
         /// </summary>
-        public bool IsLockedByOther { get; private set; }
-
-        #endregion
-
-        #region 常量
-
-        ///// <summary>
-        ///// 最大上锁时间（10000秒）
-        ///// </summary>
-        //private const int MaxLockSecond = 10000;
+        public bool IsLockedByOther { get; private set; } = true;
 
         #endregion
 
@@ -100,16 +98,24 @@ namespace tdb.ddd.infrastructure
         /// 构造函数
         /// </summary>
         /// <param name="key">key</param>
-        /// <param name="isLockedByOther">是否被他人锁着</param>
-        private TdbLocalLock(string key, bool isLockedByOther)
+        private TdbLocalLock(string key)
         {
             this.Key = key;
-            this.IsLockedByOther = isLockedByOther;
         }
 
         #endregion
 
-        #region 公开方法
+        #region 方法
+
+        /// <summary>
+        /// 上锁
+        /// </summary>
+        /// <param name="maxLockSeconds">最大上锁时间（秒）【预防宕机导致一直锁着】</param>
+        private void Lock(int maxLockSeconds)
+        {
+            memoryCache.Set<Guid?>(this.Key, this.LockValue, TimeSpan.FromSeconds(maxLockSeconds));
+            this.IsLockedByOther = false;
+        }
 
         /// <summary>
         /// 释放
@@ -123,8 +129,8 @@ namespace tdb.ddd.infrastructure
             }
 
             //如果不是自己上的锁，不处理
-            var lockThreadID = memoryCache.Get<int?>(this.Key);
-            if (lockThreadID is null || lockThreadID.Value != Thread.CurrentThread.ManagedThreadId)
+            var lockValue = memoryCache.Get<Guid?>(this.Key);
+            if (lockValue is null || lockValue.Value != this.LockValue)
             {
                 return;
             }

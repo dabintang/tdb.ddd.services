@@ -37,23 +37,25 @@ namespace tdb.demo.webapi.Controllers.V1
             var user = UserRepos.Ins.Find(req.LoginName, req.Password);
             if (user == null)
             {
-                return new TdbRes<string>(DemoConfig.Msg.IncorrectPassword, "");
+                return new TdbRes<string>(DemoConfig.Msg!.IncorrectPassword!, "");
             }
 
             //客户端IP
             var clientIP = this.HttpContext.GetClientIP();
 
             //用户信息
-            var lstClaim = new List<Claim>();
-            lstClaim.Add(new Claim(TdbClaimTypes.UID, user.ID.ToString()));
-            lstClaim.Add(new Claim(TdbClaimTypes.UName, user.Name));
-            lstClaim.Add(new Claim(TdbClaimTypes.ClientIP, clientIP));
+            var lstClaim = new List<Claim>
+            {
+                new Claim(TdbClaimTypes.UID, user.ID.ToString()),
+                new Claim(TdbClaimTypes.UName, user.Name),
+                new Claim(TdbClaimTypes.ClientIP, clientIP)
+            };
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(lstClaim),
-                Issuer = DemoConfig.App.Token.Issuer,
+                Issuer = DemoConfig.App!.Token!.Issuer,
                 Expires = DateTime.UtcNow.AddSeconds(DemoConfig.App.Token.TimeoutSeconds),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(DemoConfig.App.Token.SecretKey)), SecurityAlgorithms.HmacSha256Signature)
             };
@@ -72,7 +74,7 @@ namespace tdb.demo.webapi.Controllers.V1
         public TdbRes<UserRes> GetCurrentUserInfo()
         {
             //找用户
-            var user = UserRepos.Ins.GetByID(this.CurUser.ID);
+            var user = UserRepos.Ins.GetByID(this.CurUser?.ID ?? 0);
             var res = new UserRes()
             {
                 ID = user?.ID ?? 0,
@@ -94,13 +96,13 @@ namespace tdb.demo.webapi.Controllers.V1
             /// 登录名
             /// </summary>
             [TdbRequired("登录名")]
-            public string LoginName { get; set; }
+            public string LoginName { get; set; } = "";
 
             /// <summary>
             /// 密码
             /// </summary>
             [TdbRequired("密码")]
-            public string Password { get; set; }
+            public string Password { get; set; } = "";
         }
 
         /// <summary>
@@ -117,12 +119,12 @@ namespace tdb.demo.webapi.Controllers.V1
             /// <summary>
             /// 用户名
             /// </summary>           
-            public string Name { get; set; }
+            public string Name { get; set; } = "";
 
             /// <summary>
             /// 昵称
             /// </summary>
-            public string NickName { get; set; }
+            public string NickName { get; set; } = "";
         }
     }
 }

@@ -39,7 +39,7 @@ namespace tdb.demo.webapi.Controllers.V1
         {
             this.testIoc1.Age = 10;
             var testIoc2 = TdbIOC.GetService<ITestIoc>();
-            TdbAssert.Equals(true, object.ReferenceEquals(testIoc1, testIoc2));
+            TdbDemoAssert.Equals(true, object.ReferenceEquals(testIoc1, testIoc2));
 
             return TdbRes.Success("OK");
         }

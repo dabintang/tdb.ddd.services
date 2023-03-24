@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.27.0" />
-    <PackageReference Include="tdb.ddd.domain" Version="7.0.0.8" />
+    <PackageReference Include="tdb.ddd.domain" Version="7.0.0.9" />
   </ItemGroup>
 
   <ItemGroup>

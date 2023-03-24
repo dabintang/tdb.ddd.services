@@ -23,12 +23,12 @@ namespace tdb.ddd.account.repository.DBEntity
         /// 角色名称
         /// </summary>
         [SugarColumn(Length = 32)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// 备注
         /// </summary>
         [SugarColumn(Length = 255)]
-        public string Remark { get; set; }
+        public string Remark { get; set; } = string.Empty;
     }
 }

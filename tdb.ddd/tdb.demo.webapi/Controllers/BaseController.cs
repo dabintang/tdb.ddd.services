@@ -15,11 +15,11 @@ namespace tdb.demo.webapi.Controllers
     [Route("tdb.ddd.demo/v{api-version:apiVersion}/[controller]/[action]")]
     public class BaseController : ControllerBase
     {
-        private OperatorInfo _curUser;
+        private OperatorInfo? _curUser;
         /// <summary>
         /// 当前用户
         /// </summary>
-        protected virtual OperatorInfo CurUser
+        protected virtual OperatorInfo? CurUser
         {
             get
             {
@@ -32,8 +32,8 @@ namespace tdb.demo.webapi.Controllers
                 if (this._curUser == null)
                 {
                     this._curUser = new OperatorInfo();
-                    this._curUser.ID = Convert.ToInt64(HttpContext.User.FindFirst(TdbClaimTypes.UID).Value);
-                    this._curUser.Name = HttpContext.User.Identity.Name;
+                    this._curUser.ID = Convert.ToInt64(HttpContext.User.FindFirst(TdbClaimTypes.UID)?.Value);
+                    this._curUser.Name = HttpContext.User.Identity?.Name ?? "";
                 }
 
                 return this._curUser;
@@ -54,11 +54,11 @@ namespace tdb.demo.webapi.Controllers
         /// <summary>
         /// 用户名
         /// </summary>           
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// 昵称
         /// </summary>
-        public string NickName { get; set; }
+        public string NickName { get; set; } = "";
     }
 }

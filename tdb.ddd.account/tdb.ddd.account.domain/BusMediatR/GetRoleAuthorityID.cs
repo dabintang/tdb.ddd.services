@@ -37,9 +37,9 @@ namespace tdb.ddd.account.domain.BusMediatR
             //获取角色聚合
             var roleAgg = await roleService.GetAsync(request.RoleID);
             //权限ID集合
-            var lstAuthorityID = roleAgg.LstAuthorityID.Value;
+            var lstAuthorityID = roleAgg?.LstAuthorityID.Value!;
 
-            return lstAuthorityID;
+            return lstAuthorityID ?? new List<long>();
         }
     }
 }

@@ -25,7 +25,7 @@ namespace tdb.ddd.files.domain.Files
         /// </summary>
         /// <param name="fileID">文件ID</param>
         /// <returns></returns>
-        Task<FileAgg> GetFileAggAsync(long fileID);
+        Task<FileAgg?> GetFileAggAsync(long fileID);
 
         /// <summary>
         /// 删除文件

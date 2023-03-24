@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.infrastructure;
+using Xunit;
 
 namespace tdb.test.xUnit.Infrastructure
 {
@@ -27,6 +29,29 @@ namespace tdb.test.xUnit.Infrastructure
         }
 
         /// <summary>
+        /// 测试对同一个key上锁,完成后再次对同一key上锁
+        /// </summary>
+        [Fact]
+        public void SameKeyTwoTimes()
+        {
+            var key = "SameKeyTwoTimes";
+
+            //最多等待时间（秒）
+            var maxWaitSeconds = 60;
+            //模拟任务耗时（秒）
+            var taskSeconds = 1;
+
+            var watch = new Stopwatch();
+            watch.Start();
+
+            this.DoSomeThing(key, maxWaitSeconds, taskSeconds);
+            this.DoSomeThing(key, maxWaitSeconds, taskSeconds);
+
+            watch.Stop();
+            Assert.True(watch.Elapsed.TotalSeconds < 4);
+        }
+
+        /// <summary>
         /// 测试对同一个key上锁且未等待超时的情况
         /// </summary>
         [Fact]
@@ -41,7 +66,7 @@ namespace tdb.test.xUnit.Infrastructure
             //并行3任务
             Parallel.Invoke(
                 () => { this.DoSomeThing(key, maxWaitSeconds, taskSeconds); },
-                //() => { this.DoSomeThing(key, maxWaitSeconds, taskSeconds); },
+                () => { this.DoSomeThing(key, maxWaitSeconds, taskSeconds); },
                 () => { this.DoSomeThing(key, maxWaitSeconds, taskSeconds); }
             );
         }
@@ -87,7 +112,6 @@ namespace tdb.test.xUnit.Infrastructure
                 () => { this.DoSomeThing(key3, maxWaitSeconds, taskSeconds); }
             );
         }
-
 
         /// <summary>
         /// 模拟做任务

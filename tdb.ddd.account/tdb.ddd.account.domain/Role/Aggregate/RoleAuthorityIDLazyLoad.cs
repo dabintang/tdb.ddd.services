@@ -19,7 +19,7 @@ namespace tdb.ddd.account.domain.Role.Aggregate
     {
         #region 仓储
 
-        private IRoleRepos _roleRepos;
+        private IRoleRepos? _roleRepos;
         /// <summary>
         /// 角色仓储
         /// </summary>
@@ -28,6 +28,10 @@ namespace tdb.ddd.account.domain.Role.Aggregate
             get
             {
                 this._roleRepos ??= TdbIOC.GetService<IRoleRepos>();
+                if (this._roleRepos is null)
+                {
+                    throw new TdbException("角色仓储接口未实现");
+                }
                 return this._roleRepos;
             }
         }

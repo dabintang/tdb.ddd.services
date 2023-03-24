@@ -75,7 +75,7 @@ namespace tdb.ddd.account.webapi.Controllers.V1
             //参数
             var req = new GetUserInfoByIDReq()
             {
-                 UserID = this.CurUser.ID
+                 UserID = this.CurUser!.ID
             };
 
             var res = await this.userApp.GetUserInfoByIDAsync(req);

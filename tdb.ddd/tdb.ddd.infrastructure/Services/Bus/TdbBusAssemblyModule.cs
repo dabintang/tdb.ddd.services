@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 namespace tdb.ddd.infrastructure.Services
 {
     /// <summary>
-    /// 用到MediatR的程序集模块
+    /// 获取总线需要注册的程序集名称集合
+    /// （默认获取所有tdb.开头 .dll结尾的程序集：tdb.*.dll）
     /// </summary>
-    public class TdbMediatRAssemblyModule
+    /// <returns></returns>
+    public class TdbBusAssemblyModule
     {
         /// <summary>
         /// 获取需要注册的程序集名称集合

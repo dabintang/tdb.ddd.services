@@ -30,11 +30,11 @@ namespace tdb.ddd.account.repository
         /// </summary>
         /// <param name="userID">用户ID</param>
         /// <returns></returns>
-        public async Task<UserAgg> GetUserAggAsync(long userID)
+        public async Task<UserAgg?> GetUserAggAsync(long userID)
         {
             //获取用户信息
             var userInfo = await TdbCache.Ins.HCacheShellAsync(Cst_CacheKeyUserInfo, TimeSpan.FromDays(1), userID.ToStr(), async () => await this.GetFirstAsync(m => m.ID == userID && m.IsDeleted == false));
-            if (userInfo == null)
+            if (userInfo is null)
             {
                 return null;
             }
@@ -52,11 +52,11 @@ namespace tdb.ddd.account.repository
         /// </summary>
         /// <param name="loginName">登录名</param>
         /// <returns></returns>
-        public async Task<UserAgg> GetUserAggAsync(string loginName)
+        public async Task<UserAgg?> GetUserAggAsync(string loginName)
         {
             //获取用户信息
             var userInfo = await this.GetFirstAsync(m => m.LoginName == loginName && m.IsDeleted == false);
-            if (userInfo == null)
+            if (userInfo is null)
             {
                 return null;
             }
@@ -77,10 +77,13 @@ namespace tdb.ddd.account.repository
         /// <returns></returns>
         public async Task<List<long>> GetRoleIDsAsync(long userID)
         {
-            return await TdbCache.Ins.CacheShellAsync<List<long>>(CacheKeyUserRoleID(userID), TimeSpan.FromDays(1), async () =>
+            var lstRoleID = await TdbCache.Ins.CacheShellAsync<List<long>>(CacheKeyUserRoleID(userID), TimeSpan.FromDays(1), async () =>
             {
-                return await this.Change<UserRoleConfig>().AsQueryable().Where(m => m.UserID == userID).Select(m => m.RoleID).ToListAsync();
+                var list = await this.Change<UserRoleConfig>().AsQueryable().Where(m => m.UserID == userID).Select(m => m.RoleID).ToListAsync();
+                return list ?? new List<long>();
             });
+
+            return lstRoleID ?? new List<long>();
         }
 
         /// <summary>
@@ -99,7 +102,7 @@ namespace tdb.ddd.account.repository
                 var info = DBMapper.Map<UserAgg, UserInfo>(agg);
 
                 //如果有备份，则说明是更新操作
-                if (aggBackup != null)
+                if (aggBackup is not null)
                 {
                     await this.AsUpdateable(info).ExecuteCommandAsync();
                 }
@@ -175,18 +178,21 @@ namespace tdb.ddd.account.repository
         /// <param name="userAgg">用户聚合</param>
         private void Backup(UserAgg userAgg)
         {
-            this.dicBackup[userAgg.ID] = userAgg.DeepClone();
+            var backup = userAgg.DeepClone();
+            if (backup is not null)
+            {
+                this.dicBackup[userAgg.ID] = backup;
+            }
         }
 
         /// <summary>
         /// 获取备份
         /// </summary>
         /// <param name="userID">用户ID</param>
-        private UserAgg GetBackup(long userID)
+        private UserAgg? GetBackup(long userID)
         {
-            this.dicBackup.TryGetValue(userID, out UserAgg aggBackup);
+            this.dicBackup.TryGetValue(userID, out UserAgg? aggBackup);
             return aggBackup;
-
         }
 
         /// <summary>
@@ -197,7 +203,13 @@ namespace tdb.ddd.account.repository
         private static List<UserRoleConfig> ToUserRoleConfig(UserAgg agg)
         {
             var list = new List<UserRoleConfig>();
-            foreach (var roleID in agg.LstRoleID.Value)
+            var lstRoleID = agg.LstRoleID.Value;
+            if (lstRoleID is null)
+            {
+                return list;
+            }
+
+            foreach (var roleID in lstRoleID)
             {
                 list.Add(new UserRoleConfig() { UserID = agg.ID, RoleID = roleID });
             }

@@ -24,7 +24,7 @@ namespace tdb.demo.webapi.Controllers.V1
         [TdbAPILog(Level = EnmTdbLogLevel.Debug)]
         public TdbRes<AppConfig> GetAppConfig()
         {
-            return TdbRes.Success(DemoConfig.App);
+            return TdbRes.Success(DemoConfig.App!);
         }
 
         #endregion

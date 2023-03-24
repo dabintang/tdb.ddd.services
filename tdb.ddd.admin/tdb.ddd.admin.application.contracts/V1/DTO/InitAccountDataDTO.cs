@@ -16,6 +16,6 @@ namespace tdb.ddd.admin.application.contracts.V1.DTO
         /// 口令
         /// </summary>
         [TdbRequired("口令")]
-        public string Secret { get; set; }
+        public string Secret { get; set; } = "";
     }
 }

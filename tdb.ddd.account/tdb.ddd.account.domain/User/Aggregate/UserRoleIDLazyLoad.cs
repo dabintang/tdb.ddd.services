@@ -19,7 +19,7 @@ namespace tdb.ddd.account.domain.User.Aggregate
     {
         #region 仓储
 
-        private IUserRepos _userRepos;
+        private IUserRepos? _userRepos;
         /// <summary>
         /// 用户仓储
         /// </summary>
@@ -28,6 +28,10 @@ namespace tdb.ddd.account.domain.User.Aggregate
             get
             {
                 this._userRepos ??= TdbIOC.GetService<IUserRepos>();
+                if (this._userRepos is null)
+                {
+                    throw new TdbException("用户仓储接口未实现");
+                }
                 return this._userRepos;
             }
         }

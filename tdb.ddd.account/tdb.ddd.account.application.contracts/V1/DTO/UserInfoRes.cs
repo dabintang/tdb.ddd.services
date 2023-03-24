@@ -23,12 +23,12 @@ namespace tdb.ddd.account.application.contracts.V1.DTO
         /// <summary>
         /// 姓名
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// 昵称
         /// </summary>
-        public string NickName { get; set; }
+        public string NickName { get; set; } = "";
 
         /// <summary>
         /// 性别（1：男；2：女；3：未知）
@@ -49,7 +49,7 @@ namespace tdb.ddd.account.application.contracts.V1.DTO
         /// <summary>
         /// 手机号码
         /// </summary>
-        public string MobilePhone { get; set; }
+        public string MobilePhone { get; set; } = "";
 
         /// <summary>
         /// 手机号是否已验证
@@ -59,7 +59,7 @@ namespace tdb.ddd.account.application.contracts.V1.DTO
         /// <summary>
         /// 电子邮箱
         /// </summary>
-        public string Email { get; set; }
+        public string Email { get; set; } = "";
 
         /// <summary>
         /// 电子邮箱是否已验证
@@ -74,7 +74,7 @@ namespace tdb.ddd.account.application.contracts.V1.DTO
         /// <summary>
         /// 备注
         /// </summary>
-        public string Remark { get; set; }
+        public string Remark { get; set; } = "";
 
         /// <summary>
         /// 创建者ID

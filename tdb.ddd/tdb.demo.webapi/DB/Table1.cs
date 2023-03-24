@@ -17,6 +17,6 @@ namespace tdb.demo.webapi.DB
         /// <summary>
         /// Name
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
     }
 }

@@ -25,13 +25,13 @@ namespace tdb.ddd.files.repository.DBEntity
         /// 文件名（含后缀）
         /// </summary>
         [SugarColumn(Length = 255)]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// 文件地址(本地路径或url)
         /// </summary>
         [SugarColumn(Length = 255)]
-        public string Address { get; set; }
+        public string Address { get; set; } = string.Empty;
 
         /// <summary>
         /// 存储类型（1：本地磁盘）
@@ -57,7 +57,7 @@ namespace tdb.ddd.files.repository.DBEntity
         /// 备注
         /// </summary>
         [SugarColumn(Length = 255)]
-        public string Remark { get; set; }
+        public string Remark { get; set; } = string.Empty;
 
         /// <summary>
         /// 创建者ID

@@ -35,16 +35,16 @@ namespace tdb.ddd.files.application.contracts.V1.DTO
         /// <summary>
         /// 文件名（含后缀）
         /// </summary>           
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// 内容类型
         /// </summary>
-        public string ContentType { get; set; }
+        public string ContentType { get; set; } = "";
 
         /// <summary>
         /// 文件数据
         /// </summary>
-        public byte[] Data { get; set; }
+        public byte[] Data { get; set; } = Array.Empty<byte>();
     }
 }

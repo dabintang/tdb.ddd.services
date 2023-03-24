@@ -18,7 +18,7 @@ namespace tdb.ddd.account.domain.Authority
         /// </summary>
         /// <param name="authorityID">权限ID</param>
         /// <returns></returns>
-        Task<AuthorityAgg> GetAuthorityAggAsync(long authorityID);
+        Task<AuthorityAgg?> GetAuthorityAggAsync(long authorityID);
 
         /// <summary>
         /// 保存修改

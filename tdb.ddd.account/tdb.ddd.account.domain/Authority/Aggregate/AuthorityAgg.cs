@@ -17,12 +17,12 @@ namespace tdb.ddd.account.domain.Authority.Aggregate
         /// <summary>
         /// 权限名称
         /// </summary>           
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// 备注
         /// </summary>           
-        public string Remark { get; set; }
+        public string Remark { get; set; } = "";
 
         #endregion
     }

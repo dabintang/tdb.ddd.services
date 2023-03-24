@@ -97,15 +97,20 @@ namespace tdb.test.xUnit.Infrastructure
             this.cache.Set(key, value, TimeSpan.FromMinutes(1));
             //获取缓存
             var cacheValue = this.cache.Get<T>(key);
+
             //设置的值和获取的值应一致
             if (typeof(T).IsClass)
             {
+                Assert.NotNull(cacheValue);
+
                 var json1 = value.SerializeJson();
                 var json2 = cacheValue.SerializeJson();
                 Assert.Equal(json1, json2);
             }
             else if (value is DateTime)
             {
+                Assert.NotNull(cacheValue);
+
                 var json1 = value.ToString();
                 var json2 = cacheValue.ToString();
                 Assert.Equal(json1, json2);
@@ -205,15 +210,20 @@ namespace tdb.test.xUnit.Infrastructure
             await this.cache.SetAsync(key, value, TimeSpan.FromMinutes(1));
             //获取缓存
             var cacheValue = this.cache.Get<T>(key);
+
             //设置的值和获取的值应一致
             if (typeof(T).IsClass)
             {
+                Assert.NotNull(cacheValue);
+
                 var json1 = value.SerializeJson();
                 var json2 = cacheValue.SerializeJson();
                 Assert.Equal(json1, json2);
             }
             else if (value is DateTime)
             {
+                Assert.NotNull(cacheValue);
+
                 var json1 = value.ToString();
                 var json2 = cacheValue.ToString();
                 Assert.Equal(json1, json2);
@@ -459,15 +469,20 @@ namespace tdb.test.xUnit.Infrastructure
             this.cache.Expire(key, TimeSpan.FromMinutes(1));
             //获取缓存
             var cacheValue = this.cache.HGet<T>(key, field);
+
             //设置的值和获取的值应一致
             if (typeof(T).IsClass)
             {
+                Assert.NotNull(cacheValue);
+
                 var json1 = value.SerializeJson();
                 var json2 = cacheValue.SerializeJson();
                 Assert.Equal(json1, json2);
             }
             else if (value is DateTime)
             {
+                Assert.NotNull(cacheValue);
+
                 var json1 = value.ToString();
                 var json2 = cacheValue.ToString();
                 Assert.Equal(json1, json2);
@@ -568,15 +583,20 @@ namespace tdb.test.xUnit.Infrastructure
             await this.cache.HSetAsync(key, TimeSpan.FromMinutes(1), field, value);
             //获取缓存
             var cacheValue = this.cache.HGet<T>(key, field);
+
             //设置的值和获取的值应一致
             if (typeof(T).IsClass)
             {
+                Assert.NotNull(cacheValue);
+
                 var json1 = value.SerializeJson();
                 var json2 = cacheValue.SerializeJson();
                 Assert.Equal(json1, json2);
             }
             else if (value is DateTime)
             {
+                Assert.NotNull(cacheValue);
+
                 var json1 = value.ToString();
                 var json2 = cacheValue.ToString();
                 Assert.Equal(json1, json2);
@@ -603,7 +623,7 @@ namespace tdb.test.xUnit.Infrastructure
                 { "field2", "value2" },
                 { "field3", "value3" }
             };
-            var keyValues = value.Select(m => (m.Key, (object)m.Value));
+            var keyValues = value.Select(m => (m.Key, (object?)m.Value));
 
             //设置缓存
             this.cache.HMSet(key, keyValues.ToArray());
@@ -611,6 +631,8 @@ namespace tdb.test.xUnit.Infrastructure
             this.cache.Expire(key, TimeSpan.FromMinutes(1));
             //获取缓存
             var cacheValue = this.cache.HGetAll<string>(key);
+            Assert.NotNull(cacheValue);
+
             //设置的值和获取的值应一致
             var json1 = value.SerializeJson();
             var json2 = cacheValue.SerializeJson();
@@ -646,12 +668,14 @@ namespace tdb.test.xUnit.Infrastructure
                 { "field2", "value2" },
                 { "field3", "value3" }
             };
-            var keyValues = value.Select(m => (m.Key, (object)m.Value));
+            var keyValues = value.Select(m => (m.Key, (object?)m.Value));
 
             //设置缓存
             await this.cache.HMSetAsync(key, TimeSpan.FromMinutes(1), keyValues.ToArray());
             //获取缓存
             var cacheValue = this.cache.HGetAll<string>(key);
+            Assert.NotNull(cacheValue);
+
             //设置的值和获取的值应一致
             var json1 = value.SerializeJson();
             var json2 = cacheValue.SerializeJson();
@@ -915,10 +939,10 @@ namespace tdb.test.xUnit.Infrastructure
         /// </summary>
         public class ClassOjbect
         {
-            public string Text { get; set; }
+            public string? Text { get; set; }
             public int Age { get; set; }
             public EnmGender GenderCode { get; set; }
-            public ClassOjbect2 C2 { get; set; }
+            public ClassOjbect2? C2 { get; set; }
             public StructObject2 S2;
         }
 
@@ -927,7 +951,7 @@ namespace tdb.test.xUnit.Infrastructure
         /// </summary>
         public class ClassOjbect2
         {
-            public string Text2 { get; set; }
+            public string? Text2 { get; set; }
             public int Age2 { get; set; }
         }
 
@@ -945,7 +969,7 @@ namespace tdb.test.xUnit.Infrastructure
         /// </summary>
         public struct StructObject2
         {
-            public string Text2 { get; set; }
+            public string? Text2 { get; set; }
             public int Age2 { get; set; }
         }
 

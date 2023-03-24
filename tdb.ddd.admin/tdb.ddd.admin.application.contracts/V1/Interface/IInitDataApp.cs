@@ -15,7 +15,6 @@ namespace tdb.ddd.admin.application.contracts.V1.Interface
         /// <summary>
         /// 初始化账户服务数据
         /// </summary>
-        /// <param name="secretKey">秘钥</param>
         /// <returns></returns>
         Task<TdbRes<string>> InitAccountDataAsync();
     }

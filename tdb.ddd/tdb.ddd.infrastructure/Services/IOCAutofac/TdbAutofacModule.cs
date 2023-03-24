@@ -21,9 +21,6 @@ namespace tdb.ddd.infrastructure.Services
         /// <param name="builder"></param>
         protected override void Load(ContainerBuilder builder)
         {
-            //获取需要注册的程序集集合
-            var lstAssembly = this.GetRegisterAssemblys();
-
             //拦截器接口
             var iIntercept = typeof(ITdbIOCIntercept);
 

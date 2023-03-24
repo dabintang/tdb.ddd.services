@@ -18,7 +18,7 @@ namespace tdb.ddd.account.domain.Role
         /// </summary>
         /// <param name="roleID">角色ID</param>
         /// <returns></returns>
-        Task<RoleAgg> GetRoleAggAsync(long roleID);
+        Task<RoleAgg?> GetRoleAggAsync(long roleID);
 
         /// <summary>
         /// 获取角色拥有的权限ID

@@ -12,6 +12,8 @@ namespace tdb.ddd.files.infrastructure.Config
     /// </summary>
     public class CommonConfigInfo
     {
+#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
+
         /// <summary>
         /// key前缀
         /// </summary>
@@ -23,23 +25,23 @@ namespace tdb.ddd.files.infrastructure.Config
         [TdbConfigKey("Token")]
         public TokenConfigInfo Token { get; set; }
 
-        /// <summary>
-        /// 账户服务配置信息
-        /// </summary>
-        [TdbConfigKey("AccountService")]
-        public ServiceConfigInfo AccountService { get; set; }
+        ///// <summary>
+        ///// 账户服务配置信息
+        ///// </summary>
+        //[TdbConfigKey("AccountService")]
+        //public ServiceConfigInfo AccountService { get; set; }
 
-        /// <summary>
-        /// 文件服务配置信息
-        /// </summary>
-        [TdbConfigKey("FilesService")]
-        public ServiceConfigInfo FilesService { get; set; }
+        ///// <summary>
+        ///// 文件服务配置信息
+        ///// </summary>
+        //[TdbConfigKey("FilesService")]
+        //public ServiceConfigInfo FilesService { get; set; }
 
-        /// <summary>
-        /// 运维服务配置信息
-        /// </summary>
-        [TdbConfigKey("AdminService")]
-        public ServiceConfigInfo AdminService { get; set; }
+        ///// <summary>
+        ///// 运维服务配置信息
+        ///// </summary>
+        //[TdbConfigKey("AdminService")]
+        //public ServiceConfigInfo AdminService { get; set; }
 
         /// <summary>
         /// HashID配置信息
@@ -71,16 +73,16 @@ namespace tdb.ddd.files.infrastructure.Config
             public string SecretKey { get; set; }
         }
 
-        /// <summary>
-        /// 服务配置信息
-        /// </summary>
-        public class ServiceConfigInfo
-        {
-            /// <summary>
-            /// webapi根地址
-            /// </summary>
-            public string WebapiRootURL { get; set; }
-        }
+        ///// <summary>
+        ///// 服务配置信息
+        ///// </summary>
+        //public class ServiceConfigInfo
+        //{
+        //    /// <summary>
+        //    /// webapi根地址
+        //    /// </summary>
+        //    public string WebapiRootURL { get; set; }
+        //}
 
         /// <summary>
         /// HashID配置信息
@@ -110,5 +112,7 @@ namespace tdb.ddd.files.infrastructure.Config
         }
 
         #endregion
+
+#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
     }
 }

@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DotNetCore.CAP;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using tdb.ddd.contracts;
 using tdb.ddd.files.application.contracts.V1.DTO;
 using tdb.ddd.files.application.contracts.V1.Interface;
+using tdb.ddd.files.application.V1;
 using tdb.ddd.files.domain.contracts.Enum;
+using tdb.ddd.infrastructure;
 using tdb.ddd.webapi;
 
 namespace tdb.ddd.files.webapi.Controllers.V1
@@ -147,7 +150,7 @@ namespace tdb.ddd.files.webapi.Controllers.V1
 
             //下载文件
             var result = await this.filesApp.DownloadFileAsync(reqOpe);
-            if (result.Code != TdbComResMsg.Success.Code)
+            if (result.Code != TdbComResMsg.Success.Code || result.Data is null)
             {
                 return new JsonResult(result);
             }
@@ -174,7 +177,7 @@ namespace tdb.ddd.files.webapi.Controllers.V1
 
             //下载图片
             var result = await this.filesApp.DownloadImageAsync(reqOpe);
-            if (result.Code != TdbComResMsg.Success.Code)
+            if (result.Code != TdbComResMsg.Success.Code || result.Data is null)
             {
                 return new JsonResult(result);
             }
@@ -207,5 +210,28 @@ namespace tdb.ddd.files.webapi.Controllers.V1
         }
 
         #endregion
+
+
+        ///// <summary>
+        ///// 修改文件状态
+        ///// </summary>
+        ///// <param name="msg">修改文件状态 消息</param>
+        ///// <returns></returns>
+        //[NonAction]
+        //[CapSubscribe(TdbCst.CAPTopic.UpdateFilesStatus)]
+        //public async Task<UpdateFilesStatusRes> UpdateFilesStatusAsync(UpdateFilesStatusMsg msg)
+        //{
+        //    var res = new UpdateFilesStatusRes();
+
+        //    if (msg.LstFileStatus is null)
+        //    {
+        //        return res;
+        //    }
+
+            
+
+        //    return res;
+        //}
+
     }
 }

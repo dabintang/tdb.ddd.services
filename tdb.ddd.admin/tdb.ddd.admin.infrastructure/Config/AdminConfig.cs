@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.infrastructure.Services;
 using tdb.ddd.infrastructure;
+using tdb.ddd.contracts;
 
 namespace tdb.ddd.admin.infrastructure.Config
 {
@@ -32,26 +33,41 @@ namespace tdb.ddd.admin.infrastructure.Config
             //定时重新读取共用配置信息
             RefreshCommonConfigInfo();
 
+            //验证配置信息是否正确
+            CheckConfig();
         }
 
         #region appsetting.json
 
+        private static AppConfigInfo? _app;
         /// <summary>
         /// appsettings.json配置
         /// </summary>
-        public static AppConfigInfo App { get; private set; }
+        public static AppConfigInfo App
+        {
+            get
+            {
+                if (_app is null)
+                {
+                    throw new TdbException("未设置本地配置【appsettings.json】");
+                }
+
+                return _app;
+            }
+            private set => _app = value;
+        }
 
         /// <summary>
         /// json配置服务
         /// </summary>
-        private static ITdbJsonConfig JsonConfigService { get; set; }
+        private static ITdbJsonConfig? JsonConfigService { get; set; }
 
         /// <summary>
         /// 读取appsettings.json配置
         /// </summary>
         private static void ReadAppConfig()
         {
-            App = JsonConfigService.GetConfig<AppConfigInfo>();
+            App = JsonConfigService!.GetConfig<AppConfigInfo>();
         }
 
         /// <summary>
@@ -67,22 +83,35 @@ namespace tdb.ddd.admin.infrastructure.Config
 
         #region common
 
+        private static CommonConfigInfo? _common;
         /// <summary>
         /// 共用配置
         /// </summary>
-        public static CommonConfigInfo Common { get; private set; }
+        public static CommonConfigInfo Common
+        {
+            get
+            {
+                if (_common is null)
+                {
+                    throw new TdbException("未设置分布式配置【共用配置】");
+                }
+
+                return _common;
+            }
+            private set => _common = value;
+        }
 
         /// <summary>
         /// 共用配置服务
         /// </summary>
-        private static ITdbDistributedConfig CommonConfigService { get; set; }
+        private static ITdbDistributedConfig? CommonConfigService { get; set; }
 
         /// <summary>
         /// 读取共用配置信息
         /// </summary>
         private static void ReadCommonConfigInfo()
         {
-            Common = CommonConfigService.GetConfigAsync<CommonConfigInfo>().Result;
+            Common = CommonConfigService!.GetConfigAsync<CommonConfigInfo>().Result;
         }
 
         /// <summary>
@@ -103,5 +132,16 @@ namespace tdb.ddd.admin.infrastructure.Config
 
         #endregion
 
+        #region 验证
+
+        /// <summary>
+        /// 验证配置信息是否正确
+        /// </summary>
+        private static void CheckConfig()
+        {
+			//TODO
+        }
+
+        #endregion
     }
 }

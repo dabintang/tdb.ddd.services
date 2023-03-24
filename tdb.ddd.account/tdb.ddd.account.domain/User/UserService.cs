@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.account.domain.User.Aggregate;
+using tdb.ddd.contracts;
 using tdb.ddd.infrastructure;
 
 namespace tdb.ddd.account.domain.User
@@ -15,7 +16,7 @@ namespace tdb.ddd.account.domain.User
     {
         #region 仓储
 
-        private IUserRepos _userRepos;
+        private IUserRepos? _userRepos;
         /// <summary>
         /// 用户仓储
         /// </summary>
@@ -24,6 +25,11 @@ namespace tdb.ddd.account.domain.User
             get
             {
                 this._userRepos ??= TdbIOC.GetService<IUserRepos>();
+                if (this._userRepos is null)
+                {
+                    throw new TdbException("用户仓储接口未实现");
+                }
+
                 return this._userRepos;
             }
         }
@@ -37,7 +43,7 @@ namespace tdb.ddd.account.domain.User
         /// </summary>
         /// <param name="userID">用户ID</param>
         /// <returns></returns>
-        public async Task<UserAgg> GetAsync(long userID)
+        public async Task<UserAgg?> GetAsync(long userID)
         {
             //获取用户聚合
             var userAgg = await this.UserRepos.GetUserAggAsync(userID);
@@ -49,7 +55,7 @@ namespace tdb.ddd.account.domain.User
         /// </summary>
         /// <param name="loginName">登录名</param>
         /// <returns></returns>
-        public async Task<UserAgg> GetAsync(string loginName)
+        public async Task<UserAgg?> GetAsync(string loginName)
         {
             //获取用户聚合
             var userAgg = await this.UserRepos.GetUserAggAsync(loginName);
@@ -85,7 +91,7 @@ namespace tdb.ddd.account.domain.User
         public async Task<bool> IsExistLoginName(string loginName)
         {
             var userAgg = await this.GetAsync(loginName);
-            return (userAgg != null);
+            return (userAgg is not null);
         }
 
         /// <summary>
@@ -96,7 +102,7 @@ namespace tdb.ddd.account.domain.User
         public async Task<bool> IsExistUserID(long userID)
         {
             var userAgg = await this.GetAsync(userID);
-            return (userAgg != null);
+            return (userAgg is not null);
         }
 
         #endregion

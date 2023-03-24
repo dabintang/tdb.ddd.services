@@ -23,10 +23,14 @@ namespace tdb.ddd.account.repository
         /// </summary>
         /// <param name="roleID">角色ID</param>
         /// <returns></returns>
-        public async Task<RoleAgg> GetRoleAggAsync(long roleID)
+        public async Task<RoleAgg?> GetRoleAggAsync(long roleID)
         {
             //获取角色信息
-            var roleInfo = await TdbCache.Ins.CacheShellAsync(this.CacheKeyRoleInfo(roleID), TimeSpan.FromDays(1), async () => await this.GetByIdAsync(roleID));
+            var roleInfo = await TdbCache.Ins.CacheShellAsync(CacheKeyRoleInfo(roleID), TimeSpan.FromDays(1), async () => await this.GetByIdAsync(roleID));
+            if (roleInfo is null)
+            {
+                return null;
+            }
 
             //转为聚合
             var roleAgg = DBMapper.Map<RoleInfo, RoleAgg>(roleInfo);
@@ -41,10 +45,12 @@ namespace tdb.ddd.account.repository
         /// <returns></returns>
         public async Task<List<long>> GetAuthorityIDsAsync(long roleID)
         {
-            return await TdbCache.Ins.CacheShellAsync(this.CacheKeyRoleAuthorityID(roleID), TimeSpan.FromDays(1), async () =>
+            var lstAuthorityID = await TdbCache.Ins.CacheShellAsync(CacheKeyRoleAuthorityID(roleID), TimeSpan.FromDays(1), async () =>
             {
-                return await this.Change<RoleAuthorityConfig>().AsQueryable().Where(m => m.RoleID == roleID).Select(m => m.AuthorityID).ToListAsync();
+                var list = await this.Change<RoleAuthorityConfig>().AsQueryable().Where(m => m.RoleID == roleID).Select(m => m.AuthorityID).ToListAsync();
+                return list ?? new List<long>();
             });
+            return lstAuthorityID ?? new List<long>();
         }
 
         /// <summary>
@@ -59,7 +65,7 @@ namespace tdb.ddd.account.repository
             //保存角色信息
             await this.InsertOrUpdateAsync(info);
             //移除缓存
-            TdbCache.Ins.Del(this.CacheKeyRoleInfo(info.ID));
+            TdbCache.Ins.Del(CacheKeyRoleInfo(info.ID));
 
             #region 保存角色权限信息
 
@@ -67,7 +73,7 @@ namespace tdb.ddd.account.repository
             if (agg.LstAuthorityID.IsLoaded)
             {
                 //转换为数据库实体
-                var lstAuthority = this.ToRoleAuthorityConfig(agg);
+                var lstAuthority = ToRoleAuthorityConfig(agg);
                 //保存角色权限信息
                 await this.SaveRoleAuthorityConfigAsync(agg.ID, lstAuthority);
             }
@@ -92,7 +98,7 @@ namespace tdb.ddd.account.repository
             //先删除原权限
             await client.AsDeleteable().Where(m => m.RoleID == roleID).ExecuteCommandAsync();
             //移除缓存
-            TdbCache.Ins.Del(this.CacheKeyRoleAuthorityID(roleID));
+            TdbCache.Ins.Del(CacheKeyRoleAuthorityID(roleID));
 
             //保存新权限
             if (lstAuthority != null && lstAuthority.Count >0)
@@ -106,13 +112,18 @@ namespace tdb.ddd.account.repository
         /// </summary>
         /// <param name="agg">聚合</param>
         /// <returns></returns>
-        private List<RoleAuthorityConfig> ToRoleAuthorityConfig(RoleAgg agg)
+        private static List<RoleAuthorityConfig> ToRoleAuthorityConfig(RoleAgg agg)
         {
             var list = new List<RoleAuthorityConfig>();
-            foreach (var authorityID in agg.LstAuthorityID.Value)
+            var lstAuthorityID = agg.LstAuthorityID.Value;
+            if (lstAuthorityID is not null)
             {
-                list.Add(new RoleAuthorityConfig() { RoleID = agg.ID, AuthorityID = authorityID });
+                foreach (var authorityID in lstAuthorityID)
+                {
+                    list.Add(new RoleAuthorityConfig() { RoleID = agg.ID, AuthorityID = authorityID });
+                }
             }
+          
             return list;
         }
 
@@ -121,7 +132,7 @@ namespace tdb.ddd.account.repository
         /// </summary>
         /// <param name="roleID">角色ID</param>
         /// <returns></returns>
-        private string CacheKeyRoleInfo(long roleID)
+        private static string CacheKeyRoleInfo(long roleID)
         {
             return $"ReposRoleInfo_{roleID}";
         }
@@ -131,7 +142,7 @@ namespace tdb.ddd.account.repository
         /// </summary>
         /// <param name="roleID">角色ID</param>
         /// <returns></returns>
-        private string CacheKeyRoleAuthorityID(long roleID)
+        private static string CacheKeyRoleAuthorityID(long roleID)
         {
             return $"ReposRoleAuthorityID_{roleID}";
         }

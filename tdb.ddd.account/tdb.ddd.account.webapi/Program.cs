@@ -23,13 +23,12 @@ builder.RunWebApp(option =>
     //总线-MediatR
     option.BusOption.MediatROption = new TdbWebAppBuilderOption.TdbMediatROption();
     //总线-DotNetCore.CAP
-    option.BusOption.SetupDotNetCoreCAP = (o) =>
+    option.BusOption.CAPOption = new TdbWebAppBuilderOption.TdbDotNetCoreCAPOption((o) =>
     {
         o.UseRedis(AccountConfig.Common.CAP.RedisConnStr);
         o.UseMySql(AccountConfig.Common.CAP.DBConnStr);
-        option.BusOption.DefaultCapOptionsWithoutTransportAndStorage(o);
         o.DefaultGroupName = "account";
-    };
+    });
     //SqlSugar（IOC模式）
     option.SetupSqlSugar = () => builder.Services.AddTdbSqlSugar(c =>
     {

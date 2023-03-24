@@ -26,7 +26,7 @@ namespace tdb.ddd.admin.application.V1
         {
             //调用账户服务初始化数据接口 
             var accountApp = TdbIOC.GetService<IAccountApp>();
-            var res = await accountApp.InitDataAsync();
+            var res = await accountApp!.InitDataAsync();
 
             return res;
         }

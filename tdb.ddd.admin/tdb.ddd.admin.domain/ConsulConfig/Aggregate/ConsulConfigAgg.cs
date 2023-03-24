@@ -21,12 +21,12 @@ namespace tdb.ddd.admin.domain.ConsulConfig.Aggregate
         /// <summary>
         /// json文件路径
         /// </summary>
-        public string JsonPath { get; set; }
+        public string JsonPath { get; set; } = "";
 
         /// <summary>
         /// consul IP
         /// </summary>
-        public string ConsulIP { get; set; }
+        public string ConsulIP { get; set; } = "";
 
         /// <summary>
         /// consul端口
@@ -36,7 +36,7 @@ namespace tdb.ddd.admin.domain.ConsulConfig.Aggregate
         /// <summary>
         /// 配置key前缀（一般用来区分不同服务）
         /// </summary>
-        public string PrefixKey { get; set; }
+        public string PrefixKey { get; set; } = "";
 
         #endregion
 
@@ -94,7 +94,7 @@ namespace tdb.ddd.admin.domain.ConsulConfig.Aggregate
         {
             var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(this.JsonPath);
             var extension = Path.GetExtension(this.JsonPath);
-            var fileName = $"backup_consul_config{Path.DirectorySeparatorChar}{fileNameWithoutExtension}_{DateTime.Now.ToString("yyyyMMddHHmmss")}{extension}";
+            var fileName = $"backup_consul_config{Path.DirectorySeparatorChar}{fileNameWithoutExtension}_{DateTime.Now:yyyyMMddHHmmss}{extension}";
             return CommHelper.GetFullFileName(fileName);
         }
 

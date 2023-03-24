@@ -14,11 +14,11 @@ namespace tdb.ddd.files.application.V1
     /// <summary>
     /// cap订阅者
     /// </summary>
-    public class CAPSubscriber : ICAPSubscriber
+    public class CAPSubscriber : ICapSubscribe
     {
         #region 领域服务
 
-        private FileService _fileService;
+        private FileService? _fileService;
         /// <summary>
         /// 文件领域服务
         /// </summary>
@@ -80,7 +80,7 @@ namespace tdb.ddd.files.application.V1
 
             //获取文件聚合
             var fileAgg = await this.FileService.GetFileAggAsync(req.ID);
-            if (fileAgg == null)
+            if (fileAgg is null)
             {
                 result.IsSuccess = false;
                 result.Msg = FilesConfig.Msg.FileNotExist.Msg;
@@ -96,10 +96,12 @@ namespace tdb.ddd.files.application.V1
             }
 
             //改为正式文件
-            fileAgg.FileStatusCode = EnmFileStatus.Formal;
-            fileAgg.UpdateInfo.UpdaterID = operatorID;
-            fileAgg.UpdateInfo.UpdateTime = operationTime;
-
+            fileAgg.FileStatusCode = req.FileStatusCode;
+            fileAgg.UpdateInfo = new ddd.domain.UpdateInfoValueObject()
+            {
+                UpdaterID = operatorID,
+                UpdateTime = operationTime
+            };
             //保存
             await this.FileService.SaveChangedAsync(fileAgg);
 
@@ -109,18 +111,5 @@ namespace tdb.ddd.files.application.V1
         }
 
         #endregion
-    }
-
-    /// <summary>
-    /// cap订阅者
-    /// </summary>
-    public interface ICAPSubscriber : ICapSubscribe, ITdbIOCTransient
-    {
-        /// <summary>
-        /// 修改文件状态
-        /// </summary>
-        /// <param name="msg">修改文件状态 消息</param>
-        /// <returns></returns>
-        Task<UpdateFilesStatusRes> UpdateFilesStatusAsync(UpdateFilesStatusMsg msg);
     }
 }

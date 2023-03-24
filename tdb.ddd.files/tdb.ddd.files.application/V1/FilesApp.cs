@@ -27,7 +27,7 @@ namespace tdb.ddd.files.application.V1
     {
         #region 领域服务
 
-        private FileService _fileService;
+        private FileService? _fileService;
         /// <summary>
         /// 文件领域服务
         /// </summary>
@@ -54,7 +54,7 @@ namespace tdb.ddd.files.application.V1
             //结果
             var lstRes = new List<UploadFilesRes>();
 
-            var files = reqDTO.Param;
+            var files = reqDTO.Param ?? new List<UploadFilesReq>();
             foreach (var file in files)
             {
                 var res = new UploadFilesRes();
@@ -106,7 +106,7 @@ namespace tdb.ddd.files.application.V1
         {
             //获取文件聚合
             var fileAgg = await this.FileService.GetFileAggAsync(reqDTO.Param.ID);
-            if (fileAgg == null)
+            if (fileAgg is null)
             {
                 return new TdbRes<bool>(FilesConfig.Msg.FileNotExist, false);
             }
@@ -125,8 +125,11 @@ namespace tdb.ddd.files.application.V1
 
             //改为正式文件
             fileAgg.FileStatusCode = EnmFileStatus.Formal;
-            fileAgg.UpdateInfo.UpdaterID = reqDTO.OperatorID;
-            fileAgg.UpdateInfo.UpdateTime = reqDTO.OperationTime;
+            fileAgg.UpdateInfo = new UpdateInfoValueObject()
+            {
+                UpdaterID = reqDTO.OperatorID,
+                UpdateTime = reqDTO.OperationTime
+            };
 
             //保存
             await this.FileService.SaveChangedAsync(fileAgg);
@@ -143,7 +146,7 @@ namespace tdb.ddd.files.application.V1
         {
             //获取文件聚合
             var fileAgg = await this.FileService.GetFileAggAsync(reqDTO.Param.ID);
-            if (fileAgg == null)
+            if (fileAgg is null)
             {
                 return new TdbRes<DownloadFileRes>(FilesConfig.Msg.FileNotExist, null);
             }
@@ -175,20 +178,17 @@ namespace tdb.ddd.files.application.V1
             //未调整大小，返回原图
             if (reqDTO.Param.Width <= 0 && reqDTO.Param.Height <= 0)
             {
-                return await this.DownloadFileAsync(new TdbOperateReq<DownloadFileReq>()
+                return await this.DownloadFileAsync(new TdbOperateReq<DownloadFileReq>(new DownloadFileReq() { ID = reqDTO.Param.ID }, reqDTO.OperatorID, reqDTO.OperatorName)
                 {
-                    OperatorID = reqDTO.OperatorID,
-                    OperatorName = reqDTO.OperatorName,
                     OperatorRoleIDs = reqDTO.OperatorRoleIDs,
                     OperatorAuthorityIDs = reqDTO.OperatorAuthorityIDs,
-                    OperationTime = reqDTO.OperationTime,
-                    Param = new DownloadFileReq() { ID = reqDTO.Param.ID }
+                    OperationTime = reqDTO.OperationTime
                 });
             }
 
             //获取文件聚合
             var fileAgg = await this.FileService.GetFileAggAsync(reqDTO.Param.ID);
-            if (fileAgg == null)
+            if (fileAgg is null)
             {
                 return new TdbRes<DownloadFileRes>(FilesConfig.Msg.FileNotExist, null);
             }
@@ -252,12 +252,15 @@ namespace tdb.ddd.files.application.V1
             var res = new DeleteTempFilesRes();
 
             //循环删除文件
-            foreach (var agg in list.Data)
+            if (list.Data is not null)
             {
-                await this.FileService.DeleteFileAsync(agg);
+                foreach (var agg in list.Data)
+                {
+                    await this.FileService.DeleteFileAsync(agg);
 
-                res.Count++;
-                res.Details.Add(new DeleteTempFileRes() { ID = agg.ID, Name = agg.Name });
+                    res.Count++;
+                    res.Details.Add(new DeleteTempFileRes() { ID = agg.ID, Name = agg.Name });
+                }
             }
 
             return TdbRes.Success(res);

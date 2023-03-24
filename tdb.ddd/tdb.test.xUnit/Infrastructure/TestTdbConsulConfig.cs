@@ -50,8 +50,7 @@ namespace tdb.test.xUnit.Infrastructure
             /// Consul配置信息
             /// </summary>
             [TdbConfigKey("Consul")]
-            public ConsulConfigInfo Consul { get; set; }
-
+            public ConsulConfigInfo Consul { get; set; } = new ConsulConfigInfo();
 
             /// <summary>
             /// Consul配置信息
@@ -61,7 +60,7 @@ namespace tdb.test.xUnit.Infrastructure
                 /// <summary>
                 /// consul IP
                 /// </summary>
-                public string IP { get; set; }
+                public string IP { get; set; } = "";
 
                 /// <summary>
                 /// consul端口号

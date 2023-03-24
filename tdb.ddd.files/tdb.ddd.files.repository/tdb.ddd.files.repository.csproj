@@ -3,11 +3,11 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>disable</Nullable>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="tdb.ddd.repository.sqlsugar" Version="7.0.0.8" />
+    <PackageReference Include="tdb.ddd.repository.sqlsugar" Version="7.0.0.9" />
   </ItemGroup>
 
   <ItemGroup>

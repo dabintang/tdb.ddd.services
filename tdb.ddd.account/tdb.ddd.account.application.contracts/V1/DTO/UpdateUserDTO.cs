@@ -25,13 +25,13 @@ namespace tdb.ddd.account.application.contracts.V1.DTO
         /// [可选]姓名（无值时会随机生成）
         /// </summary>
         [TdbStringLength("姓名", 32)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// [可选]昵称（无值时会随机生成）
         /// </summary>
         [TdbStringLength("昵称", 32)]
-        public string NickName { get; set; }
+        public string? NickName { get; set; }
 
         /// <summary>
         /// [必须]性别（1：男；2：女；3：未知）
@@ -56,19 +56,19 @@ namespace tdb.ddd.account.application.contracts.V1.DTO
         /// </summary>
         [TdbStringLength("手机号码", 16)]
         [TdbRegex(TdbCstRegex.MobilePhone, "手机号码不正确")]
-        public string MobilePhone { get; set; }
+        public string? MobilePhone { get; set; }
 
         /// <summary>
         /// [可选]电子邮箱
         /// </summary>
         [TdbStringLength("电子邮箱", 128)]
         [TdbRegex(TdbCstRegex.Email, "电子邮箱不正确")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         /// <summary>
         /// [可选]备注
         /// </summary>
         [TdbStringLength("备注", 255)]
-        public string Remark { get; set; }
+        public string? Remark { get; set; }
     }
 }

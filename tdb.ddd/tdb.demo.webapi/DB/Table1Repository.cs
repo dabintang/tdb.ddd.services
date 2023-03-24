@@ -34,8 +34,8 @@ namespace tdb.demo.webapi.DB
                 StackFrame[] array = frames;
                 foreach (StackFrame stackFrame in array)
                 {
-                    MethodBase method = stackFrame.GetMethod();
-                    if (method.Name == "MoveNext" && method.ReflectedType!.FullName!.StartsWith("Quartz."))
+                    MethodBase? method = stackFrame?.GetMethod();
+                    if (method?.Name == "MoveNext" && method.ReflectedType!.FullName!.StartsWith("Quartz."))
                     {
                         text += "Quartz";
                         break;

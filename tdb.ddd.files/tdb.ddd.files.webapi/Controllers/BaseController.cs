@@ -17,33 +17,35 @@ namespace tdb.ddd.files.webapi.Controllers
     [Route("tdb.ddd.files/v{api-version:apiVersion}/[controller]/[action]")]
     public class BaseController : ControllerBase
     {
-        private OperatorInfo _curUser;
+        private OperatorInfo? _curUser;
         /// <summary>
         /// 当前用户
         /// </summary>
-        protected virtual OperatorInfo CurUser
+        protected virtual OperatorInfo? CurUser
         {
             get
             {
                 //无认证用户
-                if (HttpContext.User == null)
+                if (HttpContext.User is null)
                 {
                     return null;
                 }
 
                 if (this._curUser == null)
                 {
-                    this._curUser = new OperatorInfo();
-                    this._curUser.ID = Convert.ToInt64(HttpContext.User.FindFirst(TdbClaimTypes.UID).Value);
-                    this._curUser.Name = HttpContext.User.Identity.Name;
+                    this._curUser = new OperatorInfo
+                    {
+                        ID = Convert.ToInt64(HttpContext.User.FindFirst(TdbClaimTypes.UID)?.Value),
+                        Name = HttpContext.User.Identity?.Name ?? ""
+                    };
 
                     //角色
                     var roleClaims = HttpContext.User.FindAll(TdbClaimTypes.RoleID);
-                    this._curUser.LstRoleID = roleClaims.SelectMany(m => m.Value.DeserializeJson<List<long>>()).ToList();
+                    this._curUser.LstRoleID = roleClaims.SelectMany(m => m.Value.DeserializeJson<List<long>>() ?? new List<long>()).ToList();
 
                     //权限
                     var authorityClaims = HttpContext.User.FindAll(TdbClaimTypes.AuthorityID);
-                    this._curUser.LstAuthorityID = authorityClaims.SelectMany(m => m.Value.DeserializeJson<List<long>>()).ToList();
+                    this._curUser.LstAuthorityID = authorityClaims.SelectMany(m => m.Value.DeserializeJson<List<long>>() ?? new List<long>()).ToList();
                 }
 
                 return this._curUser;
@@ -58,13 +60,10 @@ namespace tdb.ddd.files.webapi.Controllers
         /// <returns></returns>
         protected virtual TdbOperateReq<T> CreateTdbOperateReq<T>(T param)
         {
-            var reqOpe = new TdbOperateReq<T>()
+            var reqOpe = new TdbOperateReq<T>(param, this.CurUser?.ID ?? 0, this.CurUser?.Name ?? "")
             {
-                OperatorID = this.CurUser.ID,
-                OperatorName = this.CurUser.Name,
-                OperatorRoleIDs = this.CurUser.LstRoleID,
-                OperatorAuthorityIDs = this.CurUser.LstAuthorityID,
-                Param = param
+                OperatorRoleIDs = this.CurUser?.LstRoleID ?? new List<long>(),
+                OperatorAuthorityIDs = this.CurUser?.LstAuthorityID ?? new List<long>()
             };
 
             return reqOpe;

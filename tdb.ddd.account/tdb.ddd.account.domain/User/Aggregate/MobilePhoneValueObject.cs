@@ -15,7 +15,7 @@ namespace tdb.ddd.account.domain.User.Aggregate
         /// <summary>
         /// 手机号码
         /// </summary>
-        public string MobilePhone { get; set; }
+        public string MobilePhone { get; set; } = "";
 
         /// <summary>
         /// 手机号是否已验证

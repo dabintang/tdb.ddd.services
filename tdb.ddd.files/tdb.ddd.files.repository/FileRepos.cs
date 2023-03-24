@@ -43,7 +43,7 @@ namespace tdb.ddd.files.repository
                 var info = DBMapper.Map<FileAgg, DBEntity.FileInfo>(agg);
 
                 //如果有备份，则说明是更新操作
-                if (aggBackup != null)
+                if (aggBackup is not null)
                 {
                     await this.AsUpdateable(info).ExecuteCommandAsync();
                 }
@@ -64,10 +64,11 @@ namespace tdb.ddd.files.repository
         /// </summary>
         /// <param name="fileID">文件ID</param>
         /// <returns></returns>
-        public async Task<FileAgg> GetFileAggAsync(long fileID)
+        public async Task<FileAgg?> GetFileAggAsync(long fileID)
         {
             //获取文件信息
             var fileInfo = await TdbCache.Ins.HCacheShellAsync(Cst_CacheKeyFileInfo, TimeSpan.FromDays(1), fileID.ToStr(), async () => await this.GetFirstAsync(m => m.ID == fileID));
+            //var fileInfo = await this.GetFirstAsync(m => m.ID == fileID);
             if (fileInfo == null)
             {
                 return null;
@@ -107,11 +108,11 @@ namespace tdb.ddd.files.repository
         {
             var query = this.AsQueryable();
             //[可选]文件状态（1：临时文件；2：正式文件）
-            query.WhereIF(req.FileStatusCode.HasValue, m => m.FileStatusCode == req.FileStatusCode.Value);
+            query.WhereIF(req.FileStatusCode.HasValue, m => m.FileStatusCode == req.FileStatusCode);
             //[可选]起始创建时间（大于等于）
-            query.WhereIF(req.StartCreateTime.HasValue, m => m.CreateTime >= req.StartCreateTime.Value);
+            query.WhereIF(req.StartCreateTime.HasValue, m => m.CreateTime >= req.StartCreateTime);
             //[可选]截止创建时间（小于等于）
-            query.WhereIF(req.EndCreateTime.HasValue, m => m.CreateTime <= req.EndCreateTime.Value);
+            query.WhereIF(req.EndCreateTime.HasValue, m => m.CreateTime <= req.EndCreateTime);
             //排序
             if (req.LstSortItem != null && req.LstSortItem.Count > 0)
             {
@@ -145,16 +146,20 @@ namespace tdb.ddd.files.repository
         /// <param name="agg">文件聚合</param>
         private void Backup(FileAgg agg)
         {
-            this.dicBackup[agg.ID] = agg.DeepClone();
+            var backup = agg.DeepClone();
+            if (backup is not null)
+            {
+                this.dicBackup[agg.ID] = backup;
+            }
         }
 
         /// <summary>
         /// 获取备份
         /// </summary>
         /// <param name="id">文件ID</param>
-        private FileAgg GetBackup(long id)
+        private FileAgg? GetBackup(long id)
         {
-            this.dicBackup.TryGetValue(id, out FileAgg aggBackup);
+            this.dicBackup.TryGetValue(id, out FileAgg? aggBackup);
             return aggBackup;
         }
 

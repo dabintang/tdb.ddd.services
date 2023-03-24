@@ -5,6 +5,8 @@ using tdb.demo.webapi.Configs;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//builder.Services.AddTransient<tdb.demo.webapi.Controllers.V1.ICAPSubscriber, tdb.demo.webapi.Controllers.V1.CAPSubscriber>();
+
 //添加服务及使用
 builder.RunWebApp(option =>
 {
@@ -21,16 +23,15 @@ builder.RunWebApp(option =>
     //总线-MediatR
     option.BusOption.MediatROption = new TdbWebAppBuilderOption.TdbMediatROption();
     //总线-DotNetCore.CAP
-    option.BusOption.SetupDotNetCoreCAP = (o) =>
+    option.BusOption.CAPOption = new TdbWebAppBuilderOption.TdbDotNetCoreCAPOption((o) =>
     {
         o.UseRedis("127.0.0.1,defaultDatabase=0,password=");
         o.UseMySql("server=127.0.0.1;database=tdb.ddd.cap;user id=root;password=abc123456;Pooling=True;Allow User Variables=True;");
-        option.BusOption.DefaultCapOptionsWithoutTransportAndStorage(o);
-    };
+    });
     //SqlSugar（IOC模式）
     option.SetupSqlSugar = () => builder.Services.AddTdbSqlSugar(c =>
     {
-        c.ConnectionString = DemoConfig.App.DBConnStr; //数据库连接字符串
+        c.ConnectionString = DemoConfig.App!.DBConnStr; //数据库连接字符串
         c.DbType = IocDbType.MySql;
         c.IsAutoCloseConnection = true;    //开启自动释放模式
     });
@@ -38,7 +39,7 @@ builder.RunWebApp(option =>
     option.CorsOption.SetupCors = option.CorsOption.SetupCorsAllowAll;
     option.CorsOption.UseCors = option.CorsOption.UseCorsAllAllow;
     //认证授
-    option.AuthOption.SetupJwtBearer = (jwtBearerOption) => option.AuthOption.DefaultJwtBearerOptions(jwtBearerOption, () => DemoConfig.App.Token.SecretKey);
+    option.AuthOption.SetupJwtBearer = (jwtBearerOption) => option.AuthOption.DefaultJwtBearerOptions(jwtBearerOption, () => DemoConfig.App!.Token!.SecretKey);
     option.AuthOption.GetWhiteListIP = () => new List<string>() { "127.0.0.1", "localhost", "::ffff:127.0.0.1" };
     //接口入参验证
     option.IsUseParamValidate = true;

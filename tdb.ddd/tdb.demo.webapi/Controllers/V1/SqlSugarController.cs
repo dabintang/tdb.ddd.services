@@ -73,7 +73,7 @@ CREATE TABLE `table1`  (
 
             var repo2 = new Table1Repository();
             var infoRead = repo2.GetById(info.ID);
-            TdbAssert.Equals(info.Name, infoRead.Name);
+            TdbDemoAssert.Equals(info.Name, infoRead.Name);
 
             return TdbRes.Success(true);
         }
@@ -98,7 +98,7 @@ CREATE TABLE `table1`  (
 
             var repo2 = new Table1Repository();
             var info2 = repo2.GetById(info.ID);
-            TdbAssert.Equals(info.Name, info2.Name);
+            TdbDemoAssert.Equals(info.Name, info2.Name);
             info2.Name = "名称22";
             repo2.Update(info2);
 
@@ -106,7 +106,7 @@ CREATE TABLE `table1`  (
 
             var repo3 = new Table1Repository();
             var info3 = repo3.GetById(info.ID);
-            TdbAssert.Equals(info3.Name, info2.Name);
+            TdbDemoAssert.Equals(info3.Name, info2.Name);
 
             return TdbRes.Success(true);
         }
@@ -131,19 +131,19 @@ CREATE TABLE `table1`  (
 
             var repo2 = new Table1Repository();
             var info2 = repo2.GetById(info.ID);
-            TdbAssert.Equals(info.Name, info2.Name);
+            TdbDemoAssert.Equals(info.Name, info2.Name);
             info2.Name = "名称33";
             repo2.Update(info2);
 
             var repo3 = new Table1Repository();
             var info3 = repo3.GetById(info.ID);
-            TdbAssert.Equals(info3.Name, info2.Name);
+            TdbDemoAssert.Equals(info3.Name, info2.Name);
 
             TdbRepositoryTran.RollbackTran();
 
             var repo4 = new Table1Repository();
             var info4 = repo4.GetById(info.ID);
-            TdbAssert.Equals(null, info4);
+            TdbDemoAssert.Equals(null, info4);
 
             return TdbRes.Success(true);
         }

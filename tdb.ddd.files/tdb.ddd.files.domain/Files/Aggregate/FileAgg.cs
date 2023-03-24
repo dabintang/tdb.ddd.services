@@ -21,12 +21,12 @@ namespace tdb.ddd.files.domain.Files.Aggregate
         /// <summary>
         /// 文件名（含后缀）
         /// </summary>           
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// 文件地址(本地路径或url)
         /// </summary>
-        public string Address { get; internal set; }
+        public string Address { get; internal set; } = "";
 
         /// <summary>
         /// 存储类型（1：本地磁盘）
@@ -51,27 +51,27 @@ namespace tdb.ddd.files.domain.Files.Aggregate
         /// <summary>
         /// 备注
         /// </summary>
-        public string Remark { get; set; }
+        public string Remark { get; set; } = "";
 
         /// <summary>
         /// 创建信息
         /// </summary>
-        public CreateInfoValueObject CreateInfo { get; set; }
+        public CreateInfoValueObject? CreateInfo { get; set; }
 
         /// <summary>
         /// 更新信息
         /// </summary>
-        public UpdateInfoValueObject UpdateInfo { get; set; }
+        public UpdateInfoValueObject? UpdateInfo { get; set; }
 
         /// <summary>
         /// 内容类型
         /// </summary>
-        private string _contentType;
+        private string? _contentType;
 
         /// <summary>
         /// 数据内容
         /// </summary>
-        private byte[] _data;
+        private byte[]? _data;
 
         #endregion
 
@@ -101,7 +101,7 @@ namespace tdb.ddd.files.domain.Files.Aggregate
         /// <returns></returns>
         public async Task<byte[]> ReadFileAsync()
         {
-            if (this._data == null)
+            if (this._data is null)
             {
                 switch (this.StorageTypeCode)
                 {
@@ -150,7 +150,7 @@ namespace tdb.ddd.files.domain.Files.Aggregate
             }
 
             //是否文件创建者/超级管理员
-            if (this.CreateInfo.CreatorID == userID || (lstRoleID?.Contains(TdbCst.RoleID.SuperAdmin) ?? false))
+            if (this.CreateInfo?.CreatorID == userID || (lstRoleID?.Contains(TdbCst.RoleID.SuperAdmin) ?? false))
             {
                 return true;
             }
@@ -169,7 +169,7 @@ namespace tdb.ddd.files.domain.Files.Aggregate
         public bool IsAuthorizedModify(long userID, IEnumerable<long> lstRoleID)
         {
             //是否文件创建者/超级管理员
-            if (this.CreateInfo.CreatorID == userID || (lstRoleID?.Contains(TdbCst.RoleID.SuperAdmin) ?? false))
+            if (this.CreateInfo?.CreatorID == userID || (lstRoleID?.Contains(TdbCst.RoleID.SuperAdmin) ?? false))
             {
                 return true;
             }
@@ -183,7 +183,7 @@ namespace tdb.ddd.files.domain.Files.Aggregate
         /// <returns></returns>
         public string GetContentType()
         {
-            if (this._contentType == null)
+            if (this._contentType is null)
             {
                 //后缀
                 var extension = Path.GetExtension(this.Address)?.TrimStart('.');

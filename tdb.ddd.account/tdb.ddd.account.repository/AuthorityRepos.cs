@@ -23,9 +23,13 @@ namespace tdb.ddd.account.repository
         /// </summary>
         /// <param name="authorityID">权限ID</param>
         /// <returns></returns>
-        public async Task<AuthorityAgg> GetAuthorityAggAsync(long authorityID)
+        public async Task<AuthorityAgg?> GetAuthorityAggAsync(long authorityID)
         {
-            var authorityInfo = await TdbCache.Ins.CacheShellAsync(this.CacheKeyAuthorityInfo(authorityID), TimeSpan.FromDays(1), async () => await this.GetByIdAsync(authorityID));
+            var authorityInfo = await TdbCache.Ins.CacheShellAsync(CacheKeyAuthorityInfo(authorityID), TimeSpan.FromDays(1), async () => await this.GetByIdAsync(authorityID));
+            if (authorityInfo is null)
+            {
+                return null;
+            }
 
             //转为聚合
             var authorityAgg = DBMapper.Map<AuthorityInfo, AuthorityAgg>(authorityInfo);
@@ -43,9 +47,9 @@ namespace tdb.ddd.account.repository
             var info = DBMapper.Map<AuthorityAgg, AuthorityInfo>(agg);
 
             //保存
-            await this.InsertOrUpdateAsync(info);
+            await this.InsertOrUpdateAsync(info!);
             //移除缓存
-            TdbCache.Ins.Del(this.CacheKeyAuthorityInfo(info.ID));
+            TdbCache.Ins.Del(CacheKeyAuthorityInfo(info!.ID));
         }
 
         #endregion
@@ -57,7 +61,7 @@ namespace tdb.ddd.account.repository
         /// </summary>
         /// <param name="authorityID">权限ID</param>
         /// <returns></returns>
-        private string CacheKeyAuthorityInfo(long authorityID)
+        private static string CacheKeyAuthorityInfo(long authorityID)
         {
             return $"ReposAuthorityInfo_{authorityID}";
         }

@@ -24,13 +24,13 @@ namespace tdb.ddd.account.application.contracts.V1.DTO
         /// [必须]原密码
         /// </summary>
         [TdbRequired("原密码")]
-        public string OldPassword { get; set; }
+        public string OldPassword { get; set; } = "";
 
         /// <summary>
         /// [必须]新密码
         /// </summary>
         [TdbRequired("新密码")]
         [TdbStringLength("密码", 32)]
-        public string NewPassword { get; set; }
+        public string NewPassword { get; set; } = "";
     }
 }

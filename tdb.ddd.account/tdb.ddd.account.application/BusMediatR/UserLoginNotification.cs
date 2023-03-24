@@ -28,6 +28,19 @@ namespace tdb.ddd.account.application.BusMediatR
         /// 登录时间
         /// </summary>
         public DateTime LoginTime { get; set; }
+
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="user">用户聚合信息</param>
+        /// <param name="clientIP">客户端IP</param>
+        /// <param name="loginTime">登录时间</param>
+        public UserLoginNotification(UserAgg user, string clientIP, DateTime loginTime)
+        {
+            this.User = user;
+            this.ClientIP = clientIP;
+            this.LoginTime = loginTime;
+        }
     }
 
     /// <summary>

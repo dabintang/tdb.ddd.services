@@ -40,7 +40,7 @@ namespace tdb.demo.webapi.MockData
         /// </summary>
         /// <param name="id">用户ID</param>
         /// <returns></returns>
-        public UserInfo GetByID(long id)
+        public UserInfo? GetByID(long id)
         {
             var user = this.LstUser.Find(m => m.ID == id);
             return user;
@@ -52,7 +52,7 @@ namespace tdb.demo.webapi.MockData
         /// <param name="name">用户名</param>
         /// <param name="pwd">密码</param>
         /// <returns></returns>
-        public UserInfo Find(string name, string pwd)
+        public UserInfo? Find(string name, string pwd)
         {
             var user = this.LstUser.Find(m => m.Name == name && m.Pwd == pwd);
             return user;
@@ -72,17 +72,17 @@ namespace tdb.demo.webapi.MockData
         /// <summary>
         /// 用户名
         /// </summary>           
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// 密码
         /// </summary>           
-        public string Pwd { get; set; }
+        public string Pwd { get; set; } = "";
 
         /// <summary>
         /// 昵称
         /// </summary>
-        public string NickName { get; set; }
+        public string NickName { get; set; } = "";
     }
 
 }

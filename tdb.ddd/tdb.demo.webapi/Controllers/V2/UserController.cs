@@ -26,7 +26,7 @@ namespace tdb.demo.webapi.Controllers.V2
         public TdbRes<V1.UserController.UserRes> GetUserInfo([FromQuery] GetUserInfoReq req)
         {
             //找登录用户
-            UserInfo user = null;
+            UserInfo? user = null;
             if (req.ID.HasValue)
             {
                 user = UserRepos.Ins.GetByID(req.ID.Value);
@@ -98,18 +98,18 @@ namespace tdb.demo.webapi.Controllers.V2
             /// 用户名
             /// </summary>
             [TdbRequired("用户名")]
-            public string Name { get; set; }
+            public string Name { get; set; } = "";
 
             /// <summary>
             /// 密码
             /// </summary>
             [TdbRequired("密码")]
-            public string Pwd { get; set; }
+            public string Pwd { get; set; } = "";
 
             /// <summary>
             /// 昵称
             /// </summary>
-            public string NickName { get; set; }
+            public string? NickName { get; set; }
         }
     }
 }

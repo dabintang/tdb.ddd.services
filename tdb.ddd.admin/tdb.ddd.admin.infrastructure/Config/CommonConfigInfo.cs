@@ -12,6 +12,8 @@ namespace tdb.ddd.admin.infrastructure.Config
     /// </summary>
     public class CommonConfigInfo
     {
+#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
+
         /// <summary>
         /// key前缀
         /// </summary>
@@ -35,6 +37,18 @@ namespace tdb.ddd.admin.infrastructure.Config
         [TdbConfigKey("AdminService")]
         public ServiceConfigInfo AdminService { get; set; }
 
+        /// <summary>
+        /// HashID配置信息
+        /// </summary>
+        [TdbConfigKey("HashID")]
+        public HashIDConfigInfo HashID { get; set; }
+
+        /// <summary>
+        /// CAP配置信息
+        /// </summary>
+        [TdbConfigKey("CAP")]
+        public CAPConfigInfo CAP { get; set; }
+
         #region 内部类
 
         /// <summary>
@@ -48,6 +62,35 @@ namespace tdb.ddd.admin.infrastructure.Config
             public string WebapiRootURL { get; set; }
         }
 
+        /// <summary>
+        /// HashID配置信息
+        /// </summary>
+        public class HashIDConfigInfo
+        {
+            /// <summary>
+            /// 盐
+            /// </summary>
+            public string Salt { get; set; }
+        }
+
+        /// <summary>
+        /// CAP配置信息
+        /// </summary>
+        public class CAPConfigInfo
+        {
+            /// <summary>
+            /// redis链接字符串(StackExchange.Redis)
+            /// </summary>
+            public string RedisConnStr { get; set; }
+
+            /// <summary>
+            /// 数据库链接字符串(mysql)
+            /// </summary>
+            public string DBConnStr { get; set; }
+        }
+
         #endregion
+
+#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
     }
 }

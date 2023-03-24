@@ -9,7 +9,7 @@ namespace tdb.demo.webapi.Configs
     /// </summary>
     public static class DemoConfig
     {
-        private static ITdbJsonConfig JsonConfigService { get; set; }
+        private static ITdbJsonConfig? JsonConfigService { get; set; }
 
         /// <summary>
         /// 初始化配置
@@ -34,7 +34,7 @@ namespace tdb.demo.webapi.Configs
         /// </summary>
         private static void ReadAppConfig()
         {
-            App = JsonConfigService.GetConfig<AppConfig>();
+            App = JsonConfigService!.GetConfig<AppConfig>();
         }
 
         /// <summary>
@@ -49,11 +49,11 @@ namespace tdb.demo.webapi.Configs
         /// <summary>
         /// appsettings.json配置
         /// </summary>
-        public static AppConfig App { get; private set; }
+        public static AppConfig? App { get; private set; }
 
         /// <summary>
         /// 回报消息配置
         /// </summary>
-        public static MsgConfig Msg { get; private set; }
+        public static MsgConfig? Msg { get; private set; }
     }
 }

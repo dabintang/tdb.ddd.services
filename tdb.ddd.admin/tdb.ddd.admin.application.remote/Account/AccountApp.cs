@@ -23,8 +23,12 @@ namespace tdb.ddd.admin.application.remote.Account
         /// <returns></returns>
         public async Task<TdbRes<string>> InitDataAsync()
         {
-            var url = this.GetFullUrl("/tdb.ddd.account/v1/Tools/InitData");
+            var url = GetFullUrl("/tdb.ddd.account/v1/Tools/InitData");
             var res = await TdbHttpClient.PostAsJsonAsync<TdbRes<string>>(url, null);
+            if (res is null)
+            {
+                return TdbRes.Fail("初始化数据账户服务数据失败");
+            }
 
             return res;
         }
@@ -38,7 +42,7 @@ namespace tdb.ddd.admin.application.remote.Account
         /// </summary>
         /// <param name="url">url后面那一段</param>
         /// <returns></returns>
-        private string GetFullUrl(string url)
+        private static string GetFullUrl(string url)
         {
             return AdminConfig.Common.AccountService.WebapiRootURL + url;
         }

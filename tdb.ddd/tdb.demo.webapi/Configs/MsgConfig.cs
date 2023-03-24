@@ -10,6 +10,6 @@ namespace tdb.demo.webapi.Configs
         /// <summary>
         /// 登录名或密码不对
         /// </summary>
-        public TdbResMsgInfo IncorrectPassword;//{ get; set; }
+        public TdbResMsgInfo? IncorrectPassword;//{ get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Nodes;
 using tdb.ddd.application.contracts;
 using tdb.ddd.contracts;
 using tdb.ddd.infrastructure;
@@ -32,7 +33,12 @@ namespace tdb.demo.webapi.Controllers.V1
             var authentication = HttpContext.GetAuthenticationHeaderValue();
 
             var res = await TdbHttpClient.GetAsync<TdbRes<UserRes>>("http://127.0.0.1:31001/tdb.ddd.demo/v1/User/GetCurrentUserInfo", null, authentication);
-            return res;
+            if (res is not null)
+            {
+                return res;
+            }
+
+            return TdbRes.Fail<UserRes>(null);
         }
 
         /// <summary>
@@ -49,7 +55,12 @@ namespace tdb.demo.webapi.Controllers.V1
             var reqInner = new GetUserInfo2Req() { ID = req.ID };
 
             var res = await TdbHttpClient.GetAsync<TdbRes<UserRes>>("http://127.0.0.1:31001/tdb.ddd.demo/v2/User/GetUserInfo", reqInner, authentication);
-            return res;
+            if (res is not null)
+            {
+                return res;
+            }
+
+            return TdbRes.Fail<UserRes>(null);
         }
 
         /// <summary>
@@ -65,7 +76,12 @@ namespace tdb.demo.webapi.Controllers.V1
             var authentication = HttpContext.GetAuthenticationHeaderValue();
 
             var res = await TdbHttpClient.PostAsJsonAsync<UpdateUserInfoReq, TdbRes<bool>>("http://127.0.0.1:31001/tdb.ddd.demo/v2/User/UpdateUserInfo", req, null, authentication);
-            return res;
+            if (res is not null)
+            {
+                return res;
+            }
+
+            return TdbRes.Fail<bool>(false);
         }
 
         /// <summary>
@@ -89,16 +105,22 @@ namespace tdb.demo.webapi.Controllers.V1
             using var fileStream = new FileStream(@"C:\Users\Administrator\Desktop\temp\image\big\mm1.jpeg", FileMode.Open, FileAccess.Read);
 
             var res = await TdbHttpClient.UploadFileAsync<UploadFilesReq, TdbRes<List<UploadFilesRes>>>("http://127.0.0.1:31020/tdb.ddd.files/v1/Files/UploadTempFiles", fileStream, req.Name, req, authentication);
-            return res;
+            if (res is not null)
+            {
+                return res;
+            }
+            
+            return TdbRes.Fail<List<UploadFilesRes>>();
         }
 
         /// <summary>
         /// 下载图片
         /// </summary>
+        /// <param name="id">图片ID</param>
         /// <returns></returns>
         [HttpGet]
         [TdbAPILog]
-        public async Task<IActionResult> DownloadImage()
+        public async Task<IActionResult> DownloadImage([FromQuery]long id)
         {
             //获取头部身份认证信息
             var authentication = HttpContext.GetAuthenticationHeaderValue();
@@ -106,11 +128,16 @@ namespace tdb.demo.webapi.Controllers.V1
             //条件
             var req = new DownloadImageReq()
             {
-                ID = 721553529280,
+                ID = id,
                 Width = 800
             };
 
             var res = await TdbHttpClient.DownloadFileAsync<DownloadImageReq, TdbDownloadFileRes>("http://127.0.0.1:31020/tdb.ddd.files/v1/Files/DownloadImage", req, authentication);
+            if (res is null || res.ContentStream is null || res.ContentType is null)
+            {
+                return new JsonResult("找不到图片");
+            }
+            
             return new FileStreamResult(res.ContentStream, res.ContentType);
         }
 
@@ -124,6 +151,11 @@ namespace tdb.demo.webapi.Controllers.V1
         public async Task<IActionResult> DownloadImageFromBaidu()
         {
             var res = await TdbHttpClient.DownloadFileAsync<object, TdbDownloadFileRes>("https://img2.baidu.com/it/u=383161466,2016311197&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=1066", null);
+            if (res is null || res.ContentStream is null || res.ContentType is null)
+            {
+                return new JsonResult("找不到图片");
+            }
+
             return new FileStreamResult(res.ContentStream, res.ContentType);
         }
 
@@ -151,7 +183,7 @@ namespace tdb.demo.webapi.Controllers.V1
             /// <summary>
             /// 文件名（含后缀）
             /// </summary>           
-            public string Name { get; set; }
+            public string Name { get; set; } = "";
 
             /// <summary>
             /// 访问级别(1：仅创建者；2：授权；3：公开)
@@ -178,7 +210,7 @@ namespace tdb.demo.webapi.Controllers.V1
             /// <summary>
             /// 文件名
             /// </summary>
-            public string Name { get; set; }
+            public string Name { get; set; } = "";
 
             /// <summary>
             /// 是否上传成功
@@ -188,7 +220,7 @@ namespace tdb.demo.webapi.Controllers.V1
             /// <summary>
             /// 结果描述
             /// </summary>
-            public string Msg { get; set; }
+            public string Msg { get; set; } = "";
         }
         
         /// <summary>

@@ -29,13 +29,12 @@ builder.RunWebApp(option =>
         c.IsAutoCloseConnection = true;    //开启自动释放模式
     });
     //总线-DotNetCore.CAP
-    option.BusOption.SetupDotNetCoreCAP = (o) =>
+    option.BusOption.CAPOption = new TdbWebAppBuilderOption.TdbDotNetCoreCAPOption((o) =>
     {
         o.UseRedis(FilesConfig.Common.CAP.RedisConnStr);
         o.UseMySql(FilesConfig.Common.CAP.DBConnStr);
-        option.BusOption.DefaultCapOptionsWithoutTransportAndStorage(o);
         o.DefaultGroupName = "files";
-    };
+    });
     //跨域请求
     option.CorsOption.SetupCors = option.CorsOption.SetupCorsAllowAll;
     option.CorsOption.UseCors = option.CorsOption.UseCorsAllAllow;

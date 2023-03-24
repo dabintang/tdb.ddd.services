@@ -28,7 +28,7 @@ namespace tdb.ddd.account.repository.DBEntity
         /// 登录端IP
         /// </summary>
         [SugarColumn(Length = 32)]
-        public string ClientIP { get; set; }
+        public string ClientIP { get; set; } = "";
 
         /// <summary>
         /// 登录时间

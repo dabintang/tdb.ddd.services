@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.account.domain.Role.Aggregate;
+using tdb.ddd.contracts;
 using tdb.ddd.infrastructure;
 
 namespace tdb.ddd.account.domain.Role
@@ -15,7 +16,7 @@ namespace tdb.ddd.account.domain.Role
     {
         #region 仓储
 
-        private IRoleRepos _roleRepos;
+        private IRoleRepos? _roleRepos;
         /// <summary>
         /// 角色仓储
         /// </summary>
@@ -23,9 +24,10 @@ namespace tdb.ddd.account.domain.Role
         {
             get
             {
-                if (this._roleRepos == null)
+                this._roleRepos ??= TdbIOC.GetService<IRoleRepos>();
+                if (this._roleRepos is null)
                 {
-                    this._roleRepos = TdbIOC.GetService<IRoleRepos>();
+                    throw new TdbException("角色仓储接口未实现");
                 }
 
                 return this._roleRepos;
@@ -41,7 +43,7 @@ namespace tdb.ddd.account.domain.Role
         /// </summary>
         /// <param name="roleID">角色ID</param>
         /// <returns></returns>
-        public async Task<RoleAgg> GetAsync(long roleID)
+        public async Task<RoleAgg?> GetAsync(long roleID)
         {
             return await this.RoleRepos.GetRoleAggAsync(roleID);
         }
@@ -64,7 +66,7 @@ namespace tdb.ddd.account.domain.Role
         public async Task<bool> IsExist(long roleID)
         {
             var roleAgg = await this.GetAsync(roleID);
-            return (roleAgg != null);
+            return (roleAgg is not null);
         }
 
         #endregion

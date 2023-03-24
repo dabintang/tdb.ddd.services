@@ -17,7 +17,7 @@ namespace tdb.ddd.files.domain.Files
     {
         #region 仓储
 
-        private IFileRepos _fileRepos;
+        private IFileRepos? _fileRepos;
         /// <summary>
         /// 文件仓储
         /// </summary>
@@ -26,6 +26,11 @@ namespace tdb.ddd.files.domain.Files
             get
             {
                 this._fileRepos ??= TdbIOC.GetService<IFileRepos>();
+                if (this._fileRepos is null)
+                {
+                    throw new TdbException("文件仓储接口未实现");
+                }
+
                 return this._fileRepos;
             }
         }
@@ -49,7 +54,7 @@ namespace tdb.ddd.files.domain.Files
         /// </summary>
         /// <param name="fileID">文件ID</param>
         /// <returns></returns>
-        public async Task<FileAgg> GetFileAggAsync(long fileID)
+        public async Task<FileAgg?> GetFileAggAsync(long fileID)
         {
             return await this.FileRepos.GetFileAggAsync(fileID);
         }

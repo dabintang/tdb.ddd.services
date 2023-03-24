@@ -24,12 +24,12 @@ namespace tdb.ddd.account.domain.Role.Aggregate
         /// <summary>
         /// 角色名称
         /// </summary>           
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// 备注
         /// </summary>           
-        public string Remark { get; set; }
+        public string Remark { get; set; } = "";
 
         /// <summary>
         /// 角色拥有的权限ID

@@ -26,25 +26,25 @@ namespace tdb.ddd.account.repository.DBEntity
         /// 姓名
         /// </summary>
         [SugarColumn(Length = 32)]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// 昵称
         /// </summary>
         [SugarColumn(Length = 32)]
-        public string NickName { get; set; }
+        public string NickName { get; set; } = "";
 
         /// <summary>
         /// 登录名
         /// </summary>
         [SugarColumn(Length = 32)]
-        public string LoginName { get; set; }
+        public string LoginName { get; set; } = "";
 
         /// <summary>
         /// 密码(MD5)
         /// </summary>
         [SugarColumn(Length = 32)]
-        public string Password { get; set; }
+        public string Password { get; set; } = "";
 
         /// <summary>
         /// 性别（1：男；2：女；3：未知）
@@ -65,7 +65,7 @@ namespace tdb.ddd.account.repository.DBEntity
         /// 手机号码
         /// </summary>
         [SugarColumn(Length = 16)]
-        public string MobilePhone { get; set; }
+        public string MobilePhone { get; set; } = "";
 
         /// <summary>
         /// 手机号是否已验证
@@ -76,7 +76,7 @@ namespace tdb.ddd.account.repository.DBEntity
         /// 电子邮箱
         /// </summary>
         [SugarColumn(Length = 128)]
-        public string Email { get; set; }
+        public string Email { get; set; } = "";
 
         /// <summary>
         /// 电子邮箱是否已验证
@@ -97,7 +97,7 @@ namespace tdb.ddd.account.repository.DBEntity
         /// 备注
         /// </summary>
         [SugarColumn(Length = 255)]
-        public string Remark { get; set; }
+        public string Remark { get; set; } = "";
 
         /// <summary>
         /// 创建者ID

@@ -42,7 +42,7 @@ namespace tdb.ddd.account.application.V1
             var userService = new UserService();
             //获取用户聚合
             var userAgg = await userService.GetAsync(req.LoginName);
-            if (userAgg == null || userAgg.Password != req.Password)
+            if (userAgg is null || userAgg.Password != req.Password)
             {
                 return new TdbRes<UserLoginRes>(AccountConfig.Msg.IncorrectPassword, null);
             }
@@ -51,7 +51,7 @@ namespace tdb.ddd.account.application.V1
             var aggResult = await userAgg.LoginAsync(req.ClientIP);
 
             //广播用户登录通知
-            TdbMediatR.Publish(new UserLoginNotification() { User = userAgg, ClientIP = req.ClientIP, LoginTime = DateTime.Now });
+            TdbMediatR.Publish(new UserLoginNotification(userAgg, req.ClientIP, DateTime.Now));
 
             //转为对外传输类型
             var result = DTOMapper.Map<TdbRes<UserLoginResult>, TdbRes<UserLoginRes>>(aggResult);
@@ -76,7 +76,7 @@ namespace tdb.ddd.account.application.V1
             var userService = new UserService();
             //获取用户聚合
             var userAgg = await userService.GetAsync(userID.Value);
-            if (userAgg == null)
+            if (userAgg is null)
             {
                 return new TdbRes<UserLoginRes>(AccountConfig.Msg.UserNotExist, null);
             }
@@ -100,7 +100,7 @@ namespace tdb.ddd.account.application.V1
             var userService = new UserService();
             //获取用户聚合
             var userAgg = await userService.GetAsync(req.UserID);
-            if (userAgg == null)
+            if (userAgg is null)
             {
                 return new TdbRes<UserInfoRes>(AccountConfig.Msg.UserNotExist, null);
             }
@@ -148,7 +148,6 @@ namespace tdb.ddd.account.application.V1
                 Password = param.Password,
                 GenderCode = param.GenderCode,
                 Birthday = param.Birthday,
-                HeadImgID = param.HeadImgID,
                 StatusCode = EnmInfoStatus.Enable,
                 Remark = param.Remark ?? "",
                 CreateInfo = new CreateInfoValueObject() { CreatorID = req.OperatorID, CreateTime = DateTime.Now },
@@ -171,19 +170,6 @@ namespace tdb.ddd.account.application.V1
 
             //提交事务
             TdbRepositoryTran.CommitTran();
-
-            //更新头像图片状态
-            if (userAgg.HeadImgID is not null)
-            {
-                var updateHeadImgStatusMsg = new UpdateFilesStatusMsg()
-                {
-                    OperatorID = req.OperatorID,
-                    OperatorName = req.OperatorName,
-                    OperationTime = req.OperationTime
-                };
-                updateHeadImgStatusMsg.LstFileStatus.Add(new UpdateFilesStatusMsg.FileStatus() { ID = userAgg.HeadImgID.Value, FileStatusCode = EnmFileStatus.Formal });
-                await CAPPublisher.UpdateFilesStatusAsync(updateHeadImgStatusMsg);
-            }
 
             return TdbRes.Success(new AddUserRes() { ID = userAgg.ID });
         }
@@ -212,7 +198,7 @@ namespace tdb.ddd.account.application.V1
 
             //获取用户聚合
             var userAgg = await userService.GetAsync(param.ID);
-            if (userAgg == null)
+            if (userAgg is null)
             {
                 return new TdbRes<bool>(AccountConfig.Msg.UserNotExist, false);
             }
@@ -257,8 +243,11 @@ namespace tdb.ddd.account.application.V1
                 {
                     updateHeadImgStatusMsg.LstFileStatus.Add(new UpdateFilesStatusMsg.FileStatus() { ID = userAgg.HeadImgID.Value, FileStatusCode = EnmFileStatus.Formal });
                 }
-                   
-                await CAPPublisher.UpdateFilesStatusAsync(updateHeadImgStatusMsg);
+
+                if (updateHeadImgStatusMsg.LstFileStatus.Count > 0)
+                {
+                    await CAPPublisher.UpdateFilesStatusAsync(updateHeadImgStatusMsg);
+                }
             }
 
             return TdbRes.Success(true);
@@ -288,7 +277,7 @@ namespace tdb.ddd.account.application.V1
 
             //获取用户聚合
             var userAgg = await userService.GetAsync(param.ID);
-            if (userAgg == null)
+            if (userAgg is null)
             {
                 return new TdbRes<bool>(AccountConfig.Msg.UserNotExist, false);
             }

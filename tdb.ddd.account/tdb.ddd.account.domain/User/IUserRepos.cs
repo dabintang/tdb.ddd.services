@@ -18,14 +18,14 @@ namespace tdb.ddd.account.domain.User
         /// </summary>
         /// <param name="userID">用户ID</param>
         /// <returns></returns>
-        Task<UserAgg> GetUserAggAsync(long userID);
+        Task<UserAgg?> GetUserAggAsync(long userID);
 
         /// <summary>
         /// 获取用户聚合
         /// </summary>
         /// <param name="loginName">登录名</param>
         /// <returns></returns>
-        Task<UserAgg> GetUserAggAsync(string loginName);
+        Task<UserAgg?> GetUserAggAsync(string loginName);
 
         /// <summary>
         /// 获取用户拥有的角色ID

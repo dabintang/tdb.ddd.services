@@ -11,25 +11,25 @@ namespace tdb.demo.webapi.Configs
         /// 本服务URL
         /// </summary>
         [TdbConfigKey("Kestrel:EndPoints:Server:Url")]
-        public string URL { get; set; }
+        public string? URL { get; set; }
 
         /// <summary>
         /// 服务配置信息
         /// </summary>
         [TdbConfigKey("Server")]
-        public ServerConfig Server { get; set; }
+        public ServerConfig? Server { get; set; }
 
         /// <summary>
         /// token配置信息
         /// </summary>
         [TdbConfigKey("Token")]
-        public TokenConfig Token { get; set; }
+        public TokenConfig? Token { get; set; }
 
         /// <summary>
         /// 数据库连接
         /// </summary>
         [TdbConfigKey("DBConnStr")]
-        public string DBConnStr { get; set; }
+        public string DBConnStr { get; set; } = "";
 
         /// <summary>
         /// 服务配置信息
@@ -55,12 +55,12 @@ namespace tdb.demo.webapi.Configs
             /// <summary>
             /// 发行者
             /// </summary>
-            public string Issuer { get; set; }
+            public string Issuer { get; set; } = "";
 
             /// <summary>
             /// 秘钥
             /// </summary>
-            public string SecretKey { get; set; }
+            public string SecretKey { get; set; } = "";
 
             /// <summary>
             /// 超时时间（秒）
