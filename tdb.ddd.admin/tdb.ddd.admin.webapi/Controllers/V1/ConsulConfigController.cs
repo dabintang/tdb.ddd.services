@@ -99,6 +99,28 @@ namespace tdb.ddd.admin.webapi.Controllers.V1
             return await this.consulConfigApp.BackupFilesConfigAsync();
         }
 
+        /// <summary>
+        /// 还原人际关系服务配置
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [TdbAPILog]
+        public async Task<TdbRes<string>> RestoreRelationshipsConfigAsync()
+        {
+            return await this.consulConfigApp.RestoreRelationshipsConfigAsync();
+        }
+
+        /// <summary>
+        /// 备份人际关系服务配置
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [TdbAPILog]
+        public async Task<TdbRes<string>> BackupRelationshipsConfigAsync()
+        {
+            return await this.consulConfigApp.BackupRelationshipsConfigAsync();
+        }
+
         #endregion
     }
 }

@@ -1,0 +1,72 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.relationships.webapi", "tdb.ddd.relationships.webapi\tdb.ddd.relationships.webapi.csproj", "{E1CB2130-D399-456A-8AB9-A21DB4FC6415}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{A3C2A784-3296-4B90-AC2A-C09B603DBF9B}"
+	ProjectSection(SolutionItems) = preProject
+		doc\remark.txt = doc\remark.txt
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.relationships.domain.contracts", "tdb.ddd.relationships.domain.contracts\tdb.ddd.relationships.domain.contracts.csproj", "{620CCBEC-CD10-4251-9EE9-F2E90352EE53}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.relationships.infrastructure", "tdb.ddd.relationships.infrastructure\tdb.ddd.relationships.infrastructure.csproj", "{85F8415B-E2F2-4B99-8377-0BB0463BAF5B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.relationships.repository", "tdb.ddd.relationships.repository\tdb.ddd.relationships.repository.csproj", "{98CB3DE0-17E0-4EA2-A8BE-64A236D57CE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tdb.ddd.relationships.domain", "tdb.ddd.relationships.domain\tdb.ddd.relationships.domain.csproj", "{066AA9D5-96D7-4413-8E42-03208EA793B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tdb.ddd.relationships.application.remote", "tdb.ddd.relationships.application.remote\tdb.ddd.relationships.application.remote.csproj", "{CF7CA875-EA91-4EA2-817A-30D4499C6711}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tdb.ddd.relationships.application.contracts", "tdb.ddd.relationships.application.contracts\tdb.ddd.relationships.application.contracts.csproj", "{7E33DE89-FD31-4CD3-909E-4AE3052C77C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tdb.ddd.relationships.application", "tdb.ddd.relationships.application\tdb.ddd.relationships.application.csproj", "{2427E2C9-6DDB-4BCE-9491-146C40FB5C57}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E1CB2130-D399-456A-8AB9-A21DB4FC6415}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1CB2130-D399-456A-8AB9-A21DB4FC6415}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1CB2130-D399-456A-8AB9-A21DB4FC6415}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1CB2130-D399-456A-8AB9-A21DB4FC6415}.Release|Any CPU.Build.0 = Release|Any CPU
+		{620CCBEC-CD10-4251-9EE9-F2E90352EE53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{620CCBEC-CD10-4251-9EE9-F2E90352EE53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{620CCBEC-CD10-4251-9EE9-F2E90352EE53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{620CCBEC-CD10-4251-9EE9-F2E90352EE53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85F8415B-E2F2-4B99-8377-0BB0463BAF5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85F8415B-E2F2-4B99-8377-0BB0463BAF5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85F8415B-E2F2-4B99-8377-0BB0463BAF5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85F8415B-E2F2-4B99-8377-0BB0463BAF5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98CB3DE0-17E0-4EA2-A8BE-64A236D57CE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98CB3DE0-17E0-4EA2-A8BE-64A236D57CE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98CB3DE0-17E0-4EA2-A8BE-64A236D57CE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98CB3DE0-17E0-4EA2-A8BE-64A236D57CE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{066AA9D5-96D7-4413-8E42-03208EA793B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{066AA9D5-96D7-4413-8E42-03208EA793B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{066AA9D5-96D7-4413-8E42-03208EA793B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{066AA9D5-96D7-4413-8E42-03208EA793B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF7CA875-EA91-4EA2-817A-30D4499C6711}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF7CA875-EA91-4EA2-817A-30D4499C6711}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF7CA875-EA91-4EA2-817A-30D4499C6711}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF7CA875-EA91-4EA2-817A-30D4499C6711}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E33DE89-FD31-4CD3-909E-4AE3052C77C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E33DE89-FD31-4CD3-909E-4AE3052C77C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E33DE89-FD31-4CD3-909E-4AE3052C77C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E33DE89-FD31-4CD3-909E-4AE3052C77C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2427E2C9-6DDB-4BCE-9491-146C40FB5C57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2427E2C9-6DDB-4BCE-9491-146C40FB5C57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2427E2C9-6DDB-4BCE-9491-146C40FB5C57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2427E2C9-6DDB-4BCE-9491-146C40FB5C57}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5E40F49A-8600-4FCF-AEB8-D17555C75243}
+	EndGlobalSection
+EndGlobal

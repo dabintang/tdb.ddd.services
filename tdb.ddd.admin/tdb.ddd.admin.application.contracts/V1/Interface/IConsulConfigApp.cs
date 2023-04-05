@@ -47,5 +47,17 @@ namespace tdb.ddd.admin.application.contracts.V1.Interface
         /// </summary>
         /// <returns></returns>
         Task<TdbRes<string>> BackupFilesConfigAsync();
+
+        /// <summary>
+        /// 还原人际关系服务配置
+        /// </summary>
+        /// <returns></returns>
+        Task<TdbRes<string>> RestoreRelationshipsConfigAsync();
+
+        /// <summary>
+        /// 备份人际关系服务配置
+        /// </summary>
+        /// <returns></returns>
+        Task<TdbRes<string>> BackupRelationshipsConfigAsync();
     }
 }

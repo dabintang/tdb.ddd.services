@@ -71,6 +71,24 @@ namespace tdb.ddd.admin.application.V1
             return await BackupConfigAsync<FilesConfigInfo>(TdbCst.ServerID.Files, $"consulConfig{Path.DirectorySeparatorChar}files.json", FilesConfigInfo.PrefixKey);
         }
 
+        /// <summary>
+        /// 还原人际关系服务配置
+        /// </summary>
+        /// <returns></returns>
+        public async Task<TdbRes<string>> RestoreRelationshipsConfigAsync()
+        {
+            return await RestoreConfigAsync<RelationshipsConfigInfo>(TdbCst.ServerID.Relationships, $"consulConfig{Path.DirectorySeparatorChar}relationships.json", RelationshipsConfigInfo.PrefixKey);
+        }
+
+        /// <summary>
+        /// 备份文件服务配置
+        /// </summary>
+        /// <returns></returns>
+        public async Task<TdbRes<string>> BackupRelationshipsConfigAsync()
+        {
+            return await BackupConfigAsync<RelationshipsConfigInfo>(TdbCst.ServerID.Relationships, $"consulConfig{Path.DirectorySeparatorChar}relationships.json", RelationshipsConfigInfo.PrefixKey);
+        }
+
         #endregion
 
         #region 私有方法

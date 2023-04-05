@@ -30,6 +30,11 @@ namespace tdb.ddd.contracts
             /// 运维服务
             /// </summary>
             public const int Admin = 3;
+
+            /// <summary>
+            /// 人际关系服务
+            /// </summary>
+            public const int Relationships = 4;
         }
 
         /// <summary>
@@ -95,9 +100,10 @@ namespace tdb.ddd.contracts
         /// </summary>
         public class MsgCode
         {
-            // 账户服务 10001-19999
-            // 文件服务 20001-29999
-			// 运维服务 30001-39999
+            // 账户服务     10001-19999
+            // 文件服务     20001-29999
+            // 运维服务     30001-39999
+            // 人际关系服务 40001-49999
         }
 
         /// <summary>

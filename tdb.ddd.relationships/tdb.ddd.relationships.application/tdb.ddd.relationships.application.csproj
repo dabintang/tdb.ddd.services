@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\tdb.ddd.relationships.application.contracts\tdb.ddd.relationships.application.contracts.csproj" />
+    <ProjectReference Include="..\tdb.ddd.relationships.domain.contracts\tdb.ddd.relationships.domain.contracts.csproj" />
+    <ProjectReference Include="..\tdb.ddd.relationships.domain\tdb.ddd.relationships.domain.csproj" />
+    <ProjectReference Include="..\tdb.ddd.relationships.infrastructure\tdb.ddd.relationships.infrastructure.csproj" />
+    <ProjectReference Include="..\tdb.ddd.relationships.repository\tdb.ddd.relationships.repository.csproj" />
+  </ItemGroup>
+
+</Project>
