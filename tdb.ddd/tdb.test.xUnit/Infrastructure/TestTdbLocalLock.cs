@@ -4,8 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using tdb.ddd.infrastructure;
-using Xunit;
+using tdb.common;
 
 namespace tdb.test.xUnit.Infrastructure
 {
@@ -122,7 +121,7 @@ namespace tdb.test.xUnit.Infrastructure
         private void DoSomeThing(string key, int maxWaitSeconds, int taskSeconds)
         {
             this.output.WriteLine($"[{Environment.CurrentManagedThreadId}]尝试对[{key}]上锁，{DateTime.Now:yyyy-MM-dd HH:mm:ss.ffff}");
-            using (var localLock = TdbLocalLock.Lock(key, maxWaitSeconds))
+            using (var localLock = LocalLock.Lock(key, maxWaitSeconds))
             {
                 if (localLock.IsLockedByOther)
                 {

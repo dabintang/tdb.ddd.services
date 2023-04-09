@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using tdb.ddd.infrastructure;
+using tdb.common;
 
 namespace tdb.test.xUnit.Infrastructure
 {
@@ -21,7 +21,7 @@ namespace tdb.test.xUnit.Infrastructure
             var list = new List<long>();
             for (int i = 0; i < 3000; i++)
             {
-                list.Add(TdbUniqueIDHelper.CreateID(0, 0));
+                list.Add(UniqueIDHelper.CreateID(0, 0));
             }
 
             Assert.True(list.Distinct().Count() == list.Count);

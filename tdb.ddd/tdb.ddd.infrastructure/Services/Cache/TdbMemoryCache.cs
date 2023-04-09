@@ -606,7 +606,7 @@ namespace tdb.ddd.infrastructure.Services
             }
 
             //上锁，避免大量并发进入
-            using (var lockRet = TdbLocalLock.Lock(key))
+            using (var lockRet = LocalLock.Lock(key))
             {
                 //再次尝试从缓存获取值
                 var valAgain = this.GetInner<T>(key);
@@ -646,7 +646,7 @@ namespace tdb.ddd.infrastructure.Services
             }
 
             //上锁，避免大量并发进入
-            using (var lockRet = TdbLocalLock.Lock(key))
+            using (var lockRet = LocalLock.Lock(key))
             {
                 //再次尝试从缓存获取值
                 var valAgain = this.GetInner<T>(key);
@@ -687,7 +687,7 @@ namespace tdb.ddd.infrastructure.Services
             }
 
             //上锁，避免大量并发进入
-            using (var lockRet = TdbLocalLock.Lock(key))
+            using (var lockRet = LocalLock.Lock(key))
             {
                 //再次尝试从缓存获取值
                 var valAgain = this.HGetInner<T>(key, field);
@@ -729,7 +729,7 @@ namespace tdb.ddd.infrastructure.Services
             }
 
             //上锁，避免大量并发进入
-            using (var lockRet = TdbLocalLock.Lock(key))
+            using (var lockRet = LocalLock.Lock(key))
             {
                 //再次尝试从缓存获取值
                 var valAgain = this.HGetInner<T>(key, field);

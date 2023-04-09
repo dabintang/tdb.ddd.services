@@ -1,9 +1,9 @@
-﻿using HashidsNet;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tdb.common;
 
 namespace tdb.ddd.contracts
 {
@@ -27,7 +27,7 @@ namespace tdb.ddd.contracts
         /// <summary>
         /// Hashids
         /// </summary>
-        private static Hashids? hashids;
+        private static HashIDService? hashids;
 
         /// <summary>
         /// 编码

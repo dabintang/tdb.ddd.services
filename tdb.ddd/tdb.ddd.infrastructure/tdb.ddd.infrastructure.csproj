@@ -12,9 +12,9 @@
     <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.1" />
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="CSRedisCore" Version="3.8.670" />
-    <PackageReference Include="DotNetCore.CAP.Dashboard" Version="7.1.0" />
-    <PackageReference Include="DotNetCore.CAP.MySql" Version="7.1.0" />
-    <PackageReference Include="DotNetCore.CAP.RedisStreams" Version="7.1.0" />
+    <PackageReference Include="DotNetCore.CAP.Dashboard" Version="7.1.1" />
+    <PackageReference Include="DotNetCore.CAP.MySql" Version="7.1.1" />
+    <PackageReference Include="DotNetCore.CAP.RedisStreams" Version="7.1.1" />
     <PackageReference Include="Flurl" Version="3.0.7" />
     <PackageReference Include="MediatR" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -23,8 +23,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
-    <PackageReference Include="tdb.common" Version="7.0.0.3" />
-    <PackageReference Include="tdb.consul.kv" Version="7.0.0.3" />
+    <PackageReference Include="tdb.common" Version="7.0.0.4" />
+    <PackageReference Include="tdb.consul.kv" Version="7.0.0.4" />
     <PackageReference Include="tdb.nlog" Version="7.0.0.5" />
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>tdb.test.xUnit</_Parameter1>
@@ -39,7 +39,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title></Title>
-    <Version>7.0.0.10</Version>
+    <Version>7.0.0.11</Version>
     <Authors>tangdabin</Authors>
     <Company>tdb</Company>
     <Product>tdb.ddd</Product>

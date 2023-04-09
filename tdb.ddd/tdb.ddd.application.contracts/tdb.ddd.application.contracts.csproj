@@ -4,7 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>7.0.0.8</Version>
+    <Version>7.0.0.9</Version>
     <Authors>tangdabin</Authors>
     <Company>tdb</Company>
     <Product>tdb.ddd</Product>
@@ -17,7 +17,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="tdb.common" Version="7.0.0.3" />
+    <PackageReference Include="tdb.common" Version="7.0.0.4" />
   </ItemGroup>
 
   <ItemGroup>

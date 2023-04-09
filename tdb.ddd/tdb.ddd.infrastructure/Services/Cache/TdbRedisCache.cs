@@ -338,7 +338,7 @@ namespace tdb.ddd.infrastructure.Services
             }
 
             //上锁
-            using (var lockRet = TdbLocalLock.Lock(key))
+            using (var lockRet = LocalLock.Lock(key))
             {
                 //再次尝试从缓存获取值
                 var valAgain = this.Get<T>(key);
@@ -378,7 +378,7 @@ namespace tdb.ddd.infrastructure.Services
             }
 
             //上锁
-            using (var lockRet = TdbLocalLock.Lock(key))
+            using (var lockRet = LocalLock.Lock(key))
             {
                 //再次尝试从缓存获取值
                 var valAgain = this.Get<T>(key);
@@ -419,7 +419,7 @@ namespace tdb.ddd.infrastructure.Services
             }
 
             //上锁
-            using (var lockRet = TdbLocalLock.Lock(key))
+            using (var lockRet = LocalLock.Lock(key))
             {
                 //再次尝试从缓存获取值
                 var valAgain = this.HGet<T>(key, field);
@@ -461,7 +461,7 @@ namespace tdb.ddd.infrastructure.Services
             }
 
             //上锁
-            using (var lockRet = TdbLocalLock.Lock(key))
+            using (var lockRet = LocalLock.Lock(key))
             {
                 //再次尝试从缓存获取值
                 var valAgain = this.HGet<T>(key, field);
