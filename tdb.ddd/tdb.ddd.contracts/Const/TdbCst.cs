@@ -34,7 +34,7 @@ namespace tdb.ddd.contracts
             /// <summary>
             /// 人际关系服务
             /// </summary>
-            public const int Relationships = 4;
+            public const int Relationships = 11;
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace tdb.ddd.contracts
             // 文件服务     2001-2999
             // 运维服务     3001-3999
 
-            // 人际关系服务 101001-101999
+            // 人际关系服务 11001-11999
         }
 
         /// <summary>

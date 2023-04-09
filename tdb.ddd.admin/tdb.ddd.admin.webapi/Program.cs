@@ -22,15 +22,15 @@ builder.RunWebApp(option =>
     //总线-DotNetCore.CAP
     option.BusOption.CAPOption = new TdbWebAppBuilderOption.TdbDotNetCoreCAPOption((o) =>
     {
-        o.UseRedis(AdminConfig.Common.CAP.RedisConnStr);
-        o.UseMySql(AdminConfig.Common.CAP.DBConnStr);
+        o.UseRedis(AdminConfig.Common?.CAP?.RedisConnStr ?? AdminConfig.App.CAP.RedisConnStr);
+        o.UseMySql(AdminConfig.Common?.CAP?.DBConnStr ?? AdminConfig.App.CAP.DBConnStr);
         o.DefaultGroupName = "admin";
     });
     //跨域请求
     option.CorsOption.SetupCors = option.CorsOption.SetupCorsAllowAll;
     option.CorsOption.UseCors = option.CorsOption.UseCorsAllAllow;
     //认证授权
-    option.AuthOption.SetupJwtBearer = (jwtBearerOption) => option.AuthOption.DefaultJwtBearerOptions(jwtBearerOption, () => AdminConfig.App.Token.SecretKey);
+    option.AuthOption.SetupJwtBearer = (jwtBearerOption) => option.AuthOption.DefaultJwtBearerOptions(jwtBearerOption, () => AdminConfig.Common?.Token?.SecretKey ?? AdminConfig.App.Token.SecretKey);
     //白名单IP
     option.AuthOption.GetWhiteListIP = () => AdminConfig.App.WhiteListIP;
     //接口入参验证

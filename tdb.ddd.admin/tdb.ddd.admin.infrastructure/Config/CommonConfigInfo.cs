@@ -38,6 +38,12 @@ namespace tdb.ddd.admin.infrastructure.Config
         public ServiceConfigInfo AdminService { get; set; }
 
         /// <summary>
+        /// token配置信息
+        /// </summary>
+        [TdbConfigKey("Token")]
+        public TokenConfigInfo Token { get; set; }
+
+        /// <summary>
         /// HashID配置信息
         /// </summary>
         [TdbConfigKey("HashID")]
@@ -60,6 +66,22 @@ namespace tdb.ddd.admin.infrastructure.Config
             /// webapi根地址
             /// </summary>
             public string WebapiRootURL { get; set; }
+        }
+
+        /// <summary>
+        /// token配置信息
+        /// </summary>
+        public class TokenConfigInfo
+        {
+            /// <summary>
+            /// 发行者
+            /// </summary>
+            public string Issuer { get; set; }
+
+            /// <summary>
+            /// 秘钥
+            /// </summary>
+            public string SecretKey { get; set; }
         }
 
         /// <summary>

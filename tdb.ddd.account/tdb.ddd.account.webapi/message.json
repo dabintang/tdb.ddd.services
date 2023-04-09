@@ -1,39 +1,39 @@
-//账户服务：10001 - 19999
+//账户服务：1001 - 1999
 {
   "IncorrectPassword": {
-    "Code": 10001,
+    "Code": 1001,
     "Msg": "登录名或密码不对"
   },
   "Disableduser": {
-    "Code": 10002,
+    "Code": 1002,
     "Msg": "用户已被禁用"
   },
   "ExpiredRefreshToken": {
-    "Code": 10003,
+    "Code": 1003,
     "Msg": "刷新令牌已失效"
   },
   "UserNotExist": {
-    "Code": 10004,
+    "Code": 1004,
     "Msg": "用户不存在"
   },
   "LoginNameExist": {
-    "Code": 10005,
+    "Code": 1005,
     "Msg": "登录名已存在"
   },
   "RoleNotExist": {
-    "Code": 10006,
+    "Code": 1006,
     "Msg": "角色不存在"
   },
   "AuthorityNotExist": {
-    "Code": 10007,
+    "Code": 1007,
     "Msg": "权限不存在"
   },
   "IncorrectOldPassword": {
-    "Code": 10008,
+    "Code": 1008,
     "Msg": "原密码不对"
   },
   "HeadImgNotExist": {
-    "Code": 10009,
+    "Code": 1009,
     "Msg": "头像不存在"
   }
 }
