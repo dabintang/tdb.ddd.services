@@ -5,8 +5,6 @@ using tdb.demo.webapi.Configs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.Services.AddTransient<tdb.demo.webapi.Controllers.V1.ICAPSubscriber, tdb.demo.webapi.Controllers.V1.CAPSubscriber>();
-
 //添加服务及使用
 builder.RunWebApp(option =>
 {
@@ -52,6 +50,7 @@ builder.RunWebApp(option =>
     {
         o.ServiceName = "演示服务";
         o.LstXmlCommentsFileName.Add("tdb.demo.webapi.xml");
+        o.LstXmlCommentsFileName.Add("tdb.ddd.contracts.xml");
     };
     option.SwaggerOption.RoutePrefix = "tdbswagger";
 });

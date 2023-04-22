@@ -1,7 +1,27 @@
-//人际关系服务：101001 - 101999
+//人际关系服务：11001-11999
 {
-  "PersonnelNotExist": {
+  "CircleNotExist": {
     "Code": 11001,
+    "Msg": "人际圈不存在"
+  },
+  "PersonnelNotExist": {
+    "Code": 11002,
     "Msg": "人员不存在"
+  },
+  "MemberNotExist": {
+    "Code": 11003,
+    "Msg": "圈内无该成员"
+  },
+  "ReachedMemberLimit": {
+    "Code": 11004,
+    "Msg": "已达到人数上限"
+  },
+  "InvalidInvitationCode": {
+    "Code": 11005,
+    "Msg": "无效邀请码"
+  },
+  "ExpiredInvitationCode": {
+    "Code": 11006,
+    "Msg": "邀请码已过期"
   }
 }

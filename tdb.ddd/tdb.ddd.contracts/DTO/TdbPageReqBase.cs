@@ -7,10 +7,10 @@ namespace tdb.ddd.contracts
     /// <summary>
     /// 分页请求基类
     /// </summary>
-    public class TdbPageReqBase : ITdbSortReq
+    public class TdbPageReqBase<T> : ITdbSortReq<T> where T : struct, Enum
     {
         /// <summary>
-        /// 页码
+        /// 页码（从1开始）
         /// </summary>
         public int PageNO { get; set; }
 
@@ -22,6 +22,6 @@ namespace tdb.ddd.contracts
         /// <summary>
         /// 排序项集合
         /// </summary>
-        public virtual List<TdbSortItem>? LstSortItem { get; set; }
+        public virtual List<TdbSortItem<T>>? LstSortItem { get; set; }
     }
 }

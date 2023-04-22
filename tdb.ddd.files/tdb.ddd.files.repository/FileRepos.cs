@@ -114,19 +114,19 @@ namespace tdb.ddd.files.repository
             //[可选]截止创建时间（小于等于）
             query.WhereIF(req.EndCreateTime.HasValue, m => m.CreateTime <= req.EndCreateTime);
             //排序
-            if (req.LstSortItem != null && req.LstSortItem.Count > 0)
-            {
-                //排序字符串
-                var orderFields = string.Join(',', 
-                                            req.LstSortItem.Where(m => string.IsNullOrWhiteSpace(m.FieldName) == false)
-                                                           .Select(m => m.SortCode == TdbSortItem.EnmSort.Asc ? $"{m.FieldName}" : $"{m.FieldName} DESC"));
-                query.OrderByIF(string.IsNullOrWhiteSpace(orderFields) == false, orderFields);
-            }
-            else
-            {
+            //if (req.LstSortItem != null && req.LstSortItem.Count > 0)
+            //{
+            //    //排序字符串
+            //    var orderFields = string.Join(',', 
+            //                                req.LstSortItem.Where(m => string.IsNullOrWhiteSpace(m.FieldName) == false)
+            //                                               .Select(m => m.SortCode == EnmTdbSort.Asc ? $"{m.FieldName}" : $"{m.FieldName} DESC"));
+            //    query.OrderByIF(string.IsNullOrWhiteSpace(orderFields) == false, orderFields);
+            //}
+            //else
+            //{
                 //默认按创建时间降序排序
                 query.OrderByDescending(m => m.CreateTime);
-            }
+            //}
 
             //查询
             var total = new RefAsync<int>();

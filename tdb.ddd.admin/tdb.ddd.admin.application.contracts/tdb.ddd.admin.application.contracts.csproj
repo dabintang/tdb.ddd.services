@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="tdb.ddd.application.contracts" Version="7.0.0.9" />
+    <PackageReference Include="tdb.ddd.application.contracts" Version="7.0.0.10" />
   </ItemGroup>
 
 </Project>

@@ -8,12 +8,12 @@ using tdb.ddd.contracts;
 using tdb.ddd.domain;
 using tdb.ddd.relationships.application.contracts.V1.DTO;
 using tdb.ddd.relationships.application.contracts.V1.Interface;
+using tdb.ddd.relationships.domain.Circle.Aggregate;
 using tdb.ddd.relationships.domain.Personnel;
 using tdb.ddd.relationships.domain.Personnel.Aggregate;
 using tdb.ddd.relationships.infrastructure;
 using tdb.ddd.relationships.infrastructure.Config;
 using tdb.ddd.repository.sqlsugar;
-using static tdb.ddd.contracts.TdbCst;
 
 namespace tdb.ddd.relationships.application.V1
 {
@@ -23,6 +23,52 @@ namespace tdb.ddd.relationships.application.V1
     public class PersonnelAPP : IPersonnelAPP
     {
         #region 实现接口
+
+        /// <summary>
+        /// 获取人员信息
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        public async Task<TdbRes<GetPersonnelRes>> GetPersonnelAsync(GetPersonnelReq req)
+        {
+            //人员领域服务
+            var personnelService = new PersonnelService();
+
+            //获取人员聚合
+            var personnelAgg = await personnelService.GetByIDAsync(req.ID);
+            if (personnelAgg is null)
+            {
+                return TdbRes.Success<GetPersonnelRes>(null);
+            }
+
+            //类型转换
+            var res = DTOMapper.Map<PersonnelAgg, GetPersonnelRes>(personnelAgg);
+
+            return TdbRes.Success(res);
+        }
+
+        /// <summary>
+        /// 根据用户ID获取人员信息
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        public async Task<TdbRes<GetPersonnelByUserIDRes>> GetPersonnelByUserIDAsync(GetPersonnelByUserIDReq req)
+        {
+            //人员领域服务
+            var personnelService = new PersonnelService();
+
+            //根据用户ID获取人员聚合
+            var personnelAgg = await personnelService.GetByUserIDAsync(req.UserID);
+            if (personnelAgg is null)
+            {
+                return TdbRes.Success<GetPersonnelByUserIDRes>(null);
+            }
+
+            //类型转换
+            var res = DTOMapper.Map<PersonnelAgg, GetPersonnelByUserIDRes>(personnelAgg);
+
+            return TdbRes.Success(res);
+        }
 
         /// <summary>
         /// 添加人员
@@ -50,7 +96,6 @@ namespace tdb.ddd.relationships.application.V1
                 Email = param.Email ?? "",
                 Remark = param.Remark ?? "",
                 UserID = null,
-                IsDeleted = false,
                 CreateInfo = new CreateInfoValueObject() { CreatorID = req.OperatorID, CreateTime = DateTime.Now },
                 UpdateInfo = new UpdateInfoValueObject() { UpdaterID = req.OperatorID, UpdateTime = DateTime.Now }
             };
@@ -87,7 +132,7 @@ namespace tdb.ddd.relationships.application.V1
                 return new TdbRes<bool>(RelationshipsConfig.Msg.PersonnelNotExist, false);
             }
 
-            //判断权限（只有创建人修改其人员信息）
+            //判断权限（只有创建人可以修改）
             if (req.OperatorID != personnelAgg.CreateInfo.CreatorID)
             {
                 return new TdbRes<bool>(TdbComResMsg.InsufficientPermissions, false);
@@ -100,6 +145,8 @@ namespace tdb.ddd.relationships.application.V1
             personnelAgg.MobilePhone = param.MobilePhone ?? "";
             personnelAgg.Email = param.Email ?? "";
             personnelAgg.Remark = param.Remark ?? "";
+            personnelAgg.UpdateInfo.UpdaterID = req.OperatorID;
+            personnelAgg.UpdateInfo.UpdateTime = req.OperationTime;
 
             //保存
             await personnelAgg.SaveChangedAsync();
@@ -111,6 +158,8 @@ namespace tdb.ddd.relationships.application.V1
 
             return TdbRes.Success(true);
         }
+
+
 
         #endregion
     }

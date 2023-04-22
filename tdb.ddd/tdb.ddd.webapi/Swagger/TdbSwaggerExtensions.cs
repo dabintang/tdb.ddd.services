@@ -86,6 +86,7 @@ namespace tdb.ddd.webapi
                 });
 
                 //标记[TdbHashIDJsonConverterAttribute]特性的属性，修改为string型
+                //标记[TdbHashIDListJsonConverterAttribute]特性的属性，修改为string列表类型
                 o.SchemaFilter<TdbSwaggerSchemaHashIDFilter>();
                 //标记[TdbHashIDModelBinderAttribute]特性的属性，修改为string型
                 o.ParameterFilter<TdbSwaggerParameterHashIDFilter>();
@@ -190,6 +191,7 @@ namespace tdb.ddd.webapi
                 });
 
                 //标记[TdbHashIDJsonConverterAttribute]特性的属性，修改为string型
+                //标记[TdbHashIDListJsonConverterAttribute]特性的属性，修改为string列表类型
                 o.SchemaFilter<TdbSwaggerSchemaHashIDFilter>();
                 //标记[TdbHashIDModelBinderAttribute]特性的属性，修改为string型
                 o.ParameterFilter<TdbSwaggerParameterHashIDFilter>();

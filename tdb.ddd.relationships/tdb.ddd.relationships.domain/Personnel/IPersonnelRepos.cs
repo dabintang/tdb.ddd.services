@@ -22,6 +22,13 @@ namespace tdb.ddd.relationships.domain.Personnel
         Task<PersonnelAgg?> GetByIDAsync(long personnelID);
 
         /// <summary>
+        /// 根据用户ID获取人员聚合
+        /// </summary>
+        /// <param name="userID">用户ID</param>
+        /// <returns></returns>
+        Task<PersonnelAgg?> GetByUserIDAsync(long userID);
+
+        /// <summary>
         /// 获取人员的照片ID
         /// </summary>
         /// <param name="personnelID">人员ID</param>
@@ -41,15 +48,6 @@ namespace tdb.ddd.relationships.domain.Personnel
         /// <param name="param">条件</param>
         /// <returns></returns>
         Task<TdbPageRes<PersonnelAgg>> QueryAsync(QueryPersonnelParam param);
-
-
-        /// <summary>
-        /// 获取人员在指定人际圈内信息
-        /// </summary>
-        /// <param name="personnelID">人员ID</param>
-        /// <param name="circleID">人际圈ID</param>
-        /// <returns></returns>
-        Task<PersonnelCircleEntity> GetPersonnelCircleInfoAsync(long personnelID, long circleID);
 
         /// <summary>
         /// 保存

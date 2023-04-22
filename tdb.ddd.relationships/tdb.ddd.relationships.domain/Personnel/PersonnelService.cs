@@ -45,8 +45,20 @@ namespace tdb.ddd.relationships.domain.Personnel
         /// <returns></returns>
         public async Task<PersonnelAgg?> GetByIDAsync(long personnelID)
         {
-            //获取照片聚合
+            //获取人员聚合
             var agg = await this.PersonnelRepos.GetByIDAsync(personnelID);
+            return agg;
+        }
+
+        /// <summary>
+        /// 根据用户ID获取人员聚合
+        /// </summary>
+        /// <param name="userID">用户ID</param>
+        /// <returns></returns>
+        public async Task<PersonnelAgg?> GetByUserIDAsync(long userID)
+        {
+            //获取照片聚合
+            var agg = await this.PersonnelRepos.GetByUserIDAsync(userID);
             return agg;
         }
 

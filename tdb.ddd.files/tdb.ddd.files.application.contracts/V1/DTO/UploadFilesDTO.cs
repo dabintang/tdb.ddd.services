@@ -32,7 +32,7 @@ namespace tdb.ddd.files.application.contracts.V1.DTO
         /// <summary>
         /// 文件状态（1：临时文件；2：正式文件）
         /// </summary>
-        public EnmFileStatus FileStatusCode { get; set; }
+        public EnmTdbFileStatus FileStatusCode { get; set; }
 
         /// <summary>
         /// 备注

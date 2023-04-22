@@ -7,11 +7,11 @@ namespace tdb.ddd.contracts
     /// <summary>
     /// 排序条件接口
     /// </summary>
-    public interface ITdbSortReq
+    public interface ITdbSortReq<T> where T : struct, Enum
     {
         /// <summary>
         /// 排序项集合
         /// </summary>
-        List<TdbSortItem>? LstSortItem { get; set; }
+        List<TdbSortItem<T>>? LstSortItem { get; set; }
     }
 }

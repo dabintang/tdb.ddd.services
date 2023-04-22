@@ -118,13 +118,13 @@ namespace tdb.ddd.files.application.V1
             }
 
             //如果已经是正式文件，直接返回成功
-            if (fileAgg.FileStatusCode == EnmFileStatus.Formal)
+            if (fileAgg.FileStatusCode == EnmTdbFileStatus.Formal)
             {
                 return TdbRes.Success(true);
             }
 
             //改为正式文件
-            fileAgg.FileStatusCode = EnmFileStatus.Formal;
+            fileAgg.FileStatusCode = EnmTdbFileStatus.Formal;
             fileAgg.UpdateInfo = new UpdateInfoValueObject()
             {
                 UpdaterID = reqDTO.OperatorID,
@@ -241,8 +241,8 @@ namespace tdb.ddd.files.application.V1
             var reqQuery = new QueryFilesReq()
             {
                 PageNO = 1,
-                PageSize = 2,
-                FileStatusCode = (byte)EnmFileStatus.Temp,
+                PageSize = 100,
+                FileStatusCode = (byte)EnmTdbFileStatus.Temp,
                 StartCreateTime = reqDTO.Param.StartCreateTime,
                 EndCreateTime = reqDTO.Param.EndCreateTime
             };
@@ -252,14 +252,27 @@ namespace tdb.ddd.files.application.V1
             var res = new DeleteTempFilesRes();
 
             //循环删除文件
-            if (list.Data is not null)
+            while (list.Data is not null && list.Data.Count > 0)
             {
+                //循环删除文件
                 foreach (var agg in list.Data)
                 {
                     await this.FileService.DeleteFileAsync(agg);
 
                     res.Count++;
                     res.Details.Add(new DeleteTempFileRes() { ID = agg.ID, Name = agg.Name });
+                }
+
+                //如果存储中还有记录，则继续删除。否则推出循环
+                if (list.TotalCount > list.Data.Count)
+                {
+                    //重新查询
+                    list = await this.FileService.QueryFileAggsAsync(reqQuery);
+                }
+                else
+                {
+                    //退出循环
+                    break;
                 }
             }
 

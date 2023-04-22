@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace tdb.ddd.contracts
 {
     /// <summary>
-    /// 把IDhash加密的json转换特效
+    /// 把 ID hash加密的json转换特效
     /// </summary>
     public class TdbHashIDJsonConverterAttribute : JsonConverterAttribute
     {

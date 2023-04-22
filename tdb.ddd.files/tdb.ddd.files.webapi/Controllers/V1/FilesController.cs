@@ -74,19 +74,6 @@ namespace tdb.ddd.files.webapi.Controllers.V1
             }
             var storageTypeCode = (EnmStorageType)Convert.ToByte(strStorageTypeCode);
 
-            ////文件状态（1：临时文件；2：正式文件）
-            //formData.TryGetValue("FileStatusCode", out StringValues strFileStatusCode);
-            //if (string.IsNullOrWhiteSpace(strFileStatusCode))
-            //{
-            //    strFileStatusCode = "1";
-            //}
-            //else if (strFileStatusCode != "1" && strFileStatusCode != "2")
-            //{
-            //    return new TdbRes<List<UploadFilesRes>>(TdbComResMsg.InvalidParam.FromNewMsg("文件状态只支持：1：临时文件；2：正式文件"), null);
-            //}
-            //var fileStatusCode = (EnmFileStatus)Convert.ToByte(strFileStatusCode);
-            var fileStatusCode = EnmFileStatus.Temp;
-
             //备注
             formData.TryGetValue("Remark", out StringValues strRemark);
             var remark = Convert.ToString(strRemark) ?? "";
@@ -105,7 +92,7 @@ namespace tdb.ddd.files.webapi.Controllers.V1
                         Name = file.FileName,
                         AccessLevelCode = accessLevelCode,
                         StorageTypeCode = storageTypeCode,
-                        FileStatusCode = fileStatusCode,
+                        FileStatusCode = EnmTdbFileStatus.Temp,
                         Remark = remark,
                         Data = data
                     };
@@ -210,28 +197,5 @@ namespace tdb.ddd.files.webapi.Controllers.V1
         }
 
         #endregion
-
-
-        ///// <summary>
-        ///// 修改文件状态
-        ///// </summary>
-        ///// <param name="msg">修改文件状态 消息</param>
-        ///// <returns></returns>
-        //[NonAction]
-        //[CapSubscribe(TdbCst.CAPTopic.UpdateFilesStatus)]
-        //public async Task<UpdateFilesStatusRes> UpdateFilesStatusAsync(UpdateFilesStatusMsg msg)
-        //{
-        //    var res = new UpdateFilesStatusRes();
-
-        //    if (msg.LstFileStatus is null)
-        //    {
-        //        return res;
-        //    }
-
-            
-
-        //    return res;
-        //}
-
     }
 }

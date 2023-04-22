@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using tdb.ddd.application;
 using tdb.ddd.application.contracts;
 using tdb.ddd.contracts;
 using tdb.ddd.domain;
@@ -85,6 +86,57 @@ namespace tdb.demo.webapi.Controllers.V1
             return TdbRes.Success(res);
         }
 
+        /// <summary>
+        /// 分页查询
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        //[HttpGet]
+        [HttpPost]
+        [AllowAnonymous]
+        public TdbPageRes<UserRes> QueryUserList([FromBody]QueryUserListReq req)
+        {
+            var all = UserRepos.Ins.All();
+            var enumerable = all.AsEnumerable();
+
+            if (req.ID is not null)
+            {
+                enumerable = enumerable.Where(m => m.ID == req.ID.Value);
+            }
+            else if (req.LstID?.Count > 0)
+            {
+                enumerable = enumerable.Where(m => req.LstID.Contains(m.ID));
+            }
+
+            //排序
+            if (req.LstSortItem is not null)
+            {
+                foreach (var sort in req.LstSortItem)
+                {
+                    switch (sort.FieldCode)
+                    {
+                        case QueryUserListReq.EnmSortField.ID:
+                            enumerable = enumerable.Sort(sort.SortCode, m => m.ID);
+                            break;
+                        case QueryUserListReq.EnmSortField.Name:
+                            enumerable = enumerable.Sort(sort.SortCode, m => m.Name);
+                            break;
+                        case QueryUserListReq.EnmSortField.NickName:
+                            enumerable = enumerable.Sort(sort.SortCode, m => m.NickName);
+                            break;
+                    }
+                }
+            }
+            //分页
+            var list = enumerable.Skip(Math.Min((req.PageNO - 1), 1) * req.PageSize).Take(req.PageSize).Select(m => new UserRes()
+            {
+                ID = m.ID,
+                Name = m.Name,
+                NickName = m.NickName
+            }).ToList();
+            return new TdbPageRes<UserRes>(TdbComResMsg.Success, list, all.Count);
+        }
+
         #endregion
 
         /// <summary>
@@ -125,6 +177,49 @@ namespace tdb.demo.webapi.Controllers.V1
             /// 昵称
             /// </summary>
             public string NickName { get; set; } = "";
+        }
+
+        /// <summary>
+        /// 查询用户列表 请求参数
+        /// </summary>
+        public class QueryUserListReq : TdbPageReqBase<QueryUserListReq.EnmSortField>
+        {
+            /// <summary>
+            /// [可选]用户编号集合
+            /// </summary>
+            [TdbHashIDListJsonConverter]
+            public List<long>? LstID { get; set; }
+
+            /// <summary>
+            /// [可选]用户编号
+            /// </summary>
+            [TdbHashIDJsonConverter]
+            public long? ID { get; set; }
+
+            #region 内部类
+
+            /// <summary>
+            /// 排序字段枚举（1：用户编号；2：用户名；3：昵称）
+            /// </summary>
+            public enum EnmSortField
+            {
+                /// <summary>
+                /// 用户编号
+                /// </summary>
+                ID = 1,
+
+                /// <summary>
+                /// 用户名
+                /// </summary>
+                Name = 2,
+
+                /// <summary>
+                /// 昵称
+                /// </summary>
+                NickName = 3
+            }
+
+            #endregion
         }
     }
 }

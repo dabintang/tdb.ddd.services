@@ -51,11 +51,11 @@ namespace tdb.ddd.contracts
     public class TdbRes
     {
         /// <summary>
-        /// 失败消息
+        /// 成功消息
         /// </summary>
         /// <param name="data">返回值</param>
         /// <returns>成功消息</returns>
-        public static TdbRes<T> Success<T>(T data)
+        public static TdbRes<T> Success<T>(T? data)
         {
             return new TdbRes<T>(TdbComResMsg.Success, data);
         }

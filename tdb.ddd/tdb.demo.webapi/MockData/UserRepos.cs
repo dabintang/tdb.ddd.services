@@ -57,6 +57,15 @@ namespace tdb.demo.webapi.MockData
             var user = this.LstUser.Find(m => m.Name == name && m.Pwd == pwd);
             return user;
         }
+
+        /// <summary>
+        /// 通知用户名和密码查找用户
+        /// </summary>
+        /// <returns></returns>
+        public List<UserInfo> All ()
+        {
+            return this.LstUser;
+        }
     }
 
     /// <summary>

@@ -22,7 +22,7 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO
         public string Name { get; set; } = "";
 
         /// <summary>
-        /// 性别
+        /// [必须]性别
         /// </summary>
         [TdbRequired("性别")]
         [TdbEnumDataType(typeof(EnmGender), "性别不合法")]

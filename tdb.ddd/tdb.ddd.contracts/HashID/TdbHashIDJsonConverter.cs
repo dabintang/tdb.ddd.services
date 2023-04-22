@@ -6,7 +6,7 @@ using tdb.ddd.contracts;
 namespace tdb.ddd.contracts
 {
     /// <summary>
-    /// 把IDhash加密的json转换器
+    /// 把 ID hash加密的json转换器
     /// </summary>
     public class TdbHashIDJsonConverter : JsonConverter<long>
     {

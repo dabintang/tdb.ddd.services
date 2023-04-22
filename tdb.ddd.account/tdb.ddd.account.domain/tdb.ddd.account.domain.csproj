@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.28.1" />
-    <PackageReference Include="tdb.ddd.domain" Version="7.0.0.11" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.29.0" />
+    <PackageReference Include="tdb.ddd.domain" Version="7.0.0.12" />
   </ItemGroup>
 
   <ItemGroup>

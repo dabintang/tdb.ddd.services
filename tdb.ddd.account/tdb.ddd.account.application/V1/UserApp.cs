@@ -236,12 +236,12 @@ namespace tdb.ddd.account.application.V1
                 if (oldHeadImgID is not null && oldHeadImgID != userAgg.HeadImgID)
                 {
                     //把原头像状态设置为临时
-                    updateHeadImgStatusMsg.LstFileStatus.Add(new UpdateFilesStatusMsg.FileStatus() { ID = oldHeadImgID.Value, FileStatusCode = EnmFileStatus.Temp });
+                    updateHeadImgStatusMsg.LstFileStatus.Add(new UpdateFilesStatusMsg.FileStatus() { ID = oldHeadImgID.Value, FileStatusCode = EnmTdbFileStatus.Temp });
                 }
                 //如果有新头像，且头像被更新
                 if (userAgg.HeadImgID is not null && oldHeadImgID != userAgg.HeadImgID)
                 {
-                    updateHeadImgStatusMsg.LstFileStatus.Add(new UpdateFilesStatusMsg.FileStatus() { ID = userAgg.HeadImgID.Value, FileStatusCode = EnmFileStatus.Formal });
+                    updateHeadImgStatusMsg.LstFileStatus.Add(new UpdateFilesStatusMsg.FileStatus() { ID = userAgg.HeadImgID.Value, FileStatusCode = EnmTdbFileStatus.Formal });
                 }
 
                 if (updateHeadImgStatusMsg.LstFileStatus.Count > 0)

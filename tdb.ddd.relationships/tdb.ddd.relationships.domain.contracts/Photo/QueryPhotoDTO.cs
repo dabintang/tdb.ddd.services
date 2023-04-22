@@ -10,7 +10,7 @@ namespace tdb.ddd.relationships.domain.contracts.Photo
     /// <summary>
     /// 查询照片参数
     /// </summary>
-    public class QueryPhotoParam : TdbPageReqBase
+    public class QueryPhotoParam : TdbPageReqBase<QueryPhotoParam.EnmSortField>
     {
         /// <summary>
         /// [必须]人员ID
@@ -21,5 +21,16 @@ namespace tdb.ddd.relationships.domain.contracts.Photo
         /// [可选]人际圈ID
         /// </summary>
         public long? CircleID { get; set; }
+
+        /// <summary>
+        /// 排序字段（1：照片ID）
+        /// </summary>
+        public enum EnmSortField
+        {
+            /// <summary>
+            /// 人员ID
+            /// </summary>
+            ID = 1
+        }
     }
 }

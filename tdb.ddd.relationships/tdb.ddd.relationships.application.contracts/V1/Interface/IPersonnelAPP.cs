@@ -15,14 +15,28 @@ namespace tdb.ddd.relationships.application.contracts.V1.Interface
     public interface IPersonnelAPP : ITdbIOCScoped
     {
         /// <summary>
-        /// 添加用户
+        /// 获取人员信息
         /// </summary>
         /// <param name="req">请求参数</param>
-        /// <returns>新用户ID</returns>
+        /// <returns></returns>
+        Task<TdbRes<GetPersonnelRes>> GetPersonnelAsync(GetPersonnelReq req);
+
+        /// <summary>
+        /// 根据用户ID获取人员信息
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        Task<TdbRes<GetPersonnelByUserIDRes>> GetPersonnelByUserIDAsync(GetPersonnelByUserIDReq req);
+
+        /// <summary>
+        /// 添加人员
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns>新人员ID</returns>
         Task<TdbRes<AddPersonnelRes>> AddPersonnelAsync(TdbOperateReq<AddPersonnelReq> req);
 
         /// <summary>
-        /// 更新用户
+        /// 更新人员
         /// </summary>
         /// <param name="req">请求参数</param>
         /// <returns></returns>

@@ -26,5 +26,26 @@ namespace tdb.ddd.webapi
 
             return strHashID;
         }
+
+        /// <summary>
+        /// 转成HashIDList schema （long型改为string列表类型）
+        /// </summary>
+        /// <param name="original">原始的ID schema</param>
+        /// <returns></returns>
+        public static OpenApiSchema? ToHashIDListSchema(OpenApiSchema original)
+        {
+            //深复制
+            var strHashIDList = original.DeepClone();
+            if (strHashIDList != null)
+            {
+                //修改类型
+                strHashIDList.Type = "array";
+                strHashIDList.Format = "array";
+                strHashIDList.Items.Type = "string";
+                strHashIDList.Items.Format = "string";
+            }
+
+            return strHashIDList;
+        }
     }
 }

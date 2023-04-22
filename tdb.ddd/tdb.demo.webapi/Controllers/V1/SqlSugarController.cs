@@ -149,6 +149,32 @@ CREATE TABLE `table1`  (
         }
 
         /// <summary>
+        /// 开启多次事务
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public TdbRes<bool> UseTranManyTimes()
+        {
+            var info = new Table1()
+            {
+                ID = 10,
+                Name = "名称10"
+            };
+
+            var repo = new Table1Repository();
+
+            for (int i = 0; i < 3; i++)
+            {
+                TdbRepositoryTran.BeginTranOnAsyncFunc();
+                info.Name = $"名称{i + 10}";
+                repo.InsertOrUpdate(info);
+                TdbRepositoryTran.CommitTran();
+            }
+
+            return TdbRes.Success(true);
+        }
+
+        /// <summary>
         /// 同一请求下是否用的同一个数据库连接（是）
         /// </summary>
         /// <returns></returns>

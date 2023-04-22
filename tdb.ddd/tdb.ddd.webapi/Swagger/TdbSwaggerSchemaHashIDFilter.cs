@@ -7,6 +7,7 @@ namespace tdb.ddd.webapi
 {
     /// <summary>
     /// 标记[TdbHashIDJsonConverterAttribute]特性的属性，修改为string型
+    /// 标记[TdbHashIDListJsonConverterAttribute]特性的属性，修改为string列表类型
     /// </summary>
     public class TdbSwaggerSchemaHashIDFilter : ISchemaFilter
     {
@@ -33,6 +34,16 @@ namespace tdb.ddd.webapi
                     var originalSchema = schema.Properties[property.Name];
                     //转为HashID schema
                     var hashIDSchema = TdbSwaggerHelper.ToHashIDSchema(originalSchema);
+                    //替换原来的 schema
+                    schema.Properties[property.Name] = hashIDSchema;
+                }
+                //标记[TdbHashIDListJsonConverterAttribute]特性的属性，修改为string列表类型
+                else if (schema.Properties.ContainsKey(property.Name) && property.HasAttribute<TdbHashIDListJsonConverterAttribute>())
+                {
+                    //原ID schema
+                    var originalSchema = schema.Properties[property.Name];
+                    //转为HashID schema
+                    var hashIDSchema = TdbSwaggerHelper.ToHashIDListSchema(originalSchema);
                     //替换原来的 schema
                     schema.Properties[property.Name] = hashIDSchema;
                 }

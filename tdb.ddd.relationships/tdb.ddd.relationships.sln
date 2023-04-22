@@ -16,13 +16,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.relationships.infra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.relationships.repository", "tdb.ddd.relationships.repository\tdb.ddd.relationships.repository.csproj", "{98CB3DE0-17E0-4EA2-A8BE-64A236D57CE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tdb.ddd.relationships.domain", "tdb.ddd.relationships.domain\tdb.ddd.relationships.domain.csproj", "{066AA9D5-96D7-4413-8E42-03208EA793B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.relationships.domain", "tdb.ddd.relationships.domain\tdb.ddd.relationships.domain.csproj", "{066AA9D5-96D7-4413-8E42-03208EA793B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tdb.ddd.relationships.application.remote", "tdb.ddd.relationships.application.remote\tdb.ddd.relationships.application.remote.csproj", "{CF7CA875-EA91-4EA2-817A-30D4499C6711}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.relationships.application.remote", "tdb.ddd.relationships.application.remote\tdb.ddd.relationships.application.remote.csproj", "{CF7CA875-EA91-4EA2-817A-30D4499C6711}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tdb.ddd.relationships.application.contracts", "tdb.ddd.relationships.application.contracts\tdb.ddd.relationships.application.contracts.csproj", "{7E33DE89-FD31-4CD3-909E-4AE3052C77C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.relationships.application.contracts", "tdb.ddd.relationships.application.contracts\tdb.ddd.relationships.application.contracts.csproj", "{7E33DE89-FD31-4CD3-909E-4AE3052C77C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tdb.ddd.relationships.application", "tdb.ddd.relationships.application\tdb.ddd.relationships.application.csproj", "{2427E2C9-6DDB-4BCE-9491-146C40FB5C57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.relationships.application", "tdb.ddd.relationships.application\tdb.ddd.relationships.application.csproj", "{2427E2C9-6DDB-4BCE-9491-146C40FB5C57}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2A5CF864-31E7-4764-B865-D9CB4C67CB54}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -31,6 +31,12 @@ namespace tdb.ddd.relationships.infrastructure.Config
         [TdbConfigKey("Redis")]
         public RedisConfigInfo Redis { get; set; }
 
+        /// <summary>
+        /// AES加解密信息
+        /// </summary>
+        [TdbConfigKey("AES")]
+        public AESConfigInfo AES { get; set; }
+
         #region 内部类
 
         /// <summary>
@@ -53,6 +59,22 @@ namespace tdb.ddd.relationships.infrastructure.Config
             /// 连接字符串
             /// </summary>
             public List<string> ConnStr { get; set; }
+        }
+
+        /// <summary>
+        /// AES加解密信息
+        /// </summary>
+        public class AESConfigInfo
+        {
+            /// <summary>
+            /// 秘钥（支持长度：16、24、32）
+            /// </summary>
+            public string Key { get; set; }
+
+            /// <summary>
+            /// 向量（支持长度：16）
+            /// </summary>
+            public string IV { get; set; }
         }
 
         #endregion

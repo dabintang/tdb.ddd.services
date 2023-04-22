@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper.Execution;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,24 +15,58 @@ namespace tdb.ddd.relationships.domain.Circle
     public interface ICircleRepos : ITdbIOCScoped
     {
         /// <summary>
-        /// 获取人员ID集合
+        /// 根据人际圈ID获取人际圈聚合
         /// </summary>
         /// <param name="circleID">人际圈ID</param>
         /// <returns></returns>
-        Task<List<long>> GetPersonnelIDsAsync(long circleID);
+        Task<CircleAgg?> GetByIDAsync(long circleID);
 
         /// <summary>
-        /// 保存
+        /// 获取成员数
+        /// </summary>
+        /// <param name="circleID">人际圈ID</param>
+        /// <returns>成员数</returns>
+        Task<int> CountMembersAsync(long circleID);
+
+        /// <summary>
+        /// 获取成员信息
+        /// </summary>
+        /// <param name="circleID">人际圈ID</param>
+        /// <param name="personnelID">人员ID</param>
+        /// <returns></returns>
+        Task<MemberEntity> GetMemberAsync(long circleID, long personnelID);
+
+        /// <summary>
+        /// 添加或修改成员信息
+        /// </summary>
+        /// <param name="circleID">人际圈ID</param>
+        /// <param name="entity">成员信息</param>
+        Task SaveMemberAsync(long circleID, MemberEntity entity);
+
+        /// <summary>
+        /// 删除成员
+        /// </summary>
+        /// <param name="memberID">成员ID</param>
+        Task DeleteMemberAsync(long memberID);
+
+        /// <summary>
+        /// 删除所有成员
+        /// </summary>
+        /// <param name="circleID">人际圈ID</param>
+        Task DeleteAllMembersAsync(long circleID);
+
+        /// <summary>
+        /// 保存人际圈信息
         /// </summary>
         /// <param name="agg">人际圈聚合</param>
-        Task SaveChangedAsync(CircleAgg agg);
+        Task SaveCircleAsync(CircleAgg agg);
 
         /// <summary>
-        /// 删除
+        /// 删除人际圈信息
         /// </summary>
         /// <param name="personnelID">人际圈ID</param>
         /// <returns></returns>
-        Task DeleteAsync(long circleID);
+        Task DeleteCircleAsync(long circleID);
 
     }
 }
