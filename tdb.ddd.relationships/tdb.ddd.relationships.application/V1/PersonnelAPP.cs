@@ -38,7 +38,7 @@ namespace tdb.ddd.relationships.application.V1
             var personnelAgg = await personnelService.GetByIDAsync(req.ID);
             if (personnelAgg is null)
             {
-                return TdbRes.Success<GetPersonnelRes>(null);
+                return new TdbRes<GetPersonnelRes>(RelationshipsConfig.Msg.PersonnelNotExist, null);
             }
 
             //类型转换
@@ -61,7 +61,7 @@ namespace tdb.ddd.relationships.application.V1
             var personnelAgg = await personnelService.GetByUserIDAsync(req.UserID);
             if (personnelAgg is null)
             {
-                return TdbRes.Success<GetPersonnelByUserIDRes>(null);
+                return new TdbRes<GetPersonnelByUserIDRes>(RelationshipsConfig.Msg.PersonnelNotExist, null);
             }
 
             //类型转换

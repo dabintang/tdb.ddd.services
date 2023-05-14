@@ -528,11 +528,13 @@ namespace tdb.ddd.relationships.application.V1
             }
 
             //邀请码信息
-            var invCodeInfo = new InvitationCodeInfo();
-            invCodeInfo.CircleID = param.CircleID;
-            invCodeInfo.InviterID = req.OperatorID;
-            invCodeInfo.InviterName = req.OperatorName;
-            invCodeInfo.ExpireAt = DateTime.Now.AddMinutes(param.EffectiveMinutes);
+            var invCodeInfo = new InvitationCodeInfo
+            {
+                CircleID = param.CircleID,
+                InviterID = req.OperatorID,
+                InviterName = req.OperatorName,
+                ExpireAt = DateTime.Now.AddMinutes(param.EffectiveMinutes)
+            };
 
             //结果
             var res = new CreateInvitationCodeRes()

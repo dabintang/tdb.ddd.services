@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="tdb.ddd.infrastructure" Version="7.0.0.12" />
+    <PackageReference Include="tdb.ddd.infrastructure" Version="7.0.0.13" />
   </ItemGroup>
 
 </Project>
