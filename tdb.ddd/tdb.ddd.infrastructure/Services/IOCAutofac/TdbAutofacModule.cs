@@ -43,7 +43,7 @@ namespace tdb.ddd.infrastructure.Services
             });
 
             //注入缓存拦截器
-            builder.Register(c => new TdbCacheInterceptor()).SingleInstance();
+            builder.Register(c => new TdbCacheInterceptor(new TdbCacheInterceptorAsync())).SingleInstance();
 
             #region 一个接口多处实现时注册
 

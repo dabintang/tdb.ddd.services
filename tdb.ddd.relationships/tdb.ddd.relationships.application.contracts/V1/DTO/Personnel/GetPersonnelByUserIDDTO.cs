@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.application.contracts;
 
-namespace tdb.ddd.relationships.application.contracts.V1.DTO
+namespace tdb.ddd.relationships.application.contracts.V1.DTO.Personnel
 {
     /// <summary>
     /// 根据用户ID获取人员信息 请求条件

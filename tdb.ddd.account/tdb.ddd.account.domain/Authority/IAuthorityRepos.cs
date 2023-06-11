@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.account.domain.Authority.Aggregate;
 using tdb.ddd.contracts;
+using tdb.ddd.infrastructure;
 
 namespace tdb.ddd.account.domain.Authority
 {
     /// <summary>
     /// 权限仓储接口
     /// </summary>
-    public interface IAuthorityRepos : ITdbIOCScoped
+    public interface IAuthorityRepos : ITdbIOCScoped, ITdbIOCIntercept
     {
         /// <summary>
         /// 获取权限聚合
@@ -24,6 +25,6 @@ namespace tdb.ddd.account.domain.Authority
         /// 保存修改
         /// </summary>
         /// <param name="agg">权限聚合</param>
-        Task SaveChangedAsync(AuthorityAgg agg);
+        Task SaveAsync(AuthorityAgg agg);
     }
 }

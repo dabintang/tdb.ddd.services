@@ -25,7 +25,18 @@ namespace tdb.ddd.infrastructure.Services
         public TdbRedisCache(params string[] connectionStrings)
         {
             this.rds = new CSRedis.CSRedisClient((p => { return null; }), connectionStrings);
-            //RedisHelper.Initialization(this.rds);
+
+            //使用text.json序列化
+            this.rds.CurrentSerialize = (obj) =>
+            {
+                return obj.SerializeJson();
+            };
+
+            //使用text.json反序列化
+            this.rds.CurrentDeserialize = (json, type) =>
+            {
+                return json.DeserializeJson(type);
+            };
         }
 
         #region 实现接口

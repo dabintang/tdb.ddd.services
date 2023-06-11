@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using tdb.ddd.contracts;
 using tdb.ddd.relationships.domain.contracts.Enum;
 
-namespace tdb.ddd.relationships.application.contracts.V1.DTO
+namespace tdb.ddd.relationships.application.contracts.V1.DTO.Personnel
 {
     /// <summary>
     /// 人员信息
@@ -18,6 +18,12 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO
         /// </summary>
         [TdbHashIDJsonConverter]
         public long ID { get; set; }
+
+        /// <summary>
+        /// 头像图片ID
+        /// </summary>
+        [TdbHashIDJsonConverter]
+        public long? HeadImgID { get; set; }
 
         /// <summary>
         /// 姓名

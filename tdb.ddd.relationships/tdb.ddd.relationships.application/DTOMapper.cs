@@ -5,8 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.contracts;
-using tdb.ddd.relationships.application.contracts.V1.DTO;
 using tdb.ddd.relationships.application.contracts.V1.DTO.Circle;
+using tdb.ddd.relationships.application.contracts.V1.DTO.Personnel;
 using tdb.ddd.relationships.domain.Circle.Aggregate;
 using tdb.ddd.relationships.domain.Personnel.Aggregate;
 

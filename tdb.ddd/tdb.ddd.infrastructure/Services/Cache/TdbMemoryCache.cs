@@ -578,7 +578,7 @@ namespace tdb.ddd.infrastructure.Services
         /// <returns></returns>
         private Dictionary<string, object?>? HGetAllInner(string key)
         {
-            if (this.cache.TryGetValue(key, out Dictionary<string, object?>? dicVal) && dicVal != null)
+            if (this.cache.TryGetValue(key, out Dictionary<string, object?>? dicVal) && dicVal is not null)
             {
                 return dicVal;
             }
@@ -600,7 +600,7 @@ namespace tdb.ddd.infrastructure.Services
         {
             //先从缓存获取看是否已有缓存
             var value = this.GetInner<T>(key);
-            if (value != null && (!value.Equals(default(T)) || this.Exists(key)))
+            if (value is not null && (!value.Equals(default(T)) || this.Exists(key)))
             {
                 return value;
             }
@@ -610,7 +610,7 @@ namespace tdb.ddd.infrastructure.Services
             {
                 //再次尝试从缓存获取值
                 var valAgain = this.GetInner<T>(key);
-                if (valAgain != null && (!valAgain.Equals(default(T)) || this.Exists(key)))
+                if (valAgain is not null && (!valAgain.Equals(default(T)) || this.Exists(key)))
                 {
                     return valAgain;
                 }
@@ -620,7 +620,7 @@ namespace tdb.ddd.infrastructure.Services
             }
 
             //缓存
-            if (value != null)
+            if (value is not null)
             {
                 this.Set(key, value, expire);
             }
@@ -640,7 +640,7 @@ namespace tdb.ddd.infrastructure.Services
         {
             //先从缓存获取看是否已有缓存
             var value = this.GetInner<T>(key);
-            if (value != null && (!value.Equals(default(T)) || this.Exists(key)))
+            if (value is not null && (!value.Equals(default(T)) || this.Exists(key)))
             {
                 return value;
             }
@@ -650,7 +650,7 @@ namespace tdb.ddd.infrastructure.Services
             {
                 //再次尝试从缓存获取值
                 var valAgain = this.GetInner<T>(key);
-                if (valAgain != null && (!valAgain.Equals(default(T)) || this.Exists(key)))
+                if (valAgain is not null && (!valAgain.Equals(default(T)) || this.Exists(key)))
                 {
                     return valAgain;
                 }
@@ -660,7 +660,7 @@ namespace tdb.ddd.infrastructure.Services
             }
 
             //缓存
-            if (value != null)
+            if (value is not null)
             {
                 await this.SetAsync(key, value, expire);
             }
@@ -681,7 +681,7 @@ namespace tdb.ddd.infrastructure.Services
         {
             //先从缓存获取看是否已有缓存
             var value = this.HGetInner<T>(key, field);
-            if (value != null && (!value.Equals(default(T)) || this.HExists(key, field)))
+            if (value is not null && (!value.Equals(default(T)) || this.HExists(key, field)))
             {
                 return value;
             }
@@ -691,7 +691,7 @@ namespace tdb.ddd.infrastructure.Services
             {
                 //再次尝试从缓存获取值
                 var valAgain = this.HGetInner<T>(key, field);
-                if (valAgain != null && (!valAgain.Equals(default(T)) || this.HExists(key, field)))
+                if (valAgain is not null && (!valAgain.Equals(default(T)) || this.HExists(key, field)))
                 {
                     return valAgain;
                 }
@@ -700,7 +700,7 @@ namespace tdb.ddd.infrastructure.Services
                 value = getData();
 
                 //缓存
-                if (value != null)
+                if (value is not null)
                 {
                     this.HSet(key, field, value);
                     this.Expire(key, expire);
@@ -723,7 +723,7 @@ namespace tdb.ddd.infrastructure.Services
         {
             //先从缓存获取看是否已有缓存
             var value = this.HGetInner<T>(key, field);
-            if (value != null && (!value.Equals(default(T)) || this.HExists(key, field)))
+            if (value is not null && (!value.Equals(default(T)) || this.HExists(key, field)))
             {
                 return value;
             }
@@ -733,7 +733,7 @@ namespace tdb.ddd.infrastructure.Services
             {
                 //再次尝试从缓存获取值
                 var valAgain = this.HGetInner<T>(key, field);
-                if (valAgain != null && (!valAgain.Equals(default(T)) || this.HExists(key, field)))
+                if (valAgain is not null && (!valAgain.Equals(default(T)) || this.HExists(key, field)))
                 {
                     return valAgain;
                 }
@@ -742,7 +742,7 @@ namespace tdb.ddd.infrastructure.Services
                 value = await getDataAsync();
 
                 //缓存
-                if (value != null)
+                if (value is not null)
                 {
                     await this.HSetAsync(key, field, value);
                     await this.ExpireAsync(key, expire);

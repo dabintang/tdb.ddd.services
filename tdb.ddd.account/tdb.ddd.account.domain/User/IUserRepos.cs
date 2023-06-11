@@ -4,14 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.account.domain.User.Aggregate;
+using tdb.ddd.account.infrastructure;
 using tdb.ddd.contracts;
+using tdb.ddd.infrastructure;
+using tdb.ddd.infrastructure.Services;
 
 namespace tdb.ddd.account.domain.User
 {
     /// <summary>
     /// 用户仓储接口
     /// </summary>
-    public interface IUserRepos : ITdbIOCScoped
+    public interface IUserRepos : ITdbIOCScoped, ITdbIOCIntercept
     {
         /// <summary>
         /// 获取用户聚合
@@ -35,11 +38,20 @@ namespace tdb.ddd.account.domain.User
         Task<List<long>> GetRoleIDsAsync(long userID);
 
         /// <summary>
-        /// 保存修改
+        /// 保存用户聚合信息
         /// </summary>
         /// <param name="agg">用户聚合</param>
-        Task SaveChangedAsync(UserAgg agg);
+        Task SaveAsync(UserAgg agg);
 
+        /// <summary>
+        /// 保存用户角色信息
+        /// </summary>
+        /// <param name="userID">用户ID</param>
+        /// <param name="lstRoleID">用户角色ID</param>
+        /// <returns></returns>
+        Task SaveUserRoleAsync(long userID, List<long> lstRoleID);
+
+        //TODO：移到运维服务
         /// <summary>
         /// 添加登录记录
         /// </summary>

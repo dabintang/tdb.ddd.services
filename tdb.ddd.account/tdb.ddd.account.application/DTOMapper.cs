@@ -5,9 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.account.application.contracts.V1.DTO;
-using tdb.ddd.account.domain.contracts.User;
 using tdb.ddd.account.domain.User.Aggregate;
-using tdb.ddd.contracts;
 
 namespace tdb.ddd.account.application
 {
@@ -74,9 +72,6 @@ namespace tdb.ddd.account.application
                .ForMember(dest => dest.CreateTime, opts => opts.MapFrom(src => src.CreateInfo.CreateTime))
                .ForMember(dest => dest.UpdaterID, opts => opts.MapFrom(src => src.UpdateInfo.UpdaterID))
                .ForMember(dest => dest.UpdateTime, opts => opts.MapFrom(src => src.UpdateInfo.UpdateTime));
-
-            cfg.CreateMap<UserLoginResult, UserLoginRes>();
-            cfg.CreateMap<TdbRes<UserLoginResult>, TdbRes<UserLoginRes>>();
         }
     }
 }

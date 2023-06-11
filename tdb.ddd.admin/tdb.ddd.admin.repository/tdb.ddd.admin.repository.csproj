@@ -7,8 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\tdb.ddd.account.application.contracts\tdb.ddd.account.application.contracts.csproj" />
-    <ProjectReference Include="..\tdb.ddd.account.infrastructure\tdb.ddd.account.infrastructure.csproj" />
+    <PackageReference Include="tdb.ddd.repository.sqlsugar" Version="7.0.0.14" />
   </ItemGroup>
 
 </Project>

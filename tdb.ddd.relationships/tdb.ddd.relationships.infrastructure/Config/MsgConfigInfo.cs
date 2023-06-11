@@ -44,6 +44,11 @@ namespace tdb.ddd.relationships.infrastructure.Config
         /// </summary>
         public TdbResMsgInfo ExpiredInvitationCode { get; set; }
 
+        /// <summary>
+        /// 创建者必须为管理员
+        /// </summary>
+        public TdbResMsgInfo CreatorMustBeAdmin { get; set; }
+
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
     }
 }

@@ -6,17 +6,18 @@ using System.Threading.Tasks;
 using tdb.ddd.application.contracts;
 using tdb.ddd.contracts;
 
-namespace tdb.ddd.account.application.remote.Files.DTO
+namespace tdb.ddd.relationships.application.contracts.V1.DTO.Personnel
 {
     /// <summary>
-    /// 确认文件 条件参数
+    /// 删除人员信息 条件
     /// </summary>
-    public class ConfirmFileReq
+    public class DeletePersonnelReq
     {
         /// <summary>
-        /// [必须]文件ID
+        /// [必须]人员ID
         /// </summary>
         [TdbHashIDJsonConverter]
+        [TdbRequired("人员ID")]
         public long ID { get; set; }
     }
 }

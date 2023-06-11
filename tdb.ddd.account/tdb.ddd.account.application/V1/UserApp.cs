@@ -1,16 +1,17 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using tdb.common;
 using tdb.ddd.account.application.BusMediatR;
 using tdb.ddd.account.application.contracts.V1.DTO;
 using tdb.ddd.account.application.contracts.V1.Interface;
-using tdb.ddd.account.domain.BusMediatR;
 using tdb.ddd.account.domain.contracts.Enum;
-using tdb.ddd.account.domain.contracts.User;
+using tdb.ddd.account.domain.Role;
 using tdb.ddd.account.domain.User;
 using tdb.ddd.account.domain.User.Aggregate;
 using tdb.ddd.account.infrastructure;
@@ -48,13 +49,11 @@ namespace tdb.ddd.account.application.V1
             }
 
             //登录
-            var aggResult = await userAgg.LoginAsync(req.ClientIP);
+            var result = await this.LoginAsync(userAgg, req.ClientIP);
 
             //广播用户登录通知
             TdbMediatR.Publish(new UserLoginNotification(userAgg, req.ClientIP, DateTime.Now));
 
-            //转为对外传输类型
-            var result = DTOMapper.Map<TdbRes<UserLoginResult>, TdbRes<UserLoginRes>>(aggResult);
             return result;
         }
 
@@ -82,10 +81,11 @@ namespace tdb.ddd.account.application.V1
             }
 
             //登录
-            var aggResult = await userAgg.LoginAsync(req.ClientIP);
+            var result = await this.LoginAsync(userAgg, req.ClientIP);
 
-            //转为对外传输类型
-            var result = DTOMapper.Map<TdbRes<UserLoginResult>, TdbRes<UserLoginRes>>(aggResult);
+            //清除缓存
+            await TdbCache.Ins.DelAsync(req.RefreshToken);
+
             return result;
         }
 
@@ -107,7 +107,6 @@ namespace tdb.ddd.account.application.V1
 
             //转为DTO
             var res = DTOMapper.Map<UserAgg, UserInfoRes>(userAgg);
-
             return TdbRes.Success(res);
         }
 
@@ -132,10 +131,25 @@ namespace tdb.ddd.account.application.V1
                 return new TdbRes<AddUserRes>(AccountConfig.Msg.LoginNameExist, null);
             }
 
-            //只能赋予操作人拥有的角色[超级管理员除外]
-            if (param.LstRoleID != null && req.OperatorRoleIDs.Contains(TdbCst.RoleID.SuperAdmin) == false && param.LstRoleID.Except(req.OperatorRoleIDs)?.Count() > 0)
+            if (param.LstRoleID is not null)
             {
-                return new TdbRes<AddUserRes>(TdbComResMsg.InsufficientPermissions, null);
+                //只能赋予操作人拥有的角色[超级管理员除外]
+                if (req.OperatorRoleIDs.Contains(TdbCst.RoleID.SuperAdmin) == false &&
+                    param.LstRoleID.Except(req.OperatorRoleIDs)?.Count() > 0)
+                {
+                    return new TdbRes<AddUserRes>(TdbComResMsg.InsufficientPermissions, null);
+                }
+
+                //角色领域服务
+                var roleService = new RoleService();
+                //判断角色ID是否存在
+                foreach (var roleID in param.LstRoleID)
+                {
+                    if (await roleService.IsExist(roleID) == false)
+                    {
+                        return new TdbRes<AddUserRes>(AccountConfig.Msg.RoleNotExist.FromNewMsg($"角色不存在[{roleID}]"), null);
+                    }
+                }
             }
 
             //生成用户ID
@@ -158,15 +172,16 @@ namespace tdb.ddd.account.application.V1
             userAgg.SetNickName(param.NickName);
             userAgg.SetMobilePhone(param.MobilePhone);
             userAgg.SetEmail(param.Email);
+            userAgg.SetHeadImgID(param.HeadImgID);
+
             //设置权限
-            var resRole = userAgg.SetLstRoleID(param.LstRoleID);
-            if (resRole.Code != TdbComResMsg.Success.Code)
+            if (param.LstRoleID is not null)
             {
-                return new TdbRes<AddUserRes>(new TdbResMsgInfo() { Code = resRole.Code, Msg = resRole.Msg }, null);
+                await userAgg.SetRoleAndSaveAsync(param.LstRoleID);
             }
 
             //保存
-            await userService.SaveAsync(userAgg);
+            await userAgg.SaveAsync();
 
             //提交事务
             TdbRepositoryTran.CommitTran();
@@ -203,52 +218,23 @@ namespace tdb.ddd.account.application.V1
                 return new TdbRes<bool>(AccountConfig.Msg.UserNotExist, false);
             }
 
-            //备份原头像图片ID
-            var oldHeadImgID = userAgg.HeadImgID;
-
             //更新用户信息
             userAgg.SetName(param.Name);
             userAgg.SetNickName(param.NickName);
             userAgg.GenderCode = param.GenderCode;
             userAgg.Birthday = param.Birthday;
-            userAgg.HeadImgID = param.HeadImgID;
+            userAgg.SetHeadImgID(param.HeadImgID);
             userAgg.SetMobilePhone(param.MobilePhone);
             userAgg.SetEmail(param.Email);
             userAgg.Remark = param.Remark ?? "";
+            userAgg.UpdateInfo.UpdaterID = req.OperatorID;
+            userAgg.UpdateInfo.UpdateTime = req.OperationTime;
 
             //保存
-            await userService.SaveAsync(userAgg);
+            await userAgg.SaveAsync();
 
             //提交事务
             TdbRepositoryTran.CommitTran();
-
-            //更新头像图片状态
-            if (userAgg.HeadImgID is not null || oldHeadImgID is not null)
-            {
-                var updateHeadImgStatusMsg = new UpdateFilesStatusMsg()
-                {
-                    OperatorID = req.OperatorID,
-                    OperatorName = req.OperatorName,
-                    OperationTime = req.OperationTime
-                };
-
-                //如果更新前存在头像，且头像被更新
-                if (oldHeadImgID is not null && oldHeadImgID != userAgg.HeadImgID)
-                {
-                    //把原头像状态设置为临时
-                    updateHeadImgStatusMsg.LstFileStatus.Add(new UpdateFilesStatusMsg.FileStatus() { ID = oldHeadImgID.Value, FileStatusCode = EnmTdbFileStatus.Temp });
-                }
-                //如果有新头像，且头像被更新
-                if (userAgg.HeadImgID is not null && oldHeadImgID != userAgg.HeadImgID)
-                {
-                    updateHeadImgStatusMsg.LstFileStatus.Add(new UpdateFilesStatusMsg.FileStatus() { ID = userAgg.HeadImgID.Value, FileStatusCode = EnmTdbFileStatus.Formal });
-                }
-
-                if (updateHeadImgStatusMsg.LstFileStatus.Count > 0)
-                {
-                    await CAPPublisher.UpdateFilesStatusAsync(updateHeadImgStatusMsg);
-                }
-            }
 
             return TdbRes.Success(true);
         }
@@ -290,14 +276,106 @@ namespace tdb.ddd.account.application.V1
 
             //更新用户信息
             userAgg.Password = param.NewPassword;
+            userAgg.UpdateInfo.UpdaterID = req.OperatorID;
+            userAgg.UpdateInfo.UpdateTime = req.OperationTime;
 
             //保存
-            await userService.SaveAsync(userAgg);
+            await userAgg.SaveAsync();
 
             //提交事务
             TdbRepositoryTran.CommitTran();
 
             return TdbRes.Success(true);
+        }
+
+        #endregion
+
+        #region 私有方法
+
+        /// <summary>
+        /// 登录
+        /// </summary>
+        /// <param name="userAgg">用户聚合</param>
+        /// <param name="clientIP">客户端IP</param>
+        /// <returns></returns>
+        private async Task<TdbRes<UserLoginRes>> LoginAsync(UserAgg userAgg, string clientIP)
+        {
+            //用户有效性
+            if (userAgg.IsDisabled)
+            {
+                return new TdbRes<UserLoginRes>(AccountConfig.Msg.Disableduser, null);
+            }
+
+            //角色领域服务
+            var roleService = new RoleService();
+
+            //用户权限ID
+            var lstAuthorityID = new List<long>();
+            //用户角色ID
+            var lstRoleID = await userAgg.GetRoleIDsAsync();
+            foreach (var roleID in lstRoleID)
+            {
+                //获取角色聚合
+                var roleAgg = await roleService.GetAsync(roleID);
+                if (roleAgg is not null)
+                {
+                    //权限ID集合
+                    var lstRoleAuthorityID = await roleAgg.GetAuthorityIDsAsync();
+                    lstAuthorityID.AddRange(lstRoleAuthorityID);
+                }
+            }
+
+            //响应结果
+            var res = new UserLoginRes
+            {
+                AccessToken = CreateAccessToken(userAgg, lstRoleID, lstAuthorityID, clientIP),
+                AccessTokenValidSeconds = AccountConfig.Distributed.Token.AccessTokenValidSeconds,
+                RefreshToken = Guid.NewGuid().ToString("N"),
+                RefreshTokenValidSeconds = AccountConfig.Distributed.Token.RefreshTokenValidSeconds
+            };
+
+            //缓存刷新令牌
+            TdbCache.Ins.Set(res.RefreshToken, userAgg.ID, TimeSpan.FromSeconds(res.RefreshTokenValidSeconds));
+
+            return TdbRes.Success(res);
+        }
+
+        /// <summary>
+        /// 生成访问令牌
+        /// </summary>
+        /// <param name="userAgg">用户聚合</param>
+        /// <param name="lstRoleID">用户角色ID</param>
+        /// <param name="lstAuthorityID">用户权限ID</param>
+        /// <param name="clientIP">客户端IP</param>
+        /// <returns>token</returns>
+        private string CreateAccessToken(UserAgg userAgg, List<long> lstRoleID, List<long> lstAuthorityID, string clientIP)
+        {
+            //用户基本信息
+            var lstClaim = new List<Claim>
+            {
+                new Claim(TdbClaimTypes.UID, userAgg.ID.ToStr()),
+                new Claim(TdbClaimTypes.UName, userAgg.Name),
+                //客户端IP
+                new Claim(TdbClaimTypes.ClientIP, clientIP),
+                //角色ID
+                new Claim(TdbClaimTypes.RoleID, lstRoleID.SerializeJson()),
+                //权限ID
+                new Claim(TdbClaimTypes.AuthorityID, lstAuthorityID.SerializeJson())
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(lstClaim),
+                Issuer = AccountConfig.Common.Token.Issuer,
+                //Audience = AccConfig.Consul.Token.Audience,
+                Expires = DateTime.UtcNow.AddSeconds(AccountConfig.Distributed.Token.AccessTokenValidSeconds),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(AccountConfig.Common.Token.SecretKey)), SecurityAlgorithms.Aes128CbcHmacSha256)//HmacSha256Signature
+            };
+            var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return tokenString;
         }
 
         #endregion

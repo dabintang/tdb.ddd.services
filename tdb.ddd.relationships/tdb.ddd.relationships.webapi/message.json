@@ -23,5 +23,9 @@
   "ExpiredInvitationCode": {
     "Code": 11006,
     "Msg": "邀请码已过期"
+  },
+  "CreatorMustBeAdmin": {
+    "Code": 11007,
+    "Msg": "创建者必须为管理员"
   }
 }

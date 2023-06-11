@@ -49,16 +49,6 @@ namespace tdb.ddd.account.domain.Role
         }
 
         /// <summary>
-        /// 持久化
-        /// </summary>
-        /// <param name="agg">角色聚合</param>
-        /// <returns></returns>
-        public async Task SaveAsync(RoleAgg agg)
-        {
-            await this.RoleRepos.SaveChangedAsync(agg);
-        }
-
-        /// <summary>
         /// 判断指定角色是否已存在
         /// </summary>
         /// <param name="roleID">角色ID</param>

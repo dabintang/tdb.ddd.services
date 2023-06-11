@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.application.contracts;
 using tdb.ddd.contracts;
-using tdb.ddd.relationships.application.contracts.V1.DTO;
+using tdb.ddd.relationships.application.contracts.V1.DTO.Personnel;
 
 namespace tdb.ddd.relationships.application.contracts.V1.Interface
 {
@@ -29,6 +29,13 @@ namespace tdb.ddd.relationships.application.contracts.V1.Interface
         Task<TdbRes<GetPersonnelByUserIDRes>> GetPersonnelByUserIDAsync(GetPersonnelByUserIDReq req);
 
         /// <summary>
+        /// 创建我的人员信息
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns>新人员ID</returns>
+        Task<TdbRes<CreateMyPersonnelInfoRes>> CreateMyPersonnelInfoAsync(TdbOperateReq<CreateMyPersonnelInfoReq> req);
+
+        /// <summary>
         /// 添加人员
         /// </summary>
         /// <param name="req">请求参数</param>
@@ -41,5 +48,12 @@ namespace tdb.ddd.relationships.application.contracts.V1.Interface
         /// <param name="req">请求参数</param>
         /// <returns></returns>
         Task<TdbRes<bool>> UpdatePersonnelAsync(TdbOperateReq<UpdatePersonnelReq> req);
+
+        /// <summary>
+        /// 删除人员
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        Task<TdbRes<bool>> DeletePersonnelAsync(TdbOperateReq<DeletePersonnelReq> req);
     }
 }

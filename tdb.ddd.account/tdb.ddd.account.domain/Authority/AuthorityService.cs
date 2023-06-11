@@ -50,16 +50,6 @@ namespace tdb.ddd.account.domain.Authority
         }
 
         /// <summary>
-        /// 持久化
-        /// </summary>
-        /// <param name="agg">权限聚合</param>
-        /// <returns></returns>
-        public async Task SaveAsync(AuthorityAgg agg)
-        {
-            await this.AuthorityRepos.SaveChangedAsync(agg);
-        }
-
-        /// <summary>
         /// 判断指定权限是否已存在
         /// </summary>
         /// <param name="authorityID">权限ID</param>

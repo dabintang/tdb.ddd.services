@@ -53,6 +53,12 @@ namespace tdb.ddd.account.application.contracts.V1.DTO
         public DateTime? Birthday { get; set; }
 
         /// <summary>
+        /// [可选]头像图片ID
+        /// </summary>
+        [TdbHashIDJsonConverter]
+        public long? HeadImgID { get; set; }
+
+        /// <summary>
         /// [可选]手机号码（认证后唯一）
         /// </summary>
         [TdbStringLength("手机号码", 16)]
@@ -75,6 +81,7 @@ namespace tdb.ddd.account.application.contracts.V1.DTO
         /// <summary>
         /// [可选]角色ID（只能赋予操作人拥有的角色[超级管理员除外]）
         /// </summary>
+        [TdbHashIDListJsonConverter]
         public List<long>? LstRoleID { get; set; }
     }
 

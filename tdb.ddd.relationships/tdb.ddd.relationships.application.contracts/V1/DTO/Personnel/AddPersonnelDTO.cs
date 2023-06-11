@@ -7,7 +7,7 @@ using tdb.ddd.application.contracts;
 using tdb.ddd.contracts;
 using tdb.ddd.relationships.domain.contracts.Enum;
 
-namespace tdb.ddd.relationships.application.contracts.V1.DTO
+namespace tdb.ddd.relationships.application.contracts.V1.DTO.Personnel
 {
     /// <summary>
     /// 添加人员参数

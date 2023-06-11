@@ -20,12 +20,6 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Report
         public long CircleID { get; set; }
 
         /// <summary>
-        /// [可选]创建者ID
-        /// </summary>
-        [TdbHashIDJsonConverter]
-        public long? CreatorID { get; set; }
-
-        /// <summary>
         /// 排序字段（1：角色编码；2：姓名）
         /// </summary>
         public enum EnmSortField
@@ -38,7 +32,7 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Report
             /// <summary>
             /// 姓名
             /// </summary>
-            Name
+            Name = 2
         }
     }
 
@@ -78,5 +72,11 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Report
         /// 圈内身份
         /// </summary>
         public string Identity { get; set; } = "";
+
+        /// <summary>
+        /// 人员创建者ID
+        /// </summary>
+        [TdbHashIDJsonConverter]
+        public long CreatorID { get; set; }
     }
 }

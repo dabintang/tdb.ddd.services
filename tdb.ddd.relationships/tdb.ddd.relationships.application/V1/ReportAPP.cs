@@ -17,14 +17,14 @@ namespace tdb.ddd.relationships.application.V1
         #region 实现接口
 
         /// <summary>
-        /// 查询我的人际圈列表
+        /// 查询人际圈列表
         /// </summary>
         /// <param name="req">条件</param>
         /// <returns></returns>
-        public async Task<TdbPageRes<QueryMyCircleListRes>> QueryMyCircleListAsync(QueryMyCircleListReq req)
+        public async Task<TdbPageRes<QueryCircleListRes>> QueryCircleListAsync(QueryCircleListReq req)
         {
             await Task.CompletedTask;
-            return new TdbPageRes<QueryMyCircleListRes>(TdbComResMsg.Fail, new List<QueryMyCircleListRes>(), 0);
+            return new TdbPageRes<QueryCircleListRes>(TdbComResMsg.Fail, new List<QueryCircleListRes>(), 0);
         }
 
         /// <summary>
@@ -36,6 +36,17 @@ namespace tdb.ddd.relationships.application.V1
         {
             await Task.CompletedTask;
             return new TdbPageRes<QueryCirclePersonnelListRes>(TdbComResMsg.Fail, new List<QueryCirclePersonnelListRes>(), 0);
+        }
+
+        /// <summary>
+        /// 查询成员信息列表
+        /// </summary>
+        /// <param name="req">条件</param>
+        /// <returns></returns>
+        public async Task<TdbPageRes<QueryPersonnelListRes>> QueryPersonnelListAsync(QueryPersonnelListReq req)
+        {
+            await Task.CompletedTask;
+            return new TdbPageRes<QueryPersonnelListRes>(TdbComResMsg.Fail, new List<QueryPersonnelListRes>(), 0);
         }
 
         #endregion

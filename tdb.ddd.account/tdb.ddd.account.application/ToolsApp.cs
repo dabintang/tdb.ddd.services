@@ -17,8 +17,6 @@ using tdb.ddd.repository.sqlsugar;
 using tdb.ddd.contracts;
 using tdb.ddd.account.application.contracts;
 using tdb.ddd.account.infrastructure.Config;
-using tdb.ddd.infrastructure.Services;
-using tdb.ddd.account.domain.BusMediatR;
 
 namespace tdb.ddd.account.application
 {
@@ -87,7 +85,7 @@ namespace tdb.ddd.account.application
                     Name = "用户增删改权限",
                     Remark = "账户微服务"
                 };
-                await authorityService.SaveAsync(userManageAuthority);
+                await userManageAuthority.SaveAsync();
 
                 var msgAccountUserManage = "初始化权限数据（账户微服务->用户增删改权限）";
                 TdbLogger.Ins.Info(msgAccountUserManage);
@@ -135,8 +133,8 @@ namespace tdb.ddd.account.application
                     Name = "超级管理员",
                     Remark = "账户微服务"
                 };
-                superAdminRole.SetLstAuthorityID(new List<long>() { TdbCst.AuthorityID.AccountUserManage });
-                await roleService.SaveAsync(superAdminRole);
+                await superAdminRole.SaveAsync();
+                await superAdminRole.SetAuthorityAndSaveAsync(new List<long>() { TdbCst.AuthorityID.AccountUserManage });
 
                 var msgSuperAdmin = "初始化角色数据（账户微服务->超级管理员）";
                 TdbLogger.Ins.Info(msgSuperAdmin);
@@ -158,8 +156,8 @@ namespace tdb.ddd.account.application
                     Name = "账户微服务管理员",
                     Remark = "账户微服务"
                 };
-                accountAdminRole.SetLstAuthorityID(new List<long>() { TdbCst.AuthorityID.AccountUserManage });
-                await roleService.SaveAsync(accountAdminRole);
+                await accountAdminRole.SaveAsync();
+                await accountAdminRole.SetAuthorityAndSaveAsync(new List<long>() { TdbCst.AuthorityID.AccountUserManage });
 
                 var msgAccountAdmin = "初始化角色数据（账户微服务->账户微服务管理员）";
                 TdbLogger.Ins.Info(msgAccountAdmin);
@@ -217,8 +215,8 @@ namespace tdb.ddd.account.application
                 };
                 superAdminUser.SetName("超级管理员");
                 superAdminUser.SetNickName("超级管理员");
-                superAdminUser.SetLstRoleID(new List<long>() { TdbCst.RoleID.SuperAdmin });
-                await userService.SaveAsync(superAdminUser);
+                await superAdminUser.SaveAsync();
+                await superAdminUser.SetRoleAndSaveAsync(new List<long>() { TdbCst.RoleID.SuperAdmin });
 
                 var msgSuperAdmin = "初始化用户数据（账户微服务->超级管理员）";
                 TdbLogger.Ins.Info(msgSuperAdmin);

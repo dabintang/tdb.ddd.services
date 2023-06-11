@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.admin.application.contracts.Remote;
 using tdb.ddd.admin.application.contracts.V1.Interface;
-using tdb.ddd.admin.infrastructure.Config;
 using tdb.ddd.contracts;
 using tdb.ddd.infrastructure;
 

@@ -79,6 +79,7 @@ namespace tdb.ddd.account.application.contracts.V1.DTO
         /// <summary>
         /// 创建者ID
         /// </summary>
+        [TdbHashIDJsonConverter]
         public long CreatorID { get; set; }
 
         /// <summary>
@@ -89,6 +90,7 @@ namespace tdb.ddd.account.application.contracts.V1.DTO
         /// <summary>
         /// 更新者ID
         /// </summary>
+        [TdbHashIDJsonConverter]
         public long UpdaterID { get; set; }
 
         /// <summary>

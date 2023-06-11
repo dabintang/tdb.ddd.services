@@ -427,6 +427,12 @@ namespace tdb.ddd.relationships.application.V1
                 return new TdbRes<bool>(TdbComResMsg.InsufficientPermissions, false);
             }
 
+            //创建人本身为管理员角色且不能改成非管理员
+            if (circleAgg.CreateInfo.CreatorID == param.PersonnelID)
+            {
+                return new TdbRes<bool>(RelationshipsConfig.Msg.CreatorMustBeAdmin, false);
+            }
+
             //开启事务
             TdbRepositoryTran.BeginTranOnAsyncFunc();
 
@@ -676,44 +682,49 @@ namespace tdb.ddd.relationships.application.V1
             return TdbRes.Success(true);
         }
 
-        ///// <summary>
-        ///// 退出人际圈
-        ///// </summary>
-        ///// <param name="req">请求参数</param>
-        ///// <returns></returns>
-        //public async Task<TdbRes<bool>> WithdrawCircleAsync(TdbOperateReq<WithdrawCircleReq> req)
-        //{
-        //    //参数
-        //    var param = req.Param;
+        /// <summary>
+        /// 退出人际圈
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        public async Task<TdbRes<bool>> WithdrawCircleAsync(TdbOperateReq<WithdrawCircleReq> req)
+        {
+            //参数
+            var param = req.Param;
 
-        //    //人际圈领域服务
-        //    var circleService = new CircleService();
+            //人际圈领域服务
+            var circleService = new CircleService();
 
-        //    //获取人际圈聚合
-        //    var circleAgg = await circleService.GetByIDAsync(param.CircleID);
-        //    if (circleAgg is null)
-        //    {
-        //        return new TdbRes<bool>(RelationshipsConfig.Msg.CircleNotExist, false);
-        //    }
+            //获取人际圈聚合
+            var circleAgg = await circleService.GetByIDAsync(param.CircleID);
+            if (circleAgg is null)
+            {
+                return new TdbRes<bool>(RelationshipsConfig.Msg.CircleNotExist, false);
+            }
 
-        //    //不能移出人际圈创建者
-        //    if (circleAgg.CreateInfo.CreatorID == req.OperatorID)
-        //    {
-        //        ....
-        //        return new TdbRes<bool>(TdbComResMsg.InsufficientPermissions.FromNewMsg("不能退出自己创建的人际圈"), false);
-        //    }
+            //不能移出人际圈创建者
+            if (circleAgg.CreateInfo.CreatorID == req.OperatorID)
+            {
+                return new TdbRes<bool>(TdbComResMsg.InsufficientPermissions.FromNewMsg("不能退出自己创建的人际圈"), false);
+            }
 
-        //    //开启事务
-        //    TdbRepositoryTran.BeginTranOnAsyncFunc();
+            //人员领域服务
+            var personnelService = new PersonnelService();
 
-        //    //移出成员
-        //    await circleAgg.RemoveMemberAsync(param.PersonnelID);
+            //获取我的人员信息
+            var myPersonnelInfo = await personnelService.GetByUserIDAsync(req.OperatorID) ?? throw new TdbException($"获取我的人员信息为空【UserID={req.OperatorID}】");
 
-        //    //提交事务
-        //    TdbRepositoryTran.CommitTran();
+            //开启事务
+            TdbRepositoryTran.BeginTranOnAsyncFunc();
 
-        //    return TdbRes.Success(true);
-        //}
+            //移出成员
+            await circleAgg.RemoveMemberAsync(myPersonnelInfo.ID);
+
+            //提交事务
+            TdbRepositoryTran.CommitTran();
+
+            return TdbRes.Success(true);
+        }
 
         #endregion
 

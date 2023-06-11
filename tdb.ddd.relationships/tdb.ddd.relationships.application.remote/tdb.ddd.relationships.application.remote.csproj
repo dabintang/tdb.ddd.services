@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\tdb.ddd.relationships.application.contracts\tdb.ddd.relationships.application.contracts.csproj" />
+    <ProjectReference Include="..\tdb.ddd.relationships.infrastructure\tdb.ddd.relationships.infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

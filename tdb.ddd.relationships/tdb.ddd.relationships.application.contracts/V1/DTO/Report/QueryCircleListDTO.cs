@@ -8,10 +8,16 @@ using tdb.ddd.contracts;
 namespace tdb.ddd.relationships.application.contracts.V1.DTO.Report
 {
     /// <summary>
-    /// 查询我的人际圈列表 参数
+    /// 查询人际圈列表 参数
     /// </summary>
-    public class QueryMyCircleListReq : TdbPageReqBase<QueryMyCircleListReq.EnmSortField>
+    public class QueryCircleListReq : TdbPageReqBase<QueryCircleListReq.EnmSortField>
     {
+        /// <summary>
+        /// [可选]人员ID（查询该人员加入的人际圈）
+        /// </summary>
+        [TdbHashIDJsonConverter]
+        public long? PersonnelID { get; set; }
+
         /// <summary>
         /// [可选]人际圈名称（模糊匹配）
         /// </summary>
@@ -40,9 +46,9 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Report
     }
 
     /// <summary>
-    /// 查询我的人际圈列表 结果
+    /// 查询人际圈列表 结果
     /// </summary>
-    public class QueryMyCircleListRes
+    public class QueryCircleListRes
     {
         /// <summary>
         /// 人际圈ID

@@ -88,16 +88,6 @@ namespace tdb.ddd.relationships.domain.Personnel.Aggregate
         /// </summary>
         public UpdateInfoValueObject UpdateInfo { get; set; } = new UpdateInfoValueObject();
 
-        /// <summary>
-        /// 人员照片ID
-        /// </summary>
-        public PhotoIDLazyLoad LstPhotoID { get; }
-
-        /// <summary>
-        /// 人际圈ID
-        /// </summary>
-        public CircleIDLazyLoad LstCircleID { get; }
-
         #endregion
 
         /// <summary>
@@ -105,11 +95,27 @@ namespace tdb.ddd.relationships.domain.Personnel.Aggregate
         /// </summary>
         public PersonnelAgg()
         {
-            this.LstPhotoID = new PhotoIDLazyLoad(this);
-            this.LstCircleID = new CircleIDLazyLoad(this);
         }
 
         #region 行为
+
+        /// <summary>
+        /// 获取人员所在人际圈ID
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<long>> GetCircleIDsAsync()
+        {
+             return await this.Repos.GetCircleIDsAsync(this.ID);
+        }
+
+        /// <summary>
+        /// 获取人员所有照片ID
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<long>> GetPhotoIDsAsync()
+        {
+            return await this.Repos.GetPhotoIDsAsync(this.ID);
+        }
 
         /// <summary>
         /// 保存

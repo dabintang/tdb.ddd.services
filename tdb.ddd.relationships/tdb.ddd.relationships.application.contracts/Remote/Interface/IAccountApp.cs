@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using tdb.ddd.contracts;
+using tdb.ddd.relationships.application.contracts.Remote.DTO.Account;
+
+namespace tdb.ddd.relationships.application.contracts.Remote.Interface
+{
+    /// <summary>
+    /// 账户服务应用接口
+    /// </summary>
+    public interface IAccountApp : ITdbIOCScoped
+    {
+        /// <summary>
+        /// 根据用户ID获取用户信息
+        /// </summary>
+        /// <param name="userID">用户ID</param>
+        /// <returns></returns>
+        Task<UserInfoRes?> GetUserInfoByIDAsync(long userID);
+    }
+}

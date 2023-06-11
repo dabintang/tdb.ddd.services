@@ -1,21 +1,15 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using tdb.ddd.account.domain.BusMediatR;
 using tdb.ddd.account.domain.contracts.Enum;
-using tdb.ddd.account.domain.contracts.User;
-using tdb.ddd.account.infrastructure.Config;
-using tdb.common;
 using tdb.ddd.contracts;
 using tdb.ddd.domain;
 using tdb.ddd.infrastructure;
-using tdb.ddd.infrastructure.Services;
 using System.Text.Json.Serialization;
+using tdb.ddd.account.domain.BusMediatR;
+using tdb.ddd.infrastructure.Services;
 
 namespace tdb.ddd.account.domain.User.Aggregate
 {
@@ -24,16 +18,40 @@ namespace tdb.ddd.account.domain.User.Aggregate
     /// </summary>
     public class UserAgg : TdbAggregateRoot<long>
     {
+        #region 仓储
+
+        private IUserRepos? _userRepos;
+        /// <summary>
+        /// 用户仓储
+        /// </summary>
+        private IUserRepos UserRepos
+        {
+            get
+            {
+                this._userRepos ??= TdbIOC.GetService<IUserRepos>();
+                if (this._userRepos is null)
+                {
+                    throw new TdbException("用户仓储接口未实现");
+                }
+
+                return this._userRepos;
+            }
+        }
+
+        #endregion
+
         #region 值
 
         /// <summary>
         /// 姓名
         /// </summary>
+        [JsonInclude]
         public string Name { get; internal set; } = "";
 
         /// <summary>
         /// 昵称
         /// </summary>
+        [JsonInclude]
         public string NickName { get; internal set; } = "";
 
         /// <summary>
@@ -59,7 +77,8 @@ namespace tdb.ddd.account.domain.User.Aggregate
         /// <summary>
         /// 头像图片ID
         /// </summary>
-        public long? HeadImgID { get; set; }
+        [JsonInclude]
+        public long? HeadImgID { get; internal set; }
 
         /// <summary>
         /// 手机号码
@@ -92,11 +111,10 @@ namespace tdb.ddd.account.domain.User.Aggregate
         public UpdateInfoValueObject UpdateInfo { get; set; } = new UpdateInfoValueObject();
 
         /// <summary>
-        /// 用户拥有的角色ID
+        /// 头像图片修改信息
         /// </summary>
-        [JsonIgnore]
-        public UserRoleIDLazyLoad LstRoleID { get; private set; }
-        
+        private HeadImgChangedInfo? headImgChangedInfo;
+
         #endregion
 
         /// <summary>
@@ -104,7 +122,6 @@ namespace tdb.ddd.account.domain.User.Aggregate
         /// </summary>
         public UserAgg()
         {
-            this.LstRoleID = new UserRoleIDLazyLoad(this);
         }
 
         #region 行为
@@ -118,53 +135,6 @@ namespace tdb.ddd.account.domain.User.Aggregate
             {
                 return this.StatusCode == EnmInfoStatus.Disable;
             }
-        }
-
-        /// <summary>
-        /// 登录
-        /// </summary>
-        /// <param name="clientIP">客户端IP</param>
-        /// <returns></returns>
-        public async Task<TdbRes<UserLoginResult>> LoginAsync(string clientIP)
-        {
-            //用户有效性
-            if (this.StatusCode == EnmInfoStatus.Disable)
-            {
-                return new TdbRes<UserLoginResult>(AccountConfig.Msg.Disableduser, null);
-            }
-
-            //用户权限ID
-            var lstAuthorityID = new List<long>();
-            foreach (var roleID in this.LstRoleID.Value!)
-            {
-                //获取角色权限ID
-                var lstRoleAuthorityID = await TdbMediatR.SendAsync(new GetRoleAuthorityIDRequest() { RoleID = roleID });
-                lstAuthorityID.AddRange(lstRoleAuthorityID);
-            }
-
-            //响应结果
-            var res = new UserLoginResult
-            {
-                AccessToken = CreateAccessToken(lstAuthorityID, clientIP),
-                AccessTokenValidSeconds = AccountConfig.Distributed.Token.AccessTokenValidSeconds,
-                RefreshToken = Guid.NewGuid().ToString("N"),
-                RefreshTokenValidSeconds = AccountConfig.Distributed.Token.RefreshTokenValidSeconds
-            };
-
-            //缓存刷新令牌
-            TdbCache.Ins.Set(res.RefreshToken, this.ID, TimeSpan.FromSeconds(res.RefreshTokenValidSeconds));
-
-            return TdbRes.Success(res);
-        }
-
-        /// <summary>
-        /// 赋予角色（全量赋值）
-        /// </summary>
-        /// <param name="lstRoleID">角色ID</param>
-        public TdbRes<bool> SetLstRoleID(List<long>? lstRoleID)
-        {
-            lstRoleID ??= new List<long>();
-            return this.LstRoleID.SetValue(lstRoleID);
         }
 
         /// <summary>
@@ -227,44 +197,70 @@ namespace tdb.ddd.account.domain.User.Aggregate
             this.EmailValue = new EmailValueObject() { Email = email ?? "", IsEmailVerified = false };
         }
 
-        #endregion
-
-        #region 私有方法
+        /// <summary>
+        /// 设置头像图片ID
+        /// </summary>
+        /// <param name="headImgID">头像图片ID</param>
+        public void SetHeadImgID(long? headImgID)
+        {
+            this.headImgChangedInfo ??= new HeadImgChangedInfo() { OldHeadImgID = this.HeadImgID };
+            this.HeadImgID = headImgID;
+        }
 
         /// <summary>
-        /// 生成访问令牌
+        /// 获取用户拥有的角色ID
         /// </summary>
-        /// <param name="lstAuthorityID">用户权限ID</param>
-        /// <param name="clientIP">客户端IP</param>
-        /// <returns>token</returns>
-        private string CreateAccessToken(List<long> lstAuthorityID, string clientIP)
+        /// <returns></returns>
+        public async Task<List<long>> GetRoleIDsAsync()
         {
-            //用户基本信息
-            var lstClaim = new List<Claim>
-            {
-                new Claim(TdbClaimTypes.UID, this.ID.ToStr()),
-                new Claim(TdbClaimTypes.UName, this.Name),
-                //客户端IP
-                new Claim(TdbClaimTypes.ClientIP, clientIP),
-                //角色ID
-                new Claim(TdbClaimTypes.RoleID, this.LstRoleID.Value.SerializeJson()),
-                //权限ID
-                new Claim(TdbClaimTypes.AuthorityID, lstAuthorityID.SerializeJson())
-            };
+            return await this.UserRepos.GetRoleIDsAsync(this.ID);
+        }
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(lstClaim),
-                Issuer = AccountConfig.Common.Token.Issuer,
-                //Audience = AccConfig.Consul.Token.Audience,
-                Expires = DateTime.UtcNow.AddSeconds(AccountConfig.Distributed.Token.AccessTokenValidSeconds),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(AccountConfig.Common.Token.SecretKey)), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
+        /// <summary>
+        /// 赋予角色并保存（全量赋值）
+        /// </summary>
+        /// <param name="lstRoleID">角色ID</param>
+        /// <returns></returns>
+        public async Task SetRoleAndSaveAsync(List<long> lstRoleID)
+        {
+            await this.UserRepos.SaveUserRoleAsync(this.ID, lstRoleID);
+        }
 
-            return tokenString;
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <returns></returns>
+        public async Task SaveAsync()
+        {
+            await this.UserRepos.SaveAsync(this);
+
+            if (this.headImgChangedInfo is not null)
+            {
+                //通知头像有改动
+                var msg = new UserHeadImgChangedNotification()
+                {
+                    OldHeadImgID = this.headImgChangedInfo.OldHeadImgID,
+                    NewHeadImgID = this.HeadImgID,
+                    OperatorID = this.UpdateInfo.UpdaterID,
+                    OperationTime = this.UpdateInfo.UpdateTime
+                };
+                TdbMediatR.Publish(msg);
+            }
+        }
+
+        #endregion
+
+        #region 内部类
+
+        /// <summary>
+        /// 头像图片ID修改信息
+        /// </summary>
+        class HeadImgChangedInfo
+        {
+            /// <summary>
+            /// 原头像图片ID
+            /// </summary>
+            public long? OldHeadImgID { get; set;}
         }
 
         #endregion

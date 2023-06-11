@@ -63,27 +63,6 @@ namespace tdb.ddd.account.domain.User
         }
 
         /// <summary>
-        /// 持久化
-        /// </summary>
-        /// <param name="agg">角色聚合</param>
-        /// <returns></returns>
-        public async Task SaveAsync(UserAgg agg)
-        {
-            await this.UserRepos.SaveChangedAsync(agg);
-        }
-
-        /// <summary>
-        /// 添加登录记录
-        /// </summary>
-        /// <param name="userID">用户ID</param>
-        /// <param name="clientIP">登录端IP</param>
-        /// <param name="loginTime">登录时间</param>
-        public async Task AddLoginRecordAsync(long userID, string clientIP, DateTime loginTime)
-        {
-            await this.UserRepos.AddLoginRecordAsync(userID, clientIP, loginTime);
-        }
-
-        /// <summary>
         /// 判断指定登录名是否已存在
         /// </summary>
         /// <param name="loginName">登录名</param>
@@ -103,6 +82,17 @@ namespace tdb.ddd.account.domain.User
         {
             var userAgg = await this.GetAsync(userID);
             return (userAgg is not null);
+        }
+
+        /// <summary>
+        /// 添加登录记录
+        /// </summary>
+        /// <param name="userID">用户ID</param>
+        /// <param name="clientIP">登录端IP</param>
+        /// <param name="loginTime">登录时间</param>
+        public async Task AddLoginRecordAsync(long userID, string clientIP, DateTime loginTime)
+        {
+            await this.UserRepos.AddLoginRecordAsync(userID, clientIP, loginTime);
         }
 
         #endregion
