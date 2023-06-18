@@ -19,7 +19,7 @@ namespace tdb.ddd.account.application.contracts.V1.Interface
         /// </summary>
         /// <param name="req">请求参数</param>
         /// <returns></returns>
-        Task<TdbRes<UserLoginRes>> LoginAsync(UserLoginDTO req);
+        Task<TdbRes<UserLoginRes>> LoginAsync(UserLoginReq req);
 
         /// <summary>
         /// 刷新用户访问令牌

@@ -121,7 +121,7 @@ namespace tdb.ddd.relationships.domain.Personnel.Aggregate
         /// 保存
         /// </summary>
         /// <returns></returns>
-        public async Task SaveChangedAsync()
+        public async Task SaveAsync()
         {
             await this.Repos.SaveChangedAsync(this);
         }

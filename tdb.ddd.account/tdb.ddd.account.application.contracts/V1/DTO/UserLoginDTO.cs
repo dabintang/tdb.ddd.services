@@ -11,7 +11,7 @@ namespace tdb.ddd.account.application.contracts.V1.DTO
     /// <summary>
     /// 用户登录 参数
     /// </summary>
-    public class UserLoginDTO
+    public class UserLoginReq
     {
         /// <summary>
         /// [必须]登录名

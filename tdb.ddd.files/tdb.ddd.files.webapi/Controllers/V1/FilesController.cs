@@ -1,12 +1,10 @@
-﻿using DotNetCore.CAP;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using tdb.ddd.contracts;
 using tdb.ddd.files.application.contracts.V1.DTO;
 using tdb.ddd.files.application.contracts.V1.Interface;
-using tdb.ddd.files.application.V1;
 using tdb.ddd.files.domain.contracts.Enum;
-using tdb.ddd.infrastructure;
 using tdb.ddd.webapi;
 
 namespace tdb.ddd.files.webapi.Controllers.V1
@@ -158,6 +156,34 @@ namespace tdb.ddd.files.webapi.Controllers.V1
         [ResponseCache(Duration = 3600 * 24 * 30, VaryByQueryKeys = new string[] { "ID", "Width", "Height" })]
         [HttpGet]
         public async Task<IActionResult> DownloadImage([FromQuery] DownloadImageReq req)
+        {
+            //请求参数
+            var reqOpe = this.CreateTdbOperateReq(req);
+
+            //下载图片
+            var result = await this.filesApp.DownloadImageAsync(reqOpe);
+            if (result.Code != TdbComResMsg.Success.Code || result.Data is null)
+            {
+                return new JsonResult(result);
+            }
+
+            //返回文件
+            var fileResult = new FileContentResult(result.Data.Data, result.Data.ContentType)
+            {
+                FileDownloadName = result.Data.Name
+            };
+            return fileResult;
+        }
+
+        /// <summary>
+        /// 下载图片（匿名）
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [ResponseCache(Duration = 3600 * 24 * 30, VaryByQueryKeys = new string[] { "ID", "Width", "Height" })]
+        [HttpGet]
+        public async Task<IActionResult> DownloadImageAnon([FromQuery] DownloadImageReq req)
         {
             //请求参数
             var reqOpe = this.CreateTdbOperateReq(req);

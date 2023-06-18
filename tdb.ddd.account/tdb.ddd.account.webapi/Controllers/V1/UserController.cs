@@ -38,7 +38,7 @@ namespace tdb.ddd.account.webapi.Controllers.V1
         /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        public async Task<TdbRes<UserLoginRes>> Login([FromBody] UserLoginDTO req)
+        public async Task<TdbRes<UserLoginRes>> Login([FromBody] UserLoginReq req)
         {
             //客户端IP
             req.ClientIP = this.HttpContext.GetClientIP();

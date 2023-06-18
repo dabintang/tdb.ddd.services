@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using tdb.ddd.contracts;
 using tdb.ddd.domain;
 using tdb.ddd.files.domain.contracts.Enum;
 using tdb.ddd.files.infrastructure.Config;
+using tdb.ddd.infrastructure;
 
 namespace tdb.ddd.files.domain.Files.Aggregate
 {
@@ -16,6 +18,28 @@ namespace tdb.ddd.files.domain.Files.Aggregate
     /// </summary>
     public class FileAgg : TdbAggregateRoot<long>
     {
+        #region 仓储
+
+        private IFileRepos? _fileRepos;
+        /// <summary>
+        /// 文件仓储
+        /// </summary>
+        private IFileRepos FileRepos
+        {
+            get
+            {
+                this._fileRepos ??= TdbIOC.GetService<IFileRepos>();
+                if (this._fileRepos is null)
+                {
+                    throw new TdbException("文件仓储接口未实现");
+                }
+
+                return this._fileRepos;
+            }
+        }
+
+        #endregion
+
         #region 值
 
         /// <summary>
@@ -26,6 +50,7 @@ namespace tdb.ddd.files.domain.Files.Aggregate
         /// <summary>
         /// 文件地址(本地路径或url)
         /// </summary>
+        [JsonInclude]
         public string Address { get; internal set; } = "";
 
         /// <summary>
@@ -36,6 +61,7 @@ namespace tdb.ddd.files.domain.Files.Aggregate
         /// <summary>
         /// 字节数
         /// </summary>
+        [JsonInclude]
         public long Size { get; internal set; }
 
         /// <summary>
@@ -56,12 +82,12 @@ namespace tdb.ddd.files.domain.Files.Aggregate
         /// <summary>
         /// 创建信息
         /// </summary>
-        public CreateInfoValueObject? CreateInfo { get; set; }
+        public CreateInfoValueObject CreateInfo { get; set; } = new CreateInfoValueObject();
 
         /// <summary>
         /// 更新信息
         /// </summary>
-        public UpdateInfoValueObject? UpdateInfo { get; set; }
+        public UpdateInfoValueObject UpdateInfo { get; set; } = new UpdateInfoValueObject();
 
         /// <summary>
         /// 内容类型
@@ -78,17 +104,17 @@ namespace tdb.ddd.files.domain.Files.Aggregate
         #region 行为
 
         /// <summary>
-        /// 保存文件
+        /// 存储文件
         /// </summary>
         /// <param name="data">文件信息</param>
         /// <returns></returns>
-        public async Task SaveFileAsync(byte[] data)
+        public async Task StorageFileAsync(byte[] data)
         {
             switch (this.StorageTypeCode)
             {
                 case EnmStorageType.Local:
                     //保存文件到本地磁盘
-                    await this.SaveFileToLocalAsync(data);
+                    await this.StorageFileToLocalAsync(data);
                     break;
                 default:
                     throw new TdbException($"不支持的文件存储类型[{this.StorageTypeCode}]");
@@ -240,16 +266,37 @@ namespace tdb.ddd.files.domain.Files.Aggregate
             return false;
         }
 
+        /// <summary>
+        /// 保存
+        /// </summary>
+        /// <returns></returns>
+        public async Task SaveAsync()
+        {
+            await this.FileRepos.SaveAsync(this);
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <returns></returns>
+        public async Task DeleteAsync()
+        {
+            //从数据库总删除
+            await this.FileRepos.DeleteFileAsync(this.ID);
+            //删除文件
+            await this.DeleteFile();
+        }
+
         #endregion
 
         #region 私有方法
 
         /// <summary>
-        /// 保存文件到本地磁盘
+        /// 存储文件到本地磁盘
         /// </summary>
         /// <param name="data">文件信息</param>
         /// <returns></returns>
-        private async Task SaveFileToLocalAsync(byte[] data)
+        private async Task StorageFileToLocalAsync(byte[] data)
         {
             //无后缀的文件名
             var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(this.Name);

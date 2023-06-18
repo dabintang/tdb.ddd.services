@@ -1,12 +1,16 @@
-﻿using System;
+﻿using Autofac.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using tdb.ddd.admin.application.BusMediatR;
 using tdb.ddd.admin.application.contracts.Remote;
 using tdb.ddd.admin.application.contracts.V1.Interface;
 using tdb.ddd.contracts;
 using tdb.ddd.infrastructure;
+using tdb.ddd.infrastructure.Services;
 
 namespace tdb.ddd.admin.application.V1
 {
@@ -26,6 +30,16 @@ namespace tdb.ddd.admin.application.V1
             //调用账户服务初始化数据接口 
             var accountApp = TdbIOC.GetService<IAccountApp>();
             var res = await accountApp!.InitDataAsync();
+
+            //推送通知
+            var msg = new InitDataNotification()
+            {
+                ServiceID = TdbCst.ServerID.Account,
+                Result = res.Data ?? res.Msg,
+                OperatorID = 0,
+                OperationTime = DateTime.Now
+            };
+            TdbMediatR.Publish(msg);
 
             return res;
         }

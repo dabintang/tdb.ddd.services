@@ -137,7 +137,7 @@ namespace tdb.ddd.contracts
             /// <summary>
             /// 修改文件状态
             /// </summary>
-            public const string UpdateFilesStatus = "UpdateFilesStatus";
+            public const string UpdateFilesStatus = "common.UpdateFilesStatus";
         }
     }
 }

@@ -76,10 +76,10 @@ namespace tdb.ddd.files.application.V1
                     };
 
                     //保存文件到物理路径
-                    await agg.SaveFileAsync(file.Data);
+                    await agg.StorageFileAsync(file.Data);
 
                     //持久化
-                    await this.FileService.SaveChangedAsync(agg);
+                    await agg.SaveAsync();
 
                     res.ID = agg.ID;
                     res.IsOK = true;
@@ -132,7 +132,7 @@ namespace tdb.ddd.files.application.V1
             };
 
             //保存
-            await this.FileService.SaveChangedAsync(fileAgg);
+            await fileAgg.SaveAsync();
 
             return TdbRes.Success(true);
         }
@@ -257,7 +257,7 @@ namespace tdb.ddd.files.application.V1
                 //循环删除文件
                 foreach (var agg in list.Data)
                 {
-                    await this.FileService.DeleteFileAsync(agg);
+                    await agg.DeleteAsync();
 
                     res.Count++;
                     res.Details.Add(new DeleteTempFileRes() { ID = agg.ID, Name = agg.Name });

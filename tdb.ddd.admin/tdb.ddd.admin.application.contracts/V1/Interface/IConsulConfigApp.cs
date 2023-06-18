@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tdb.ddd.application.contracts;
 using tdb.ddd.contracts;
 
 namespace tdb.ddd.admin.application.contracts.V1.Interface
@@ -39,8 +40,9 @@ namespace tdb.ddd.admin.application.contracts.V1.Interface
         /// <summary>
         /// 还原文件服务配置
         /// </summary>
+        /// <param name="req">操作人信息</param>
         /// <returns></returns>
-        Task<TdbRes<string>> RestoreFilesConfigAsync();
+        Task<TdbRes<string>> RestoreFilesConfigAsync(TdbOperateReq req);
 
         /// <summary>
         /// 备份文件服务配置
@@ -51,8 +53,9 @@ namespace tdb.ddd.admin.application.contracts.V1.Interface
         /// <summary>
         /// 还原人际关系服务配置
         /// </summary>
+        /// <param name="req">操作人信息</param>
         /// <returns></returns>
-        Task<TdbRes<string>> RestoreRelationshipsConfigAsync();
+        Task<TdbRes<string>> RestoreRelationshipsConfigAsync(TdbOperateReq req);
 
         /// <summary>
         /// 备份人际关系服务配置

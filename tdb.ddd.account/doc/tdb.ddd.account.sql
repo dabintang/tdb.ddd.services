@@ -14,18 +14,6 @@ CREATE TABLE `authority_info`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '权限信息' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Table structure for login_record
--- ----------------------------
--- DROP TABLE IF EXISTS `login_record`;
-CREATE TABLE `login_record`  (
-  `ID` bigint NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-  `UserID` bigint NOT NULL COMMENT '登录用户ID',
-  `ClientIP` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '登录端IP',
-  `LoginTime` datetime(3) NOT NULL COMMENT '登录时间',
-  PRIMARY KEY (`ID`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '登录记录' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
 -- Table structure for role_authority_config
 -- ----------------------------
 -- DROP TABLE IF EXISTS `role_authority_config`;

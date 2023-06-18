@@ -50,14 +50,5 @@ namespace tdb.ddd.account.domain.User
         /// <param name="lstRoleID">用户角色ID</param>
         /// <returns></returns>
         Task SaveUserRoleAsync(long userID, List<long> lstRoleID);
-
-        //TODO：移到运维服务
-        /// <summary>
-        /// 添加登录记录
-        /// </summary>
-        /// <param name="userID">用户ID</param>
-        /// <param name="clientIP">登录端IP</param>
-        /// <param name="loginTime">登录时间</param>
-        Task AddLoginRecordAsync(long userID, string clientIP, DateTime loginTime);
     }
 }

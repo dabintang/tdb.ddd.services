@@ -5,11 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.contracts;
-using tdb.ddd.files.domain.contracts.Enum;
 using tdb.ddd.files.domain.Files;
 using tdb.ddd.files.infrastructure.Config;
 
-namespace tdb.ddd.files.application.V1
+namespace tdb.ddd.files.application.CAP
 {
     /// <summary>
     /// cap订阅者
@@ -95,7 +94,7 @@ namespace tdb.ddd.files.application.V1
                 return result;
             }
 
-            //改为正式文件
+            //修改文件状态
             fileAgg.FileStatusCode = req.FileStatusCode;
             fileAgg.UpdateInfo = new ddd.domain.UpdateInfoValueObject()
             {
@@ -103,7 +102,7 @@ namespace tdb.ddd.files.application.V1
                 UpdateTime = operationTime
             };
             //保存
-            await this.FileService.SaveChangedAsync(fileAgg);
+            await fileAgg.SaveAsync();
 
             result.IsSuccess = true;
             result.Msg = TdbComResMsg.Success.Msg;

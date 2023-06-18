@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="tdb.ddd.repository.sqlsugar" Version="7.0.0.14" />
+    <PackageReference Include="tdb.ddd.repository.sqlsugar" Version="7.0.0.15" />
   </ItemGroup>
 
   <ItemGroup>

@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
-    <PackageReference Include="tdb.ddd.webapi" Version="7.0.0.12" />
+    <PackageReference Include="tdb.ddd.webapi" Version="7.0.0.13" />
   </ItemGroup>
 
   <ItemGroup>

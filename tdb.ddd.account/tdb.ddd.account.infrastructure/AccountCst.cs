@@ -40,7 +40,17 @@ namespace tdb.ddd.account.infrastructure
             /// hash形式缓存的权限信息
             /// </summary>
             public const string HashAuthorityByID = "HashAuthorityByID";
+        }
 
+        /// <summary>
+        /// cap主题常量
+        /// </summary>
+        public class CAPTopic
+        {
+            /// <summary>
+            /// 用户登录
+            /// </summary>
+            public const string UserLogin = "account.UserLogin";
         }
     }
 }

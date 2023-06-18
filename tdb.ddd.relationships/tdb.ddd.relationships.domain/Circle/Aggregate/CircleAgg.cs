@@ -171,7 +171,7 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         /// 保存人际圈信息
         /// </summary>
         /// <returns></returns>
-        public async Task SaveChangedAsync()
+        public async Task SaveAsync()
         {
             await this.Repos.SaveCircleAsync(this);
         }

@@ -55,5 +55,13 @@ namespace tdb.ddd.relationships.application.contracts.V1.Interface
         /// <param name="req">请求参数</param>
         /// <returns></returns>
         Task<TdbRes<bool>> DeletePersonnelAsync(TdbOperateReq<DeletePersonnelReq> req);
+
+        /// <summary>
+        /// 添加人员照片
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        Task<TdbRes<bool>> AddPersonnelPhotoAsync(TdbOperateReq<AddPersonnelPhotoReq> req);
+
     }
 }

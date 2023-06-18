@@ -50,6 +50,12 @@ namespace tdb.ddd.admin.infrastructure.Config
         [TdbConfigKey("CAP")]
         public CAPConfigInfo CAP { get; set; }
 
+        /// <summary>
+        /// 数据库配置信息
+        /// </summary>
+        [TdbConfigKey("DB")]
+        public DBConfigInfo DB { get; set; }
+
         #region 内部类
 
         /// <summary>
@@ -120,6 +126,17 @@ namespace tdb.ddd.admin.infrastructure.Config
             /// 数据库链接字符串(mysql)
             /// </summary>
             public string DBConnStr { get; set; }
+        }
+
+        /// <summary>
+        /// 数据库配置信息
+        /// </summary>
+        public class DBConfigInfo
+        {
+            /// <summary>
+            /// 连接字符串
+            /// </summary>
+            public string ConnStr { get; set; }
         }
 
         #endregion

@@ -1,8 +1,9 @@
+using SqlSugar.IOC;
 using tdb.ddd.admin.infrastructure.Config;
+using tdb.ddd.repository.sqlsugar;
 using tdb.ddd.webapi.Common;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 //添加服务及使用
 builder.RunWebApp(option =>
@@ -25,6 +26,13 @@ builder.RunWebApp(option =>
         o.UseRedis(AdminConfig.Common?.CAP?.RedisConnStr ?? AdminConfig.App.CAP.RedisConnStr);
         o.UseMySql(AdminConfig.Common?.CAP?.DBConnStr ?? AdminConfig.App.CAP.DBConnStr);
         o.DefaultGroupName = "admin";
+    });
+    //SqlSugar（IOC模式）
+    option.SetupSqlSugar = () => builder.Services.AddTdbSqlSugar(c =>
+    {
+        c.ConnectionString = AdminConfig.App.DB.ConnStr; //数据库连接字符串
+        c.DbType = IocDbType.MySql;
+        c.IsAutoCloseConnection = true;    //开启自动释放模式
     });
     //跨域请求
     option.CorsOption.SetupCors = option.CorsOption.SetupCorsAllowAll;

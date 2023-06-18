@@ -71,5 +71,20 @@ namespace tdb.ddd.admin.webapi.Controllers
 
             return reqOpe;
         }
+
+        /// <summary>
+        /// 生成操作请求参数
+        /// </summary>
+        /// <returns></returns>
+        protected virtual TdbOperateReq CreateTdbOperateReq()
+        {
+            var reqOpe = new TdbOperateReq(this.CurUser?.ID ?? 0, this.CurUser?.Name ?? "")
+            {
+                OperatorRoleIDs = this.CurUser?.LstRoleID ?? new List<long>(),
+                OperatorAuthorityIDs = this.CurUser?.LstAuthorityID ?? new List<long>(),
+            };
+
+            return reqOpe;
+        }
     }
 }

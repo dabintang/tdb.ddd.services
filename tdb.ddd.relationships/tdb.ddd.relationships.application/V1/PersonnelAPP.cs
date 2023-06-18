@@ -14,6 +14,8 @@ using tdb.ddd.relationships.domain.Circle;
 using tdb.ddd.relationships.domain.Circle.Aggregate;
 using tdb.ddd.relationships.domain.Personnel;
 using tdb.ddd.relationships.domain.Personnel.Aggregate;
+using tdb.ddd.relationships.domain.Photo;
+using tdb.ddd.relationships.domain.Photo.Aggregate;
 using tdb.ddd.relationships.infrastructure;
 using tdb.ddd.relationships.infrastructure.Config;
 using tdb.ddd.repository.sqlsugar;
@@ -114,7 +116,7 @@ namespace tdb.ddd.relationships.application.V1
             TdbRepositoryTran.BeginTranOnAsyncFunc();
 
             //保存
-            await personnelAgg.SaveChangedAsync();
+            await personnelAgg.SaveAsync();
 
             //提交事务
             TdbRepositoryTran.CommitTran();
@@ -153,7 +155,7 @@ namespace tdb.ddd.relationships.application.V1
             TdbRepositoryTran.BeginTranOnAsyncFunc();
 
             //保存
-            await personnelAgg.SaveChangedAsync();
+            await personnelAgg.SaveAsync();
 
             //提交事务
             TdbRepositoryTran.CommitTran();
@@ -201,12 +203,10 @@ namespace tdb.ddd.relationships.application.V1
             personnelAgg.UpdateInfo.UpdateTime = req.OperationTime;
 
             //保存
-            await personnelAgg.SaveChangedAsync();
+            await personnelAgg.SaveAsync();
 
             //提交事务
             TdbRepositoryTran.CommitTran();
-
-            //TODO：与账户服务同步数据
 
             return TdbRes.Success(true);
         }
@@ -255,9 +255,71 @@ namespace tdb.ddd.relationships.application.V1
                 }
             }
 
-            //TODO：
-            //删除该人员所有照片
+            //照片领域服务
+            var photoService = new PhotoService();
 
+            //获取人员照片ID
+            var lstPhotoID = await personnelAgg.GetPhotoIDsAsync();
+            foreach (var photoID in lstPhotoID)
+            {
+                var photoAgg = await photoService.GetByIDAsync(photoID);
+                if (photoAgg is not null)
+                {
+                    //删除照片
+                    photoAgg.UpdateInfo.UpdaterID = req.OperatorID;
+                    photoAgg.UpdateInfo.UpdateTime = req.OperationTime;
+                    await photoAgg.DeleteAsync();
+                }
+            }
+
+            //提交事务
+            TdbRepositoryTran.CommitTran();
+
+            return TdbRes.Success(true);
+        }
+
+        /// <summary>
+        /// 添加人员照片
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        public async Task<TdbRes<bool>> AddPersonnelPhotoAsync(TdbOperateReq<AddPersonnelPhotoReq> req)
+        {
+            //参数
+            var param = req.Param;
+
+            //人员领域服务
+            var personnelService = new PersonnelService();
+
+            //获取人员聚合
+            var personnelAgg = await personnelService.GetByIDAsync(param.PersonnelID);
+            if (personnelAgg is null)
+            {
+                return new TdbRes<bool>(RelationshipsConfig.Msg.PersonnelNotExist, false);
+            }
+
+            //照片聚合
+            var lstPhotoAgg = new List<PhotoAgg>();
+            foreach (var photoID in param.LstPhotoID)
+            {
+                var photoAgg = new PhotoAgg()
+                {
+                    ID = photoID,
+                    PersonnelID = param.PersonnelID,
+                    CreateInfo = new CreateInfoValueObject() { CreatorID = req.OperatorID, CreateTime = DateTime.Now },
+                    UpdateInfo = new UpdateInfoValueObject() { UpdaterID = req.OperatorID, UpdateTime = DateTime.Now }
+                };
+                lstPhotoAgg.Add(photoAgg);
+            }
+
+            //开启事务
+            TdbRepositoryTran.BeginTranOnAsyncFunc();
+
+            //保存
+            foreach (var photoAgg in lstPhotoAgg)
+            {
+                await photoAgg.SaveAsync();
+            }
 
             //提交事务
             TdbRepositoryTran.CommitTran();

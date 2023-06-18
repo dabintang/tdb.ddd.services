@@ -37,7 +37,7 @@ namespace tdb.ddd.account.application.V1
         /// </summary>
         /// <param name="req">请求参数</param>
         /// <returns></returns>
-        public async Task<TdbRes<UserLoginRes>> LoginAsync(UserLoginDTO req)
+        public async Task<TdbRes<UserLoginRes>> LoginAsync(UserLoginReq req)
         {
             //用户领域服务
             var userService = new UserService();
@@ -370,7 +370,7 @@ namespace tdb.ddd.account.application.V1
                 Issuer = AccountConfig.Common.Token.Issuer,
                 //Audience = AccConfig.Consul.Token.Audience,
                 Expires = DateTime.UtcNow.AddSeconds(AccountConfig.Distributed.Token.AccessTokenValidSeconds),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(AccountConfig.Common.Token.SecretKey)), SecurityAlgorithms.Aes128CbcHmacSha256)//HmacSha256Signature
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(AccountConfig.Common.Token.SecretKey)), SecurityAlgorithms.HmacSha256Signature)//HmacSha256Signature
             };
             var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);

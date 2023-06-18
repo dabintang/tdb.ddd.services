@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.domain;
 using tdb.ddd.files.domain.Files.Aggregate;
-using tdb.ddd.files.repository.DBEntity;
 
 namespace tdb.ddd.files.repository
 {

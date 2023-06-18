@@ -40,16 +40,6 @@ namespace tdb.ddd.files.domain.Files
         #region 公开方法
 
         /// <summary>
-        /// 添加或修改文件
-        /// </summary>
-        /// <param name="agg">文件聚合</param>
-        /// <returns></returns>
-        public async Task SaveChangedAsync(FileAgg agg)
-        {
-            await this.FileRepos.SaveChangedAsync(agg);
-        }
-
-        /// <summary>
         /// 获取文件聚合
         /// </summary>
         /// <param name="fileID">文件ID</param>
@@ -57,19 +47,6 @@ namespace tdb.ddd.files.domain.Files
         public async Task<FileAgg?> GetFileAggAsync(long fileID)
         {
             return await this.FileRepos.GetFileAggAsync(fileID);
-        }
-
-        /// <summary>
-        /// 删除文件
-        /// </summary>
-        /// <param name="agg">文件聚合</param>
-        /// <returns></returns>
-        public async Task DeleteFileAsync(FileAgg agg)
-        {
-            //从数据库总删除
-            await this.FileRepos.DeleteFileAsync(agg.ID);
-            //删除文件
-            await agg.DeleteFile();
         }
 
         /// <summary>

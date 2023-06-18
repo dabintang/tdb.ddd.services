@@ -77,7 +77,7 @@ namespace tdb.ddd.relationships.application.V1
             TdbRepositoryTran.BeginTranOnAsyncFunc();
 
             //保存
-            await circleAgg.SaveChangedAsync();
+            await circleAgg.SaveAsync();
 
             //人员领域服务
             var personnelService = new PersonnelService();
@@ -133,7 +133,7 @@ namespace tdb.ddd.relationships.application.V1
             circleAgg.UpdateInfo.UpdateTime = req.OperationTime;
 
             //保存
-            await circleAgg.SaveChangedAsync();
+            await circleAgg.SaveAsync();
 
             //提交事务
             TdbRepositoryTran.CommitTran();

@@ -121,25 +121,6 @@ namespace tdb.ddd.account.repository
             }
         }
 
-        /// <summary>
-        /// 添加登录记录
-        /// </summary>
-        /// <param name="userID">用户ID</param>
-        /// <param name="clientIP">登录端IP</param>
-        /// <param name="loginTime">登录时间</param>
-        public async Task AddLoginRecordAsync(long userID, string clientIP, DateTime loginTime)
-        {
-            //登录记录
-            var loginRecord = new LoginRecord()
-            {
-                UserID = userID,
-                ClientIP = clientIP,
-                LoginTime = loginTime
-            };
-
-            await this.Change<LoginRecord>().AsInsertable(loginRecord).ExecuteCommandAsync();
-        }
-
         #endregion
     }
 }

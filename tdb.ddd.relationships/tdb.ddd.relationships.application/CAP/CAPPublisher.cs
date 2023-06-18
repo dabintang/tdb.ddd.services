@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using tdb.ddd.contracts;
 using tdb.ddd.infrastructure.Services;
 
-namespace tdb.ddd.account.application.V1
+namespace tdb.ddd.relationships.application.CAP
 {
     /// <summary>
     /// cap发布者

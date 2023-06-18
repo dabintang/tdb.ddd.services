@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using tdb.ddd.contracts;
 using tdb.ddd.domain;
 using tdb.ddd.infrastructure;
+using tdb.ddd.infrastructure.Services;
+using tdb.ddd.relationships.domain.BusMediatR;
 
 namespace tdb.ddd.relationships.domain.Photo.Aggregate
 {
@@ -60,9 +62,19 @@ namespace tdb.ddd.relationships.domain.Photo.Aggregate
         /// 保存
         /// </summary>
         /// <returns></returns>
-        public async Task SaveChangedAsync()
+        public async Task SaveAsync()
         {
             await this.Repos.SaveChangedAsync(this);
+
+            //保存照片通知
+            var msg = new PhotoOperationNotification()
+            {
+                PhotoID = this.ID,
+                OperationTypeCode = PhotoOperationNotification.EnmOperationType.Save,
+                OperatorID = this.UpdateInfo.UpdaterID,
+                OperationTime = this.UpdateInfo.UpdateTime
+            };
+            TdbMediatR.Publish(msg);
         }
 
         /// <summary>
@@ -72,6 +84,16 @@ namespace tdb.ddd.relationships.domain.Photo.Aggregate
         public async Task DeleteAsync()
         {
             await this.Repos.DeleteAsync(this.ID);
+
+            //删除照片通知
+            var msg = new PhotoOperationNotification()
+            {
+                PhotoID = this.ID,
+                OperationTypeCode = PhotoOperationNotification.EnmOperationType.Delete,
+                OperatorID = this.UpdateInfo.UpdaterID,
+                OperationTime = this.UpdateInfo.UpdateTime
+            };
+            TdbMediatR.Publish(msg);
         }
 
         #endregion

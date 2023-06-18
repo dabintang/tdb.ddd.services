@@ -84,17 +84,6 @@ namespace tdb.ddd.account.domain.User
             return (userAgg is not null);
         }
 
-        /// <summary>
-        /// 添加登录记录
-        /// </summary>
-        /// <param name="userID">用户ID</param>
-        /// <param name="clientIP">登录端IP</param>
-        /// <param name="loginTime">登录时间</param>
-        public async Task AddLoginRecordAsync(long userID, string clientIP, DateTime loginTime)
-        {
-            await this.UserRepos.AddLoginRecordAsync(userID, clientIP, loginTime);
-        }
-
         #endregion
     }
 }

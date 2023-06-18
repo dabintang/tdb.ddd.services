@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using tdb.ddd.account.application.V1;
+using tdb.ddd.account.application.CAP;
 using tdb.ddd.account.domain.BusMediatR;
 using tdb.ddd.contracts;
 

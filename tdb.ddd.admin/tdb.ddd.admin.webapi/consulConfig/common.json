@@ -2,7 +2,7 @@
   //口令
   "Token": {
     "Issuer": "tdb.ddd", //发行者
-    "SecretKey": "0123456789223456" //秘钥
+    "SecretKey": "12345678902234567890323456789042" //秘钥
   },
   //账户服务
   "AccountService": {

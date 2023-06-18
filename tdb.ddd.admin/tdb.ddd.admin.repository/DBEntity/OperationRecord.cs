@@ -18,7 +18,7 @@ namespace tdb.ddd.admin.repository.DBEntity
         /// <summary>
         /// 记录ID
         /// </summary>
-        [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
+        [SugarColumn(IsPrimaryKey = true)]
         public long ID { get; set; }
 
         /// <summary>
@@ -27,15 +27,9 @@ namespace tdb.ddd.admin.repository.DBEntity
         public short OperationTypeCode { get; set; }
 
         /// <summary>
-        /// 版本号（同一操作不能版本，内容结构可能不一样）
-        /// </summary>
-        public byte Version { get; set; }
-
-        /// <summary>
         /// 操作内容
         /// </summary>
-        [SugarColumn(IsJson = true)]
-        public JsonElement Content { get; set; }
+        public string Content { get; set; } = "";
 
         /// <summary>
         /// 操作人ID

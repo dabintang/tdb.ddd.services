@@ -85,7 +85,8 @@ namespace tdb.ddd.admin.webapi.Controllers.V1
         [TdbAPILog]
         public async Task<TdbRes<string>> RestoreFilesConfigAsync()
         {
-            return await this.consulConfigApp.RestoreFilesConfigAsync();
+            var reqOpe = this.CreateTdbOperateReq();
+            return await this.consulConfigApp.RestoreFilesConfigAsync(reqOpe);
         }
 
         /// <summary>
@@ -107,7 +108,8 @@ namespace tdb.ddd.admin.webapi.Controllers.V1
         [TdbAPILog]
         public async Task<TdbRes<string>> RestoreRelationshipsConfigAsync()
         {
-            return await this.consulConfigApp.RestoreRelationshipsConfigAsync();
+            var reqOpe = this.CreateTdbOperateReq();
+            return await this.consulConfigApp.RestoreRelationshipsConfigAsync(reqOpe);
         }
 
         /// <summary>
