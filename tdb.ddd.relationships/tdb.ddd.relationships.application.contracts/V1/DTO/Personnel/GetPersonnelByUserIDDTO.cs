@@ -24,7 +24,7 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Personnel
     /// <summary>
     /// 根据用户ID获取人员信息 结果
     /// </summary>
-    public class GetPersonnelByUserIDRes : PersonnelInfo
+    public class GetPersonnelByUserIDRes : PersonnelInfoRes
     {
     }
 }

@@ -23,6 +23,7 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Circle
         /// <summary>
         /// [必须]有效时间（分钟）
         /// </summary>
+        [TdbRequired("有效时间")]
         [TdbNumRange("有效时间", ErrorMessage = "有效时间超出范围[1-14400]", MinValue = 1, MaxValue = 14400)]
         public int EffectiveMinutes { get; set; }
     }

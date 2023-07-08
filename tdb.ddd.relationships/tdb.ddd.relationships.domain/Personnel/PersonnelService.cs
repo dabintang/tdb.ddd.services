@@ -62,17 +62,6 @@ namespace tdb.ddd.relationships.domain.Personnel
             return agg;
         }
 
-        /// <summary>
-        /// 查询人员聚合
-        /// </summary>
-        /// <param name="param">条件</param>
-        /// <returns></returns>
-        public async Task<TdbPageRes<PersonnelAgg>> QueryAsync(QueryPersonnelParam param)
-        {
-            var list = await this.PersonnelRepos.QueryAsync(param);
-            return list;
-        }
-
         #endregion
     }
 }

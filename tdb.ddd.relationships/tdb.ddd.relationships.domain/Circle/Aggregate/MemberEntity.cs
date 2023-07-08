@@ -17,6 +17,11 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         #region 值
 
         /// <summary>
+        /// 人际圈ID
+        /// </summary>
+        public long CircleID { get; internal set; }
+
+        /// <summary>
         /// 人员ID
         /// </summary>
         public long PersonnelID { get; internal set; }
@@ -31,6 +36,11 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         /// </summary>
         public string Identity { get; internal set; } = "";
 
+        /// <summary>
+        /// 创建信息
+        /// </summary>
+        public CreateInfoValueObject CreateInfo { get; internal set; } = new CreateInfoValueObject();
+
         #endregion
 
         /// <summary>
@@ -43,15 +53,21 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         /// <summary>
         /// 构造函数
         /// </summary>
+        /// <param name="circleID">人际圈ID</param>
         /// <param name="personnelID">人员ID</param>
         /// <param name="roleCode">角色编码</param>
         /// <param name="identity">身份</param>
-        public MemberEntity(long personnelID, EnmRole roleCode, string identity = "")
+        /// <param name="creatorID">创建人ID</param>
+        /// <param name="createTime">创建时间</param>
+        public MemberEntity(long circleID, long personnelID, EnmRole roleCode, string identity, long creatorID, DateTime createTime)
         {
             this.ID = RelationshipsUniqueIDHelper.CreateID();
+            this.CircleID = circleID;
             this.PersonnelID = personnelID;
             this.RoleCode = roleCode;
             this.Identity = identity;
+            this.CreateInfo.CreatorID = creatorID;
+            this.CreateInfo.CreateTime = createTime;
         }
     }
 }

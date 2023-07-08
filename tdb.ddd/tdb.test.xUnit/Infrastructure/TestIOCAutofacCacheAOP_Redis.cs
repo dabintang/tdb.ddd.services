@@ -33,7 +33,6 @@ namespace tdb.test.xUnit.Infrastructure
             TdbCache.InitCache(new TdbRedisCache("127.0.0.1,defaultDatabase=0,idleTimeout=30000,poolsize=10,prefix=BaseTest_"));
 
             var builder = new ContainerBuilder();
-            //new TestAutofacCacheAOPModule().Configure(builder.ComponentRegistryBuilder);
             new TdbAutofacModule().Configure(builder.ComponentRegistryBuilder);
             this.container = builder.Build();
         }
@@ -110,7 +109,7 @@ namespace tdb.test.xUnit.Infrastructure
             var info21 = new TestIOCAutofacCacheAOPInfo() { ID = 2, Name = "名字1" };
 
             //删除缓存
-            await obj.RemoveCacheHashAsync(info21.ID);
+            await obj.RemoveCacheStringAsync(info21.ID);
 
             var cacheValue5 = await obj.ReadCacheStringAsync(info21);
             AssertClassEqual(cacheValue5, info21);
@@ -125,21 +124,49 @@ namespace tdb.test.xUnit.Infrastructure
             var obj = this.container.Resolve<IClassScopedCacheAOP>();
             var value1 = "value1";
             var value2 = "value2";
-            var key = "keyCacheHash";
+            var field = "fieldCacheHash";
 
             //删除缓存
-            obj.RemoveCacheHash(key);
+            obj.RemoveCacheHash(field);
 
             //缓存
-            var cacheValue1 = obj.ReadCacheHash(value1, key);
+            var cacheValue1 = obj.ReadCacheHash(value1, field);
             Assert.Equal(cacheValue1, value1);
-            var cacheValue2 = obj.ReadCacheHash(value2, key);
+            var cacheValue2 = obj.ReadCacheHash(value2, field);
             Assert.Equal(cacheValue2, value1);
             //删除缓存
-            obj.RemoveCacheHash(key);
-            var cacheValue3 = obj.ReadCacheHash(value2, key);
+            obj.RemoveCacheHash(field);
+            var cacheValue3 = obj.ReadCacheHash(value2, field);
             Assert.Equal(cacheValue3, value2);
-            var cacheValue4 = obj.ReadCacheHash(value1, key);
+            var cacheValue4 = obj.ReadCacheHash(value1, field);
+            Assert.Equal(cacheValue4, value2);
+        }
+
+        /// <summary>
+        /// 测试hash型缓存
+        /// </summary>
+        [Fact]
+        public void TestCacheHash2()
+        {
+            var obj = this.container.Resolve<IClassScopedCacheAOP>();
+            var value1 = "value1";
+            var value2 = "value2";
+            var key = 1;
+            var field = "fieldCacheHash2";
+
+            //删除缓存
+            obj.RemoveCacheHash2(key, field);
+
+            //缓存
+            var cacheValue1 = obj.ReadCacheHash2(value1, key, field);
+            Assert.Equal(cacheValue1, value1);
+            var cacheValue2 = obj.ReadCacheHash2(value2, key, field);
+            Assert.Equal(cacheValue2, value1);
+            //删除缓存
+            obj.RemoveCacheHash2(key, field);
+            var cacheValue3 = obj.ReadCacheHash2(value2, key, field);
+            Assert.Equal(cacheValue3, value2);
+            var cacheValue4 = obj.ReadCacheHash2(value1, key, field);
             Assert.Equal(cacheValue4, value2);
         }
 
@@ -169,12 +196,52 @@ namespace tdb.test.xUnit.Infrastructure
             AssertClassEqual(cacheValue4, info12);
 
             var info21 = new TestIOCAutofacCacheAOPInfo() { ID = 2, Name = "名字1" };
+            var info22 = new TestIOCAutofacCacheAOPInfo() { ID = 2, Name = "名字2" };
 
             //删除缓存
             await obj.RemoveCacheHashAsync(info21.ID);
 
             var cacheValue5 = await obj.ReadCacheHashAsync(info21);
             AssertClassEqual(cacheValue5, info21);
+            var cacheValue6 = await obj.ReadCacheHashAsync(info22);
+            AssertClassEqual(cacheValue6, info21);
+        }
+
+        /// <summary>
+        /// 测试hash型缓存
+        /// </summary>
+        [Fact]
+        public async Task TestCacheHash2Async()
+        {
+            var obj = this.container.Resolve<IClassScopedCacheAOP>();
+            var info11 = new TestIOCAutofacCacheAOPInfo() { ID = 1, Name = "名字1" };
+            var info12 = new TestIOCAutofacCacheAOPInfo() { ID = 1, Name = "名字2" };
+
+            //删除缓存
+            await obj.RemoveCacheHash2Async(info11);
+
+            //缓存
+            var cacheValue1 = await obj.ReadCacheHash2Async(info11);
+            AssertClassEqual(cacheValue1, info11);
+            var cacheValue2 = await obj.ReadCacheHash2Async(info12);
+            AssertClassEqual(cacheValue2, info11);
+            //删除缓存
+            await obj.RemoveCacheHash2Async(info11);
+            var cacheValue3 = await obj.ReadCacheHash2Async(info12);
+            AssertClassEqual(cacheValue3, info12);
+            var cacheValue4 = await obj.ReadCacheHash2Async(info11);
+            AssertClassEqual(cacheValue4, info12);
+
+            var info21 = new TestIOCAutofacCacheAOPInfo() { ID = 2, Name = "名字1" };
+            var info22 = new TestIOCAutofacCacheAOPInfo() { ID = 2, Name = "名字2" };
+
+            //删除缓存
+            await obj.RemoveCacheHash2Async(info21);
+
+            var cacheValue5 = await obj.ReadCacheHash2Async(info21);
+            AssertClassEqual(cacheValue5, info21);
+            var cacheValue6 = await obj.ReadCacheHash2Async(info22);
+            AssertClassEqual(cacheValue6, info21);
         }
 
         /// <summary>
@@ -189,22 +256,6 @@ namespace tdb.test.xUnit.Infrastructure
             Assert.Equal(json1, json2);
         }
     }
-
-    ///// <summary>
-    ///// 注册模块
-    ///// </summary>
-    //public class TestAutofacCacheAOPModule : TdbAutofacModule
-    //{
-    //    /// <summary>
-    //    /// 获取需要注册的程序集名称集合
-    //    /// </summary>
-    //    /// <returns></returns>
-    //    /// <exception cref="NotImplementedException"></exception>
-    //    protected override List<Assembly> GetRegisterAssemblys()
-    //    {
-    //        return new List<Assembly>() { Assembly.GetExecutingAssembly() };
-    //    }
-    //}
 
     /// <summary>
     /// 测试接口
@@ -224,14 +275,14 @@ namespace tdb.test.xUnit.Infrastructure
         /// <param name="input">入参</param>
         /// <param name="key">key</param>
         /// <returns></returns>
-        string ReadCacheString(string input, string key);
+        string ReadCacheString(string input, string field);
 
         /// <summary>
         /// 删除缓存
         /// </summary>
         /// <param name="key">key</param>
         /// <returns></returns>
-        void RemoveCacheString(string key);
+        void RemoveCacheString(string field);
 
         /// <summary>
         /// 优先从缓存返回，如无缓存则返回入参并加入缓存
@@ -251,16 +302,33 @@ namespace tdb.test.xUnit.Infrastructure
         /// 优先从缓存返回，如无缓存则返回入参并加入缓存
         /// </summary>
         /// <param name="input">入参</param>
-        /// <param name="key">key</param>
+        /// <param name="field">field</param>
         /// <returns></returns>
-        string ReadCacheHash(string input, string key);
+        string ReadCacheHash(string input, string field);
+
+        /// <summary>
+        /// 删除缓存
+        /// </summary>
+        /// <param name="field">field</param>
+        /// <returns></returns>
+        void RemoveCacheHash(string field);
+
+        /// <summary>
+        /// 优先从缓存返回，如无缓存则返回入参并加入缓存
+        /// </summary>
+        /// <param name="input">入参</param>
+        /// <param name="key">key</param>
+        /// <param name="field">field</param>
+        /// <returns></returns>
+        string ReadCacheHash2(string input, int key, string field);
 
         /// <summary>
         /// 删除缓存
         /// </summary>
         /// <param name="key">key</param>
+        /// <param name="field">field</param>
         /// <returns></returns>
-        void RemoveCacheHash(string key);
+        void RemoveCacheHash2(int key, string field);
 
         /// <summary>
         /// 优先从缓存返回，如无缓存则返回入参并加入缓存
@@ -275,6 +343,20 @@ namespace tdb.test.xUnit.Infrastructure
         /// <param name="id">key</param>
         /// <returns></returns>
         Task RemoveCacheHashAsync(int id);
+
+        /// <summary>
+        /// 优先从缓存返回，如无缓存则返回入参并加入缓存
+        /// </summary>
+        /// <param name="info">入参</param>
+        /// <returns></returns>
+        Task<TestIOCAutofacCacheAOPInfo> ReadCacheHash2Async(TestIOCAutofacCacheAOPInfo info);
+
+        /// <summary>
+        /// 删除缓存
+        /// </summary>
+        /// <param name="info">入参</param>
+        /// <returns></returns>
+        Task RemoveCacheHash2Async(TestIOCAutofacCacheAOPInfo info);
     }
 
     /// <summary>
@@ -301,7 +383,7 @@ namespace tdb.test.xUnit.Infrastructure
         /// <returns></returns>
         [TdbReadCacheString("CacheString")]
         [TdbCacheKey(1)]
-        public string ReadCacheString(string input, string key)
+        public string ReadCacheString(string input, string field)
         {
             return input;
         }
@@ -313,7 +395,7 @@ namespace tdb.test.xUnit.Infrastructure
         /// <returns></returns>
         [TdbRemoveCacheString("CacheString")]
         [TdbCacheKey(0)]
-        public void RemoveCacheString(string key)
+        public void RemoveCacheString(string field)
         {
         }
 
@@ -350,7 +432,32 @@ namespace tdb.test.xUnit.Infrastructure
         /// <returns></returns>
         [TdbReadCacheHash("CacheHash")]
         [TdbCacheKey(1)]
-        public string ReadCacheHash(string input, string key)
+        public string ReadCacheHash(string input, string field)
+        {
+            return input;
+        }
+
+        /// <summary>
+        /// 删除缓存
+        /// </summary>
+        /// <param name="field">key</param>
+        /// <returns></returns>
+        [TdbRemoveCacheHash("CacheHash")]
+        [TdbCacheKey(0)]
+        public void RemoveCacheHash(string field)
+        {
+        }
+
+        /// <summary>
+        /// 优先从缓存返回，如无缓存则返回入参并加入缓存
+        /// </summary>
+        /// <param name="input">入参</param>
+        /// <param name="key">key</param>
+        /// <param name="field">field</param>
+        /// <returns></returns>
+        [TdbReadCacheHash("CacheHash2", ParamIndex = 1)]
+        [TdbCacheKey(2)]
+        public string ReadCacheHash2(string input, int key, string field)
         {
             return input;
         }
@@ -359,10 +466,11 @@ namespace tdb.test.xUnit.Infrastructure
         /// 删除缓存
         /// </summary>
         /// <param name="key">key</param>
+        /// <param name="field">field</param>
         /// <returns></returns>
-        [TdbRemoveCacheHash("CacheHash")]
-        [TdbCacheKey(0)]
-        public void RemoveCacheHash(string key)
+        [TdbRemoveCacheHash("CacheHash2", ParamIndex = 0)]
+        [TdbCacheKey(1)]
+        public void RemoveCacheHash2(int key, string field)
         {
         }
 
@@ -390,6 +498,31 @@ namespace tdb.test.xUnit.Infrastructure
         {
             await Task.CompletedTask;
         }
+
+        /// <summary>
+        /// 优先从缓存返回，如无缓存则返回入参并加入缓存
+        /// </summary>
+        /// <param name="info">入参</param>
+        /// <returns></returns>
+        [TdbReadCacheHash("CacheHash2Async", ParamIndex = 0, FromPropertyName = "TypeCode")]
+        [TdbCacheKey(0, FromPropertyName = "ID")]
+        public async Task<TestIOCAutofacCacheAOPInfo> ReadCacheHash2Async(TestIOCAutofacCacheAOPInfo info)
+        {
+            await Task.CompletedTask;
+            return info;
+        }
+
+        /// <summary>
+        /// 删除缓存
+        /// </summary>
+        /// <param name="info">入参</param>
+        /// <returns></returns>
+        [TdbRemoveCacheHash("CacheHash2Async", ParamIndex = 0, FromPropertyName = "TypeCode")]
+        [TdbCacheKey(0, FromPropertyName = "ID")]
+        public async Task RemoveCacheHash2Async(TestIOCAutofacCacheAOPInfo info)
+        {
+            await Task.CompletedTask;
+        }
     }
 
     /// <summary>
@@ -401,6 +534,11 @@ namespace tdb.test.xUnit.Infrastructure
         /// 
         /// </summary>
         public int ID { get; set; }
+
+        /// <summary>
+        /// 类型
+        /// </summary>
+        public string TypeCode { get; set; } = "A";
 
         /// <summary>
         /// 

@@ -1,5 +1,4 @@
-﻿using AutoMapper.Execution;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,20 +33,19 @@ namespace tdb.ddd.relationships.domain.Circle
         /// <param name="circleID">人际圈ID</param>
         /// <param name="personnelID">人员ID</param>
         /// <returns></returns>
-        Task<MemberEntity> GetMemberAsync(long circleID, long personnelID);
+        Task<MemberEntity?> GetMemberAsync(long circleID, long personnelID);
 
         /// <summary>
         /// 添加或修改成员信息
         /// </summary>
-        /// <param name="circleID">人际圈ID</param>
         /// <param name="entity">成员信息</param>
-        Task SaveMemberAsync(long circleID, MemberEntity entity);
+        Task SaveMemberAsync(MemberEntity entity);
 
         /// <summary>
         /// 删除成员
         /// </summary>
-        /// <param name="memberID">成员ID</param>
-        Task DeleteMemberAsync(long memberID);
+        /// <param name="entity">成员信息</param>
+        Task DeleteMemberAsync(MemberEntity entity);
 
         /// <summary>
         /// 删除所有成员
@@ -64,9 +62,8 @@ namespace tdb.ddd.relationships.domain.Circle
         /// <summary>
         /// 删除人际圈信息
         /// </summary>
-        /// <param name="personnelID">人际圈ID</param>
-        /// <returns></returns>
-        Task DeleteCircleAsync(long circleID);
+        /// <param name="agg">人际圈聚合</param>
+        Task DeleteCircleAsync(CircleAgg agg);
 
     }
 }

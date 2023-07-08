@@ -3,22 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tdb.ddd.application.contracts;
 using tdb.ddd.contracts;
 using tdb.ddd.relationships.domain.contracts.Enum;
 
 namespace tdb.ddd.relationships.application.contracts.V1.DTO.Report
 {
     /// <summary>
-    /// 查询人员信息列表 条件
+    /// 查询我创建的人员信息列表 条件
     /// </summary>
-    public class QueryPersonnelListReq : TdbPageReqBase<QueryPersonnelListReq.EnmSortField>
+    public class QueryMyPersonnelListReq : TdbPageReqBase<QueryMyPersonnelListReq.EnmSortField>
     {
-        /// <summary>
-        /// [可选]创建者ID
-        /// </summary>
-        [TdbHashIDJsonConverter]
-        public long? CreatorID { get; set; }
-
         /// <summary>
         /// 排序字段（1：人员ID；2：姓名）
         /// </summary>
@@ -37,9 +32,9 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Report
     }
 
     /// <summary>
-    /// 查询人员信息列表 结果
+    /// 查询我创建的人员信息列表 结果
     /// </summary>
-    public class QueryPersonnelListRes
+    public class QueryMyPersonnelListRes
     {
         /// <summary>
         /// 人员ID

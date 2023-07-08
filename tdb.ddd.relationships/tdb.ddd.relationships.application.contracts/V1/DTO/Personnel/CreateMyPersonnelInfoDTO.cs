@@ -24,5 +24,10 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Personnel
         /// </summary>
         [TdbHashIDJsonConverter]
         public long ID { get; set; }
+
+        /// <summary>
+        /// 是否新创建（true：新创建的人员信息；false：原有人员）
+        /// </summary>
+        public bool IsNew { get; set; }
     }
 }

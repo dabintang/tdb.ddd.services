@@ -6,6 +6,6 @@
   },
   //redis配置
   "Redis": {
-    "ConnStr": [ "127.0.0.1,defaultDatabase=1,idleTimeout=30000,poolsize=10,prefix=Files_" ] //连接字符串
+    "ConnStr": [ "127.0.0.1,defaultDatabase=1,idleTimeout=30000,poolsize=10,prefix=Relationships_" ] //连接字符串
   }
 }

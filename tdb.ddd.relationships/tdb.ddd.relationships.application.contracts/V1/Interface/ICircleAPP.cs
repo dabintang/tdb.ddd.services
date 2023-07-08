@@ -39,7 +39,7 @@ namespace tdb.ddd.relationships.application.contracts.V1.Interface
         /// 解散人际圈
         /// </summary>
         /// <param name="req">请求参数</param>
-        /// <returns>新人员ID</returns>
+        /// <returns></returns>
         Task<TdbRes<bool>> DeleteCircleAsync(TdbOperateReq<DeleteCircleReq> req);
 
         /// <summary>
@@ -103,6 +103,6 @@ namespace tdb.ddd.relationships.application.contracts.V1.Interface
         /// </summary>
         /// <param name="req">请求参数</param>
         /// <returns></returns>
-        //Task<TdbRes<bool>> WithdrawCircleAsync(TdbOperateReq<WithdrawCircleReq> req);
+        Task<TdbRes<bool>> WithdrawCircleAsync(TdbOperateReq<WithdrawCircleReq> req);
     }
 }

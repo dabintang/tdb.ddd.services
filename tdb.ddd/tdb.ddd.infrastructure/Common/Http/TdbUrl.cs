@@ -1,5 +1,4 @@
-﻿using AutoMapper.Execution;
-using Castle.Core.Internal;
+﻿using Castle.Core.Internal;
 using Flurl;
 using Flurl.Util;
 using System;
@@ -8,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using tdb.common;
 using tdb.ddd.contracts;
 
 namespace tdb.ddd.infrastructure

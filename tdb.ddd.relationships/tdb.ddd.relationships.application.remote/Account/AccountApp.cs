@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.contracts;
@@ -22,11 +24,12 @@ namespace tdb.ddd.relationships.application.remote.Account
         /// 根据用户ID获取用户信息
         /// </summary>
         /// <param name="userID">用户ID</param>
+        /// <param name="authInfo">身份认证信息</param>
         /// <returns></returns>
-        public async Task<UserInfoRes?> GetUserInfoByIDAsync(long userID)
+        public async Task<UserInfoRes?> GetUserInfoByIDAsync(long userID, AuthenticationHeaderValue? authInfo)
         {
             var url = GetFullUrl("/tdb.ddd.account/v1/User/GetUserInfo");
-            var res = await TdbHttpClient.GetAsync<TdbRes<UserInfoRes>>(url, new GetUserInfoByIDReq() { UserID = userID });
+            var res = await TdbHttpClient.GetAsync<TdbRes<UserInfoRes>>(url, new GetUserInfoByIDReq() { UserID = userID }, authInfo);
             return res?.Data;
         }
 

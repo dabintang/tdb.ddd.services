@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using tdb.common;
@@ -23,6 +24,7 @@ namespace tdb.ddd.webapi
             {
                 //解决actions冲突
                 o.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+                o.CustomSchemaIds(type => type.ToString());
 
                 //配置信息
                 var config = new TdbSwaggerOptions();
@@ -139,6 +141,7 @@ namespace tdb.ddd.webapi
             {
                 //解决actions冲突
                 o.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+                o.CustomSchemaIds(type => type.ToString());
 
                 //配置信息
                 var config = new TdbSwaggerOptions();

@@ -17,7 +17,9 @@ builder.RunWebApp(option =>
     //hashid配置
     option.SetupHashID = (o) => o.Salt = "tangdabinok";
     //缓存
-    option.CacheOption.EnmCache = TdbWebAppBuilderOption.TdbEnmCache.Memory;
+    //option.CacheOption.EnmCache = TdbWebAppBuilderOption.TdbEnmCache.Memory;
+    option.CacheOption.EnmCache = TdbWebAppBuilderOption.TdbEnmCache.Redis;
+    option.CacheOption.SetupRedis = (o) => o.ConnectionStrings = new List<string>() { "127.0.0.1,defaultDatabase=0,idleTimeout=30000,poolsize=10,prefix=BaseTest_" };
     //总线-MediatR
     option.BusOption.MediatROption = new TdbWebAppBuilderOption.TdbMediatROption();
     //总线-DotNetCore.CAP

@@ -132,7 +132,7 @@ namespace tdb.ddd.relationships.domain.Personnel.Aggregate
         /// <returns></returns>
         public async Task DeleteAsync()
         {
-            await this.Repos.DeleteAsync(this.ID);
+            await this.Repos.DeleteAsync(this);
         }
 
         #endregion

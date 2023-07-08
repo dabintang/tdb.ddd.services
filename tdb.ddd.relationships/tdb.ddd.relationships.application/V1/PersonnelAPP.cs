@@ -7,11 +7,12 @@ using tdb.ddd.application.contracts;
 using tdb.ddd.contracts;
 using tdb.ddd.domain;
 using tdb.ddd.infrastructure;
+using tdb.ddd.infrastructure.Services;
 using tdb.ddd.relationships.application.contracts.Remote.Interface;
 using tdb.ddd.relationships.application.contracts.V1.DTO.Personnel;
 using tdb.ddd.relationships.application.contracts.V1.Interface;
+using tdb.ddd.relationships.domain.BusMediatR;
 using tdb.ddd.relationships.domain.Circle;
-using tdb.ddd.relationships.domain.Circle.Aggregate;
 using tdb.ddd.relationships.domain.Personnel;
 using tdb.ddd.relationships.domain.Personnel.Aggregate;
 using tdb.ddd.relationships.domain.Photo;
@@ -87,13 +88,12 @@ namespace tdb.ddd.relationships.application.V1
             var personnelAgg = await personnelService.GetByUserIDAsync(req.OperatorID);
             if (personnelAgg is not null)
             {
-                return TdbRes.Success(new CreateMyPersonnelInfoRes() { ID = personnelAgg.ID });
+                return TdbRes.Success(new CreateMyPersonnelInfoRes() { ID = personnelAgg.ID, IsNew = false });
             }
 
             //获取我的用户信息 
             var accountApp = TdbIOC.GetService<IAccountApp>()!;
-            var userInfo = await accountApp.GetUserInfoByIDAsync(req.OperatorID);
-            if (userInfo is null) throw new TdbException("从账号微服务获取我的用户信息为空");
+            var userInfo = await accountApp.GetUserInfoByIDAsync(req.OperatorID, req.AuthenticationInfo) ?? throw new TdbException("从账号微服务获取我的用户信息为空");
 
             //生成人员ID
             var personnelID = RelationshipsUniqueIDHelper.CreateID();
@@ -107,7 +107,7 @@ namespace tdb.ddd.relationships.application.V1
                 MobilePhone = userInfo.MobilePhone,
                 Email = userInfo.Email,
                 Remark = userInfo.Remark,
-                UserID = null,
+                UserID = req.OperatorID,
                 CreateInfo = new CreateInfoValueObject() { CreatorID = req.OperatorID, CreateTime = DateTime.Now },
                 UpdateInfo = new UpdateInfoValueObject() { UpdaterID = req.OperatorID, UpdateTime = DateTime.Now }
             };
@@ -121,7 +121,7 @@ namespace tdb.ddd.relationships.application.V1
             //提交事务
             TdbRepositoryTran.CommitTran();
 
-            return TdbRes.Success(new CreateMyPersonnelInfoRes() { ID = personnelAgg.ID });
+            return TdbRes.Success(new CreateMyPersonnelInfoRes() { ID = personnelAgg.ID, IsNew = true });
         }
 
         /// <summary>
@@ -266,11 +266,15 @@ namespace tdb.ddd.relationships.application.V1
                 if (photoAgg is not null)
                 {
                     //删除照片
-                    photoAgg.UpdateInfo.UpdaterID = req.OperatorID;
-                    photoAgg.UpdateInfo.UpdateTime = req.OperationTime;
                     await photoAgg.DeleteAsync();
+
+                    //删除照片通知
+                    PublishOperatePhotoMsg(photoAgg, PhotoOperationNotification.EnmOperationType.Delete, req);
                 }
             }
+
+            //删除
+            await personnelAgg.DeleteAsync();
 
             //提交事务
             TdbRepositoryTran.CommitTran();
@@ -306,8 +310,7 @@ namespace tdb.ddd.relationships.application.V1
                 {
                     ID = photoID,
                     PersonnelID = param.PersonnelID,
-                    CreateInfo = new CreateInfoValueObject() { CreatorID = req.OperatorID, CreateTime = DateTime.Now },
-                    UpdateInfo = new UpdateInfoValueObject() { UpdaterID = req.OperatorID, UpdateTime = DateTime.Now }
+                    CreateInfo = new CreateInfoValueObject() { CreatorID = req.OperatorID, CreateTime = DateTime.Now }
                 };
                 lstPhotoAgg.Add(photoAgg);
             }
@@ -319,12 +322,37 @@ namespace tdb.ddd.relationships.application.V1
             foreach (var photoAgg in lstPhotoAgg)
             {
                 await photoAgg.SaveAsync();
+
+                //保存照片通知
+                PublishOperatePhotoMsg(photoAgg, PhotoOperationNotification.EnmOperationType.Save, req);
             }
 
             //提交事务
             TdbRepositoryTran.CommitTran();
 
             return TdbRes.Success(true);
+        }
+
+        #endregion
+
+        #region 私有方法
+
+        /// <summary>
+        /// 发布操作照片消息
+        /// </summary>
+        /// <param name="photoAgg">照片聚合</param>
+        /// <param name="opeTypeCode">操作类型</param>
+        /// <param name="oper">操作人信息</param>
+        private static void PublishOperatePhotoMsg(PhotoAgg photoAgg, PhotoOperationNotification.EnmOperationType opeTypeCode, TdbOperateReq oper)
+        {
+            var msg = new PhotoOperationNotification()
+            {
+                PhotoID = photoAgg.ID,
+                OperationTypeCode = opeTypeCode,
+                OperatorID = oper.OperatorID,
+                OperationTime = oper.OperationTime
+            };
+            TdbMediatR.Publish(msg);
         }
 
         #endregion

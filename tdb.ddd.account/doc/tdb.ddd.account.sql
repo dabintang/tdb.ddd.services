@@ -44,7 +44,7 @@ CREATE TABLE `user_info`  (
   `NickName` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '昵称',
   `LoginName` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '登录名',
   `Password` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '密码(MD5)',
-  `GenderCode` tinyint NOT NULL DEFAULT 0 COMMENT '性别（1：男；2：女；3：未知）',
+  `GenderCode` tinyint NOT NULL DEFAULT 3 COMMENT '性别（1：男；2：女；3：未知）',
   `Birthday` datetime NULL DEFAULT NULL COMMENT '生日',
   `HeadImgID` bigint NULL COMMENT '头像图片ID',
   `MobilePhone` varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '手机号码',

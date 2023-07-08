@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.contracts;
+using tdb.ddd.infrastructure;
 using tdb.ddd.relationships.domain.contracts.Personnel;
 using tdb.ddd.relationships.domain.Personnel.Aggregate;
 
@@ -12,7 +13,7 @@ namespace tdb.ddd.relationships.domain.Personnel
     /// <summary>
     /// 人员存储接口
     /// </summary>
-    public interface IPersonnelRepos : ITdbIOCScoped
+    public interface IPersonnelRepos : ITdbIOCScoped, ITdbIOCIntercept
     {
         /// <summary>
         /// 根据人员ID获取人员聚合
@@ -43,13 +44,6 @@ namespace tdb.ddd.relationships.domain.Personnel
         Task<List<long>> GetCircleIDsAsync(long personnelID);
 
         /// <summary>
-        /// 查询人员聚合
-        /// </summary>
-        /// <param name="param">条件</param>
-        /// <returns></returns>
-        Task<TdbPageRes<PersonnelAgg>> QueryAsync(QueryPersonnelParam param);
-
-        /// <summary>
         /// 保存
         /// </summary>
         /// <param name="agg">人员聚合</param>
@@ -58,8 +52,7 @@ namespace tdb.ddd.relationships.domain.Personnel
         /// <summary>
         /// 删除
         /// </summary>
-        /// <param name="personnelID">人员ID</param>
-        /// <returns></returns>
-        Task DeleteAsync(long personnelID);
+        /// <param name="agg">人员聚合</param>
+        Task DeleteAsync(PersonnelAgg agg);
     }
 }

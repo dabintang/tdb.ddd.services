@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Castle.DynamicProxy;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using tdb.common;
+using tdb.ddd.contracts;
 
 namespace tdb.ddd.infrastructure.Services
 {
@@ -10,17 +13,60 @@ namespace tdb.ddd.infrastructure.Services
     public class TdbRemoveCacheHashAttribute : TdbCacheBaseAttribute
     {
         /// <summary>
-        /// key
+        /// key前缀
         /// </summary>
-        public string Key { get; set; }
+        private string KeyPrefix { get; set; }
+
+        /// <summary>
+        /// 参数位置（从0算起）
+        /// </summary>
+        public int ParamIndex { get; set; } = -1;
+
+        /// <summary>
+        /// 从指定属性获取
+        /// </summary>
+        public string FromPropertyName { get; set; } = "";
 
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="key">key</param>
-        public TdbRemoveCacheHashAttribute(string key)
+        /// <param name="keyPrefix">key前缀</param>
+        public TdbRemoveCacheHashAttribute(string keyPrefix)
         {
-            this.Key = key;
+            this.KeyPrefix = keyPrefix;
+        }
+
+        /// <summary>
+        /// 获取hash key
+        /// </summary>
+        /// <param name="invocation"></param>
+        /// <returns></returns>
+        public string GetKey(IInvocation invocation)
+        {
+            var key = new StringBuilder(this.KeyPrefix);
+            if (this.ParamIndex >= 0)
+            {
+                //获取参数值
+                var param = invocation.GetArgumentValue(this.ParamIndex);
+                //直接获取
+                if (string.IsNullOrWhiteSpace(this.FromPropertyName))
+                {
+                    key.Append($".{param.ToStr()}");
+                }
+                //从属性获取
+                else
+                {
+                    //属性不存在
+                    if (CommHelper.IsExistPropertyOrField(param, this.FromPropertyName) == false)
+                    {
+                        throw new TdbException($"[缓存拦截器]找不到属性：{param.GetType().Name}.{this.FromPropertyName}");
+                    }
+
+                    var paramValue = CommHelper.ReflectGet(param, this.FromPropertyName);
+                    key.Append($".{paramValue.ToStr()}");
+                }
+            }
+            return key.ToString();
         }
     }
 }

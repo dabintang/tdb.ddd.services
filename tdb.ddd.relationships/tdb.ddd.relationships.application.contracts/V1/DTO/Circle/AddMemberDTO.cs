@@ -31,6 +31,8 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Circle
         /// <summary>
         /// [必须]角色编码
         /// </summary>
+        [TdbRequired("角色编码")]
+        [TdbEnumDataType(typeof(EnmRole), "角色编码不正确")]
         public EnmRole RoleCode { get; set; }
 
         /// <summary>

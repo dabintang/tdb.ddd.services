@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{A3C2A784-3296-4B90-AC2A-C09B603DBF9B}"
 	ProjectSection(SolutionItems) = preProject
 		doc\remark.txt = doc\remark.txt
+		doc\tdb.ddd.relationships.sql = doc\tdb.ddd.relationships.sql
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tdb.ddd.relationships.domain.contracts", "tdb.ddd.relationships.domain.contracts\tdb.ddd.relationships.domain.contracts.csproj", "{620CCBEC-CD10-4251-9EE9-F2E90352EE53}"

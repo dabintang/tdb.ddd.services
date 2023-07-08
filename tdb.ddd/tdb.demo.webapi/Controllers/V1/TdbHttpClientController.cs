@@ -32,7 +32,7 @@ namespace tdb.demo.webapi.Controllers.V1
             //获取头部身份认证信息
             var authentication = HttpContext.GetAuthenticationHeaderValue();
 
-            var res = await TdbHttpClient.GetAsync<TdbRes<UserRes>>("http://127.0.0.1:31001/tdb.ddd.demo/v1/User/GetCurrentUserInfo", null, authentication);
+            var res = await TdbHttpClient.GetAsync<TdbRes<UserRes>>("http://127.0.0.1:3100/tdb.ddd.demo/v1/User/GetCurrentUserInfo", null, authentication);
             if (res is not null)
             {
                 return res;
@@ -54,7 +54,7 @@ namespace tdb.demo.webapi.Controllers.V1
             var authentication = HttpContext.GetAuthenticationHeaderValue();
             var reqInner = new GetUserInfo2Req() { ID = req.ID };
 
-            var res = await TdbHttpClient.GetAsync<TdbRes<UserRes>>("http://127.0.0.1:31001/tdb.ddd.demo/v2/User/GetUserInfo", reqInner, authentication);
+            var res = await TdbHttpClient.GetAsync<TdbRes<UserRes>>("http://127.0.0.1:3100/tdb.ddd.demo/v2/User/GetUserInfo", reqInner, authentication);
             if (res is not null)
             {
                 return res;
@@ -75,7 +75,7 @@ namespace tdb.demo.webapi.Controllers.V1
             //获取头部身份认证信息
             var authentication = HttpContext.GetAuthenticationHeaderValue();
 
-            var res = await TdbHttpClient.PostAsJsonAsync<UpdateUserInfoReq, TdbRes<bool>>("http://127.0.0.1:31001/tdb.ddd.demo/v2/User/UpdateUserInfo", req, null, authentication);
+            var res = await TdbHttpClient.PostAsJsonAsync<UpdateUserInfoReq, TdbRes<bool>>("http://127.0.0.1:3100/tdb.ddd.demo/v2/User/UpdateUserInfo", req, null, authentication);
             if (res is not null)
             {
                 return res;

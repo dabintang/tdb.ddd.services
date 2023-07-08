@@ -18,7 +18,6 @@ namespace tdb.ddd.repository.sqlsugar
         /// </summary>
         public static void BeginTranOnAsyncFunc()
         {
-            //TdbDbScoped.GetScopedContext().AsTenant().BeginTran();
             DbScoped.SugarScope.ScopedContext.AsTenant().BeginTran();
         }
 
@@ -27,7 +26,6 @@ namespace tdb.ddd.repository.sqlsugar
         /// </summary>
         public static void CommitTran()
         {
-            //TdbDbScoped.GetScopedContext().AsTenant().CommitTran();
             DbScoped.SugarScope.ScopedContext.AsTenant().CommitTran();
         }
 
@@ -36,7 +34,6 @@ namespace tdb.ddd.repository.sqlsugar
         /// </summary>
         public static void RollbackTran()
         {
-            //TdbDbScoped.GetScopedContext().AsTenant().RollbackTran();
             DbScoped.SugarScope.ScopedContext.AsTenant().RollbackTran();
         }
     }

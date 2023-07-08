@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tdb.ddd.application.contracts;
 using tdb.ddd.contracts;
 
 namespace tdb.ddd.relationships.application.contracts.V1.DTO.Report
@@ -15,7 +16,7 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Report
         /// <summary>
         /// [可选]人员ID（查询该人员加入的人际圈）
         /// </summary>
-        [TdbHashIDJsonConverter]
+        [TdbHashIDModelBinder]
         public long? PersonnelID { get; set; }
 
         /// <summary>
@@ -76,6 +77,5 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Report
         /// </summary>
         [TdbHashIDJsonConverter]
         public long CreatorID { get; set; }
-
     }
 }

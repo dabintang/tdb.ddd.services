@@ -13,7 +13,7 @@ using tdb.ddd.relationships.infrastructure.Config;
 namespace tdb.ddd.relationships.domain.Circle.Aggregate
 {
     /// <summary>
-    ///人际圈聚合
+    /// 人际圈聚合
     /// </summary>
     public class CircleAgg : TdbAggregateRoot<long>
     {
@@ -83,7 +83,7 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         /// </summary>
         /// <param name="personnelID">人员ID</param>
         /// <returns>成员信息</returns>
-        public async Task<MemberEntity> GetMemberAsync(long personnelID)
+        public async Task<MemberEntity?> GetMemberAsync(long personnelID)
         {
             return await this.Repos.GetMemberAsync(this.ID, personnelID);
         }
@@ -94,7 +94,7 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         /// <param name="entity">成员信息</param>
         public async Task AddMemberAsync(MemberEntity entity)
         {
-            await this.Repos.SaveMemberAsync(this.ID, entity);
+            await this.Repos.SaveMemberAsync(entity);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
             if (memberInfo is not null)
             {
                 //删除成员
-                await this.Repos.DeleteMemberAsync(memberInfo.ID);
+                await this.Repos.DeleteMemberAsync(memberInfo);
             }
         }
 
@@ -140,7 +140,7 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
             //设置圈内角色
             memberInfo.RoleCode = roleCode;
             //保存
-            await this.Repos.SaveMemberAsync(this.ID, memberInfo);
+            await this.Repos.SaveMemberAsync(memberInfo);
 
             return TdbRes.Success(true);
         }
@@ -162,7 +162,7 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
             //设置圈内身份
             memberInfo.Identity = identity;
             //保存
-            await this.Repos.SaveMemberAsync(this.ID, memberInfo);
+            await this.Repos.SaveMemberAsync(memberInfo);
 
             return TdbRes.Success(true);
         }
@@ -182,7 +182,7 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         /// <returns></returns>
         public async Task DeleteAsync()
         {
-            await this.Repos.DeleteCircleAsync(this.ID);
+            await this.Repos.DeleteCircleAsync(this);
         }
 
         #endregion

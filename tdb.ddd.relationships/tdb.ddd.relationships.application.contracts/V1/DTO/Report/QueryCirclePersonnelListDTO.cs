@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tdb.ddd.application.contracts;
 using tdb.ddd.contracts;
 using tdb.ddd.relationships.domain.contracts.Enum;
 
@@ -16,7 +17,8 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Report
         /// <summary>
         /// [必须]人际圈ID
         /// </summary>
-        [TdbHashIDJsonConverter]
+        [TdbHashIDModelBinder]
+        [TdbRequired("人际圈ID")]
         public long CircleID { get; set; }
 
         /// <summary>
@@ -41,6 +43,12 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Report
     /// </summary>
     public class QueryCirclePersonnelListRes
     {
+        /// <summary>
+        /// 人际圈ID
+        /// </summary>
+        [TdbHashIDJsonConverter]
+        public long CircleID { get; set; }
+
         /// <summary>
         /// 人员ID
         /// </summary>
@@ -77,6 +85,6 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Report
         /// 人员创建者ID
         /// </summary>
         [TdbHashIDJsonConverter]
-        public long CreatorID { get; set; }
+        public long PersonnelCreatorID { get; set; }
     }
 }

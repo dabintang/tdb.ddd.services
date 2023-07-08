@@ -4,10 +4,11 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="tdb.ddd.application.contracts" Version="7.0.0.14" />
+    <PackageReference Include="tdb.ddd.application.contracts" Version="7.0.0.15" />
   </ItemGroup>
 
   <ItemGroup>

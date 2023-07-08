@@ -9,7 +9,7 @@ namespace tdb.ddd.relationships.domain.contracts.Enum
     /// <summary>
     /// 角色(1：普通成员；2：管理员)
     /// </summary>
-    public enum EnmRole
+    public enum EnmRole : byte
     {
         /// <summary>
         /// 1：普通成员

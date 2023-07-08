@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.contracts;
+using tdb.ddd.infrastructure;
 using tdb.ddd.relationships.domain.contracts.Photo;
 using tdb.ddd.relationships.domain.Photo.Aggregate;
 
@@ -37,8 +38,7 @@ namespace tdb.ddd.relationships.domain.Photo
         /// <summary>
         /// 删除
         /// </summary>
-        /// <param name="photoID">照片ID</param>
-        /// <returns></returns>
-        Task DeleteAsync(long photoID);
+        /// <param name="agg">照片聚合</param>
+        Task DeleteAsync(PhotoAgg agg);
     }
 }

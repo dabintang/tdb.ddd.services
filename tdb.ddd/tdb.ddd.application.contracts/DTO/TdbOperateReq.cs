@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -57,6 +58,11 @@ namespace tdb.ddd.application.contracts
         /// 操作人拥有的权限ID
         /// </summary>
         public List<long> OperatorAuthorityIDs { get; set; } = new List<long>();
+
+        /// <summary>
+        /// http头部身份认证信息
+        /// </summary>
+        public AuthenticationHeaderValue? AuthenticationInfo { get; set; }
 
         /// <summary>
         /// 构造函数

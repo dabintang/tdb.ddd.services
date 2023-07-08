@@ -11,7 +11,7 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Personnel
     /// <summary>
     /// 人员信息
     /// </summary>
-    public class PersonnelInfo
+    public class PersonnelInfoRes
     {
         /// <summary>
         /// 人员ID

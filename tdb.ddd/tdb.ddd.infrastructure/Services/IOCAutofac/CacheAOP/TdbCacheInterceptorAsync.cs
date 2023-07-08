@@ -51,7 +51,7 @@ namespace tdb.ddd.infrastructure.Services
 
             if (attrCache is TdbReadCacheStringAttribute attrReadString)
             {
-                var key = $"{attrReadString.KeyPrefix}{keyFields}";
+                var key = $"{attrReadString.KeyPrefix}.{keyFields}";
                 var returnValue = this.cache.CacheShell(key, TimeSpan.FromSeconds(attrReadString.TimeoutSeconds), () =>
                 {
                     //执行被拦截的方法
@@ -80,7 +80,7 @@ namespace tdb.ddd.infrastructure.Services
                     return;
                 }
 
-                var returnValue = this.cache.HCacheShell(attrReadHash.Key, expire, keyFields, () =>
+                var returnValue = this.cache.HCacheShell(attrReadHash.GetKey(invocation), expire, keyFields, () =>
                 {
                     //执行被拦截的方法
                     invocation.Proceed();
@@ -99,7 +99,7 @@ namespace tdb.ddd.infrastructure.Services
                 //执行被拦截的方法
                 invocation.Proceed();
                 //清除缓存
-                var key = $"{attrRemoveString.KeyPrefix}{keyFields}";
+                var key = $"{attrRemoveString.KeyPrefix}.{keyFields}";
                 this.cache.Del(key);
                 return;
             }
@@ -113,7 +113,7 @@ namespace tdb.ddd.infrastructure.Services
                 //执行被拦截的方法
                 invocation.Proceed();
                 //清除缓存
-                this.cache.HDel(attrRemoveHash.Key, keyFields);
+                this.cache.HDel(attrRemoveHash.GetKey(invocation), keyFields);
                 return;
             }
 
@@ -149,7 +149,7 @@ namespace tdb.ddd.infrastructure.Services
                 //执行被拦截的方法
                 invocation.Proceed();
                 //清除缓存
-                var key = $"{attrRemoveString.KeyPrefix}{keyFields}";
+                var key = $"{attrRemoveString.KeyPrefix}.{keyFields}";
                 this.cache.Del(key);
                 return;
             }
@@ -163,7 +163,7 @@ namespace tdb.ddd.infrastructure.Services
                 //执行被拦截的方法
                 invocation.Proceed();
                 //清除缓存
-                this.cache.HDel(attrRemoveHash.Key, keyFields);
+                this.cache.HDel(attrRemoveHash.GetKey(invocation), keyFields);
                 return;
             }
 
@@ -197,7 +197,7 @@ namespace tdb.ddd.infrastructure.Services
 
             if (attrCache is TdbReadCacheStringAttribute attrReadString)
             {
-                var key = $"{attrReadString.KeyPrefix}{keyFields}";
+                var key = $"{attrReadString.KeyPrefix}.{keyFields}";
                 var returnValue = this.cache.CacheShellAsync<T>(key, TimeSpan.FromSeconds(attrReadString.TimeoutSeconds), async () =>
                 {
                     //执行被拦截的方法
@@ -227,7 +227,7 @@ namespace tdb.ddd.infrastructure.Services
                     return;
                 }
 
-                var returnValue = this.cache.HCacheShellAsync<T>(attrReadHash.Key, expire, keyFields, async () =>
+                var returnValue = this.cache.HCacheShellAsync<T>(attrReadHash.GetKey(invocation), expire, keyFields, async () =>
                 {
                     //执行被拦截的方法
                     invocation.Proceed();
@@ -247,7 +247,7 @@ namespace tdb.ddd.infrastructure.Services
                 //执行被拦截的方法
                 invocation.Proceed();
                 //清除缓存
-                var key = $"{attrRemoveString.KeyPrefix}{keyFields}";
+                var key = $"{attrRemoveString.KeyPrefix}.{keyFields}";
                 this.cache.Del(key);
                 return;
             }
@@ -261,7 +261,7 @@ namespace tdb.ddd.infrastructure.Services
                 //执行被拦截的方法
                 invocation.Proceed();
                 //清除缓存
-                this.cache.HDel(attrRemoveHash.Key, keyFields);
+                this.cache.HDel(attrRemoveHash.GetKey(invocation), keyFields);
                 return;
             }
 
@@ -280,7 +280,7 @@ namespace tdb.ddd.infrastructure.Services
         /// <returns></returns>
         private static string GetKey(IInvocation invocation)
         {
-            var sb = new StringBuilder();
+            var key = new StringBuilder();
             var attrKeys = invocation.MethodInvocationTarget.GetCustomAttributes(typeof(TdbCacheKeyAttribute), true).Select(m => m as TdbCacheKeyAttribute);
             foreach (var attrKey in attrKeys)
             {
@@ -292,7 +292,7 @@ namespace tdb.ddd.infrastructure.Services
                 //直接获取
                 if (string.IsNullOrWhiteSpace(attrKey.FromPropertyName))
                 {
-                    sb.Append(param.ToStr());
+                    key.Append($".{param.ToStr()}");
                 }
                 //从属性获取
                 else
@@ -304,11 +304,16 @@ namespace tdb.ddd.infrastructure.Services
                     }
 
                     var paramValue = CommHelper.ReflectGet(param, attrKey.FromPropertyName);
-                    sb.Append(paramValue.ToStr());
+                    key.Append($".{paramValue.ToStr()}");
                 }
             }
 
-            return sb.ToString();
+            if (key.Length > 0)
+            {
+                key.Remove(0, 1);
+            }
+
+            return key.ToString();
         }
 
         #endregion

@@ -86,7 +86,7 @@ namespace tdb.ddd.relationships.application.V1
             var personnelInfo = await personnelService.GetByUserIDAsync(req.OperatorID) ?? throw new TdbException($"获取我的人员信息为空【UserID={req.OperatorID}】");
 
             //生成我的成员信息
-            var memberInfo = new MemberEntity(personnelInfo.ID, EnmRole.Admin);
+            var memberInfo = new MemberEntity(circleAgg.ID, personnelInfo.ID, EnmRole.Admin, "", req.OperatorID, req.OperationTime);
 
             //把自己加入人际圈
             await circleAgg.AddMemberAsync(memberInfo);
@@ -145,7 +145,7 @@ namespace tdb.ddd.relationships.application.V1
         /// 解散人际圈
         /// </summary>
         /// <param name="req">请求参数</param>
-        /// <returns>新人员ID</returns>
+        /// <returns></returns>
         public async Task<TdbRes<bool>> DeleteCircleAsync(TdbOperateReq<DeleteCircleReq> req)
         {
             //参数
@@ -239,7 +239,7 @@ namespace tdb.ddd.relationships.application.V1
             }
 
             //生成成员信息
-            var memberInfo = new MemberEntity(personnelInfo.ID, param.RoleCode, param.Identity ?? "");
+            var memberInfo = new MemberEntity(circleAgg.ID, personnelInfo.ID, param.RoleCode, param.Identity ?? "", req.OperatorID, req.OperationTime);
 
             //开启事务
             TdbRepositoryTran.BeginTranOnAsyncFunc();
@@ -334,7 +334,7 @@ namespace tdb.ddd.relationships.application.V1
                 }
 
                 //生成成员信息
-                var memberInfo = new MemberEntity(personnelID, EnmRole.Member, "");
+                var memberInfo = new MemberEntity(circleAgg.ID, personnelID, EnmRole.Member, "", req.OperatorID, req.OperationTime);
 
                 //添加成员
                 await circleAgg.AddMemberAsync(memberInfo);
@@ -528,7 +528,7 @@ namespace tdb.ddd.relationships.application.V1
             var myMemberInfo = await circleAgg.GetMemberAsync(myPersonnelInfo.ID) ?? throw new TdbException($"获取我的成员信息为空【UserID={req.OperatorID}，CircleID={circleAgg.ID}】");
 
             //判断我是否有管理员权限
-            if (myMemberInfo?.RoleCode != EnmRole.Admin)
+            if (myMemberInfo.RoleCode != EnmRole.Admin)
             {
                 return new TdbRes<CreateInvitationCodeRes>(TdbComResMsg.InsufficientPermissions, null);
             }
@@ -668,7 +668,7 @@ namespace tdb.ddd.relationships.application.V1
             }
 
             //生成成员信息
-            var memberInfo = new MemberEntity(myPersonnelInfo.ID, EnmRole.Member, "");
+            var memberInfo = new MemberEntity(circleAgg.ID, myPersonnelInfo.ID, EnmRole.Member, "", req.OperatorID, req.OperationTime);
 
             //开启事务
             TdbRepositoryTran.BeginTranOnAsyncFunc();

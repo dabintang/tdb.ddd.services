@@ -18,11 +18,6 @@ namespace tdb.ddd.relationships.domain.contracts.Photo
         public long PersonnelID { get; set; }
 
         /// <summary>
-        /// [可选]人际圈ID
-        /// </summary>
-        public long? CircleID { get; set; }
-
-        /// <summary>
         /// 排序字段（1：照片ID）
         /// </summary>
         public enum EnmSortField

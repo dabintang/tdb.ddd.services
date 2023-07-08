@@ -17,7 +17,7 @@ namespace tdb.ddd.relationships.application.contracts.Remote.DTO.Account
         /// <summary>
         /// [必须]用户ID
         /// </summary>
-        [TdbHashIDModelBinder]
+        [TdbHashIDJsonConverter]
         [TdbRequired("用户编号")]
         public long UserID { get; set; }
     }
@@ -92,6 +92,7 @@ namespace tdb.ddd.relationships.application.contracts.Remote.DTO.Account
         /// <summary>
         /// 创建者ID
         /// </summary>
+        [TdbHashIDJsonConverter]
         public long CreatorID { get; set; }
 
         /// <summary>
@@ -102,6 +103,7 @@ namespace tdb.ddd.relationships.application.contracts.Remote.DTO.Account
         /// <summary>
         /// 更新者ID
         /// </summary>
+        [TdbHashIDJsonConverter]
         public long UpdaterID { get; set; }
 
         /// <summary>
