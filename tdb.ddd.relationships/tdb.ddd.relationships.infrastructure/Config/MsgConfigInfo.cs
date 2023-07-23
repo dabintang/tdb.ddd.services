@@ -49,6 +49,16 @@ namespace tdb.ddd.relationships.infrastructure.Config
         /// </summary>
         public TdbResMsgInfo CreatorMustBeAdmin { get; set; }
 
+        /// <summary>
+        /// 人员已在圈内
+        /// </summary>
+        public TdbResMsgInfo PersonnelHadInCircle { get; set; }
+
+        /// <summary>
+        /// 人员无该照片
+        /// </summary>
+        public TdbResMsgInfo PersonnelHaveNotThePhoto { get; set; }
+
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
     }
 }

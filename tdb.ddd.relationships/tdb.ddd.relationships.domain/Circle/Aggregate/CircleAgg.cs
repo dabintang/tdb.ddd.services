@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using tdb.ddd.contracts;
 using tdb.ddd.domain;
@@ -46,8 +47,14 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         public string Name { get; set; } = "";
 
         /// <summary>
+        /// 图标ID
+        /// </summary>
+        public long? ImageID { get; set; }
+
+        /// <summary>
         /// 成员数上限
         /// </summary>
+        [JsonInclude]
         public int MaxMembers { get; internal set; } = 200;
 
         /// <summary>
@@ -92,7 +99,7 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         /// 添加成员
         /// </summary>
         /// <param name="entity">成员信息</param>
-        public async Task AddMemberAsync(MemberEntity entity)
+        public async Task AddMemberAndSaveAsync(MemberEntity entity)
         {
             await this.Repos.SaveMemberAsync(entity);
         }
@@ -101,7 +108,7 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         /// 移出成员
         /// </summary>
         /// <param name="personnelID">人员ID</param>
-        public async Task RemoveMemberAsync(long personnelID)
+        public async Task RemoveMemberAndSaveAsync(long personnelID)
         {
             //获取成员信息
             var memberInfo = await this.Repos.GetMemberAsync(this.ID, personnelID);
@@ -115,7 +122,7 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         /// <summary>
         /// 移出所有成员
         /// </summary>
-        public async Task RemoveAllMembersAsync()
+        public async Task RemoveAllMembersAndSaveAsync()
         {
             //删除所有成员
             await this.Repos.DeleteAllMembersAsync(this.ID);
@@ -128,7 +135,7 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         /// <param name="roleCode">角色编码</param>
         /// <returns></returns>
         /// <exception cref="TdbException"></exception>
-        public async Task<TdbRes<bool>> SetMemberRole(long personnelID, EnmRole roleCode)
+        public async Task<TdbRes<bool>> SetMemberRoleAndSaveAsync(long personnelID, EnmRole roleCode)
         {
             //获取成员信息
             var memberInfo = await this.Repos.GetMemberAsync(this.ID, personnelID);
@@ -150,7 +157,7 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         /// </summary>
         /// <param name="personnelID">人员ID</param>
         /// <param name="identity">身份</param>
-        public async Task<TdbRes<bool>> SetMemberIdentity(long personnelID, string identity)
+        public async Task<TdbRes<bool>> SetMemberIdentityAndSaveAsync(long personnelID, string identity)
         {
             //获取成员信息
             var memberInfo = await this.Repos.GetMemberAsync(this.ID, personnelID);

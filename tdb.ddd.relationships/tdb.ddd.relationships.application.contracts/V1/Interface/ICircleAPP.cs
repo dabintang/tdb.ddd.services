@@ -85,13 +85,6 @@ namespace tdb.ddd.relationships.application.contracts.V1.Interface
         Task<TdbRes<CreateInvitationCodeRes>> CreateInvitationCodeAsync(TdbOperateReq<CreateInvitationCodeReq> req);
 
         /// <summary>
-        /// 读取加入人际圈的邀请码信息
-        /// </summary>
-        /// <param name="req">请求参数</param>
-        /// <returns></returns>
-        Task<TdbRes<ReadInvitationCodeRes>> ReadInvitationCodeAsync(TdbOperateReq<ReadInvitationCodeReq> req);
-
-        /// <summary>
         /// 通过邀请码加入人际圈
         /// </summary>
         /// <param name="req">请求参数</param>

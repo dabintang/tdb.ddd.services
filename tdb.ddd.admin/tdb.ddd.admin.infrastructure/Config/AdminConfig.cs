@@ -27,7 +27,7 @@ namespace tdb.ddd.admin.infrastructure.Config
             JsonConfigService.ConfigReload += RefreshAppConfig;
 
             //共用配置服务
-            CommonConfigService = TdbConfigFactory.CreateConsulConfig(App.Consul.IP, App.Consul.Port, CommonConfigInfo.PrefixKey);
+            CommonConfigService = TdbConfigFactory.CreateConsulConfig(App.Consul.IP, App.Consul.Port, $"{App.Server.Environment}.{CommonConfigInfo.PrefixKey}");
             //读取共用配置信息
             ReadCommonConfigInfo();
             //定时重新读取共用配置信息

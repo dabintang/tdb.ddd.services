@@ -28,14 +28,14 @@ namespace tdb.ddd.relationships.infrastructure.Config
             JsonConfigService!.ConfigReload += RefreshAppConfigInfo;
 
             //共用配置服务
-            CommonConfigService = TdbConfigFactory.CreateConsulConfig(App.Consul.IP, App.Consul.Port, CommonConfigInfo.PrefixKey);
+            CommonConfigService = TdbConfigFactory.CreateConsulConfig(App.Consul.IP, App.Consul.Port, $"{App.Server.Environment}.{CommonConfigInfo.PrefixKey}");
             //读取共用配置信息
             ReadCommonConfigInfo();
             //定时重新读取共用配置信息
             RefreshCommonConfigInfo();
 
             //分布式配置
-            DistributedConfigService = TdbConfigFactory.CreateConsulConfig(App.Consul.IP, App.Consul.Port, DistributedConfigInfo.PrefixKey);
+            DistributedConfigService = TdbConfigFactory.CreateConsulConfig(App.Consul.IP, App.Consul.Port, $"{App.Server.Environment}.{DistributedConfigInfo.PrefixKey}");
             //读取分布式配置信息
             ReadDistributedConfigInfo();
             //定时重新读取分布式配置信息

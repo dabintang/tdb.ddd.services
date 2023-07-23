@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using tdb.ddd.domain;
 using tdb.ddd.relationships.domain.contracts.Enum;
@@ -19,26 +20,31 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         /// <summary>
         /// 人际圈ID
         /// </summary>
+        [JsonInclude]
         public long CircleID { get; internal set; }
 
         /// <summary>
         /// 人员ID
         /// </summary>
+        [JsonInclude]
         public long PersonnelID { get; internal set; }
 
         /// <summary>
         /// 角色编码
         /// </summary>
+        [JsonInclude]
         public EnmRole RoleCode { get; internal set; }
 
         /// <summary>
         /// 圈内身份
         /// </summary>
+        [JsonInclude]
         public string Identity { get; internal set; } = "";
 
         /// <summary>
         /// 创建信息
         /// </summary>
+        [JsonInclude]
         public CreateInfoValueObject CreateInfo { get; internal set; } = new CreateInfoValueObject();
 
         #endregion

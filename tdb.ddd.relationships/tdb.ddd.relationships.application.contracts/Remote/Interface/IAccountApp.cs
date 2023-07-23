@@ -15,6 +15,13 @@ namespace tdb.ddd.relationships.application.contracts.Remote.Interface
     public interface IAccountApp : ITdbIOCScoped
     {
         /// <summary>
+        /// 获取当前用户信息
+        /// </summary>
+        /// <param name="authInfo">身份认证信息</param>
+        /// <returns></returns>
+        Task<UserInfoRes?> GetCurrentUserInfo(AuthenticationHeaderValue? authInfo);
+
+        /// <summary>
         /// 根据用户ID获取用户信息
         /// </summary>
         /// <param name="userID">用户ID</param>

@@ -16,6 +16,7 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Circle
         /// [必须]邀请码
         /// </summary>
         [TdbRequired("邀请码")]
+        [TdbStringLength("邀请码", 255)]
         public string Code { get; set; } = "";
     }
 }

@@ -83,7 +83,7 @@ namespace tdb.ddd.relationships.webapi.Controllers.V1
         /// <returns></returns>
         [HttpPost]
         [TdbAPILog]
-        public async Task<TdbRes<bool>> DeleteCircle(DeleteCircleReq req)
+        public async Task<TdbRes<bool>> DeleteCircle([FromBody] DeleteCircleReq req)
         {
             //参数
             var reqOpe = this.CreateTdbOperateReq(req);
@@ -100,7 +100,7 @@ namespace tdb.ddd.relationships.webapi.Controllers.V1
         /// <returns></returns>
         [HttpPost]
         [TdbAPILog]
-        public async Task<TdbRes<bool>> AddMember(AddMemberReq req)
+        public async Task<TdbRes<bool>> AddMember([FromBody] AddMemberReq req)
         {
             //参数
             var reqOpe = this.CreateTdbOperateReq(req);
@@ -111,5 +111,108 @@ namespace tdb.ddd.relationships.webapi.Controllers.V1
         }
 
         #endregion
+
+
+        /// <summary>
+        /// 批量添加成员
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        [HttpPost]
+        [TdbAPILog]
+        public async Task<TdbRes<BatchAddMemberRes>> BatchAddMember([FromBody] BatchAddMemberReq req)
+        {
+            //参数
+            var reqOpe = this.CreateTdbOperateReq(req);
+
+            //批量添加成员
+            var res = await this.circleAPP.BatchAddMemberAsync(reqOpe);
+            return res;
+        }
+
+        /// <summary>
+        /// 移出成员
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        [HttpPost]
+        [TdbAPILog]
+        public async Task<TdbRes<bool>> RemoveMember([FromBody] RemoveMemberReq req)
+        {
+            //参数
+            var reqOpe = this.CreateTdbOperateReq(req);
+
+            //移出成员
+            var res = await this.circleAPP.RemoveMemberAsync(reqOpe);
+            return res;
+        }
+
+        /// <summary>
+        /// 设置成员角色
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        [HttpPost]
+        [TdbAPILog]
+        public async Task<TdbRes<bool>> SetMemberRole([FromBody] SetMemberRoleReq req)
+        {
+            //参数
+            var reqOpe = this.CreateTdbOperateReq(req);
+
+            //设置成员角色
+            var res = await this.circleAPP.SetMemberRoleAsync(reqOpe);
+            return res;
+        }
+
+        /// <summary>
+        /// 生成加入人际圈的邀请码
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        [HttpPost]
+        [TdbAPILog]
+        public async Task<TdbRes<CreateInvitationCodeRes>> CreateInvitationCode([FromBody] CreateInvitationCodeReq req)
+        {
+            //参数
+            var reqOpe = this.CreateTdbOperateReq(req);
+
+            //生成加入人际圈的邀请码
+            var res = await this.circleAPP.CreateInvitationCodeAsync(reqOpe);
+            return res;
+        }
+
+        /// <summary>
+        /// 通过邀请码加入人际圈
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        [HttpPost]
+        [TdbAPILog]
+        public async Task<TdbRes<bool>> JoinByInvitationCode([FromBody] JoinByInvitationCodeReq req)
+        {
+            //参数
+            var reqOpe = this.CreateTdbOperateReq(req);
+
+            //通过邀请码加入人际圈
+            var res = await this.circleAPP.JoinByInvitationCodeAsync(reqOpe);
+            return res;
+        }
+
+        /// <summary>
+        /// 退出人际圈
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        [HttpPost]
+        [TdbAPILog]
+        public async Task<TdbRes<bool>> WithdrawCircle([FromBody] WithdrawCircleReq req)
+        {
+            //参数
+            var reqOpe = this.CreateTdbOperateReq(req);
+
+            //退出人际圈
+            var res = await this.circleAPP.WithdrawCircleAsync(reqOpe);
+            return res;
+        }
     }
 }

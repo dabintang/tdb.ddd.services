@@ -27,5 +27,13 @@
   "CreatorMustBeAdmin": {
     "Code": 11007,
     "Msg": "创建者必须为管理员"
+  },
+  "PersonnelHadInCircle": {
+    "Code": 11008,
+    "Msg": "人员已在圈内"
+  },
+  "PersonnelHaveNotThePhoto": {
+    "Code": 11009,
+    "Msg": "人员无该照片"
   }
 }

@@ -119,7 +119,7 @@ namespace tdb.ddd.admin.application.V1
                 JsonPath = jsonPath,
                 ConsulIP = configConfigInfo.IP,
                 ConsulPort = configConfigInfo.Port,
-                PrefixKey = prefixKey
+                PrefixKey = $"{infrastructure.Config.AdminConfig.App.Server.Environment}.{prefixKey}"
             };
             await agg.RestoreConfigAsync();
 

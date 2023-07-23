@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.application.contracts;
 using tdb.ddd.contracts;
-using tdb.ddd.relationships.application.contracts.V1.DTO.Personnel;
 using tdb.ddd.relationships.application.contracts.V1.DTO.Report;
 using tdb.ddd.relationships.application.contracts.V1.Interface;
 using tdb.ddd.relationships.domain.contracts.Enum;
@@ -65,7 +64,7 @@ namespace tdb.ddd.relationships.application.V1
                 MaxMembers = ci.MaxMembers,
                 MembersCount = SqlFunc.Subqueryable<CircleMemberInfo>().Where(subCmi => ci.ID == subCmi.CircleID).Count(),
                 CreatorID = ci.CreatorID
-            }).ToOffsetPageAsync(req.PageNO, req.PageSize, total);
+            }).Distinct().ToOffsetPageAsync(req.PageNO, req.PageSize, total);
 
             return new TdbPageRes<QueryCircleListRes>(TdbComResMsg.Success, lstInfo, total);
         }

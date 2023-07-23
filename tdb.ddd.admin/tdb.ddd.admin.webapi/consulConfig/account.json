@@ -7,11 +7,11 @@
   },
   //数据库配置
   "DB": {
-    "ConnStr": "server=127.0.0.1;database=tdb.ddd.account;user id=root;password=abc123456;Pooling=True;Allow User Variables=True;" //连接字符串
+    "ConnStr": "server=127.0.0.1;database=demo.tdb.ddd.account;user id=mylifedemo;password=Abc123456.;Pooling=True;Allow User Variables=True;" //连接字符串
   },
   //redis配置
   "Redis": {
-    "ConnStr": [ "127.0.0.1,defaultDatabase=1,idleTimeout=30000,poolsize=10,prefix=Account_" ] //连接字符串
+    "ConnStr": [ "127.0.0.1,defaultDatabase=0,idleTimeout=30000,poolsize=10,prefix=Account_" ] //连接字符串
   },
   //初始化数据配置
   "InitData": {

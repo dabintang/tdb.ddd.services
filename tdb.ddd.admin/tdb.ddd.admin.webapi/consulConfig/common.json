@@ -2,28 +2,28 @@
   //口令
   "Token": {
     "Issuer": "tdb.ddd", //发行者
-    "SecretKey": "12345678902234567890323456789042" //秘钥
+    "SecretKey": "demo.123456789022345678903234567" //秘钥
   },
   //账户服务
   "AccountService": {
-    "WebapiRootURL": "http://127.0.0.1:31010" //webapi根地址
+    "WebapiRootURL": "http://127.0.0.1:30010" //webapi根地址
   },
   //文件服务
   "FilesService": {
-    "WebapiRootURL": "http://127.0.0.1:31020" //webapi根地址
+    "WebapiRootURL": "http://127.0.0.1:30020" //webapi根地址
   },
   //运维服务
   "AdminService": {
-    "WebapiRootURL": "http://127.0.0.1:31030" //webapi根地址
+    "WebapiRootURL": "http://127.0.0.1:30030" //webapi根地址
   },
   //HashID
   "HashID": {
-    "Salt": "tangdabinok"
+    "Salt": "demo.tdb.ddd.ok"
   },
   "WhiteListIP": [ "127.0.0.1", "localhost", "::ffff:127.0.0.1" ], //白名单IP
   //cap
   "CAP": {
     "RedisConnStr": "127.0.0.1,defaultDatabase=0,password=", //redis链接字符串(StackExchange.Redis)
-    "DBConnStr": "server=127.0.0.1;database=tdb.ddd.cap;user id=root;password=abc123456;Pooling=True;Allow User Variables=True;" //数据库链接字符串(mysql)
+    "DBConnStr": "server=127.0.0.1;database=demo.tdb.ddd.cap;user id=mylifedemo;password=Abc123456.;Pooling=True;Allow User Variables=True;" //数据库链接字符串(mysql)
   }
 }

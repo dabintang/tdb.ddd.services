@@ -28,6 +28,12 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Circle
         public string Name { get; set; } = "";
 
         /// <summary>
+        /// [可选]图标ID
+        /// </summary>
+        [TdbHashIDJsonConverter]
+        public long? ImageID { get; set; }
+
+        /// <summary>
         /// [可选]备注
         /// </summary>
         [TdbStringLength("备注", 255)]

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 using System.Security.Claims;
 using tdb.ddd.contracts;
 using tdb.ddd.domain;
@@ -56,7 +57,14 @@ namespace tdb.ddd.webapi
 
             //获取客户端IP
             var filterContext = context.Resource as DefaultHttpContext;
-            var clientIP = filterContext?.HttpContext.GetClientIP();
+            var clientIP = filterContext?.HttpContext.GetClientIP() ?? "";
+
+            //如果是本地ip（服务器间调用），直接通过
+            if ((new List<string>() { "127.0.0.1", "localhost", "::ffff:127.0.0.1" }).Contains(clientIP))
+            {
+                context.Succeed(requirement);
+                return Task.CompletedTask;
+            }
 
             //判断IP是否一致
             if (clientIP == tokenIP)
@@ -66,7 +74,7 @@ namespace tdb.ddd.webapi
             }
 
             context.Fail(new AuthorizationFailureReason(this, $"客户端IP与token中的不一致。{GetUserInfo(context.User)}"));
-            TdbLogger.Ins.Warn("客户端IP与token中的不一致");
+            TdbLogger.Ins.Warn($"客户端IP[{clientIP}]与token[{tokenIP}]中的不一致");
             return Task.CompletedTask;
         }
 

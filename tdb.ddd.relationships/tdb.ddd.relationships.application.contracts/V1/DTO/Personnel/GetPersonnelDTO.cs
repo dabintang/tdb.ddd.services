@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.application.contracts;
+using tdb.ddd.contracts;
 
 namespace tdb.ddd.relationships.application.contracts.V1.DTO.Personnel
 {
@@ -25,5 +26,10 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Personnel
     /// </summary>
     public class GetPersonnelRes : PersonnelInfoRes
     {
+        /// <summary>
+        /// 照片ID集合
+        /// </summary>
+        [TdbHashIDListJsonConverter]
+        public List<long> LstPhotoID { get; set; } = new List<long>();
     }
 }

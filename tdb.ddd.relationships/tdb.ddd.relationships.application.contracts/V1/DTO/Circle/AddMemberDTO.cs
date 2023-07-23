@@ -38,6 +38,7 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Circle
         /// <summary>
         /// [可选]圈内身份
         /// </summary>
+        [TdbStringLength("圈内身份", 32)]
         public string? Identity { get; set; }
     }
 }

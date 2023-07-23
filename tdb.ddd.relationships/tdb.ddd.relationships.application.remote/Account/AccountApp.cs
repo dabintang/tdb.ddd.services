@@ -21,6 +21,18 @@ namespace tdb.ddd.relationships.application.remote.Account
         #region 实现接口
 
         /// <summary>
+        /// 获取当前用户信息
+        /// </summary>
+        /// <param name="authInfo">身份认证信息</param>
+        /// <returns></returns>
+        public async Task<UserInfoRes?> GetCurrentUserInfo(AuthenticationHeaderValue? authInfo)
+        {
+            var url = GetFullUrl("/tdb.ddd.account/v1/User/GetCurrentUserInfo");
+            var res = await TdbHttpClient.GetAsync<TdbRes<UserInfoRes>>(url, null, authInfo);
+            return res?.Data;
+        }
+
+        /// <summary>
         /// 根据用户ID获取用户信息
         /// </summary>
         /// <param name="userID">用户ID</param>

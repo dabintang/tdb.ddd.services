@@ -2,10 +2,11 @@
 -- ----------------------------
 -- Table structure for circle_info
 -- ----------------------------
---DROP TABLE IF EXISTS `circle_info`;
+-- DROP TABLE IF EXISTS `circle_info`;
 CREATE TABLE `circle_info`  (
   `ID` bigint NOT NULL COMMENT '人际圈ID',
   `Name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '名称',
+  `ImageID` bigint NULL DEFAULT NULL COMMENT '图标ID',
   `MaxMembers` int NOT NULL COMMENT '成员数上限',
   `Remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '备注',
   `CreatorID` bigint NOT NULL COMMENT '创建者ID',
@@ -18,7 +19,7 @@ CREATE TABLE `circle_info`  (
 -- ----------------------------
 -- Table structure for circle_member_info
 -- ----------------------------
---DROP TABLE IF EXISTS `circle_member_info`;
+-- DROP TABLE IF EXISTS `circle_member_info`;
 CREATE TABLE `circle_member_info`  (
   `ID` bigint NOT NULL COMMENT '人际圈成员ID',
   `CircleID` bigint NOT NULL COMMENT '人际圈ID',
@@ -34,7 +35,7 @@ CREATE TABLE `circle_member_info`  (
 -- ----------------------------
 -- Table structure for personnel_info
 -- ----------------------------
---DROP TABLE IF EXISTS `personnel_info`;
+-- DROP TABLE IF EXISTS `personnel_info`;
 CREATE TABLE `personnel_info`  (
   `ID` bigint NOT NULL COMMENT '人员ID',
   `Name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '姓名',
@@ -57,7 +58,7 @@ CREATE TABLE `personnel_info`  (
 -- ----------------------------
 -- Table structure for photo_info
 -- ----------------------------
---DROP TABLE IF EXISTS `photo_info`;
+-- DROP TABLE IF EXISTS `photo_info`;
 CREATE TABLE `photo_info`  (
   `ID` bigint NOT NULL COMMENT '照片文件ID',
   `PersonnelID` bigint NOT NULL COMMENT '人员ID',

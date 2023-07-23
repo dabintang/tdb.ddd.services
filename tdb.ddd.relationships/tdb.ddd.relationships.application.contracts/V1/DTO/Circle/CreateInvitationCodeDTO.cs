@@ -39,6 +39,16 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Circle
         public string Code { get; set; } = "";
 
         /// <summary>
+        /// 人际圈名称
+        /// </summary>
+        public string CircleName { get; set; } = "";
+
+        /// <summary>
+        /// 邀请人姓名
+        /// </summary>
+        public string InviterName { get; set; } = "";
+
+        /// <summary>
         /// 过期时间点
         /// </summary>
         public DateTime ExpireAt { get; set; }

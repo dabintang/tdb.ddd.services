@@ -140,6 +140,40 @@ namespace tdb.ddd.relationships.webapi.Controllers.V1
             return res;
         }
 
+        /// <summary>
+        /// 删除人员照片
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        [HttpPost]
+        [TdbAPILog]
+        public async Task<TdbRes<bool>> DeletePersonnelPhoto([FromBody] DeletePersonnelPhotoReq req)
+        {
+            //参数
+            var reqOpe = this.CreateTdbOperateReq(req);
+
+            //删除人员照片
+            var res = await this.personnelAPP.DeletePersonnelPhotoAsync(reqOpe);
+            return res;
+        }
+
+        /// <summary>
+        /// 设置人员头像照片
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        [HttpPost]
+        [TdbAPILog]
+        public async Task<TdbRes<bool>> SetHeadImg([FromBody] SetHeadImgReq req)
+        {
+            //参数
+            var reqOpe = this.CreateTdbOperateReq(req);
+
+            //设置人员头像照片
+            var res = await this.personnelAPP.SetHeadImgAsync(reqOpe);
+            return res;
+        }
+
         #endregion
     }
 }

@@ -1,0 +1,141 @@
+{
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			// uni-ui 规则如下配置
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+		}
+	},
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+		    "path" : "pages/login/login",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "登录"
+		    }
+		}
+		,{
+		    "path" : "pages/circle/circleAdd",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "添加人际圈"
+		    }
+		}
+		,{
+		    "path" : "pages/circle/circleDetail",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "人际圈详情"
+		    }
+		}
+		,{
+		    "path" : "pages/circle/circleList",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "人际圈",
+		        "enablePullDownRefresh": true,
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [{
+							"text": "\ue409",
+							"tag": "plus",
+							"fontSrc": "/static/uni/uni.ttf",
+							"fontSize": "27px",
+							"color": "#2B85E4"
+						}]
+					}
+				}
+		    }
+		}
+		,{
+		    "path" : "pages/circle/memberDetail",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false
+		    }
+		}
+		,{
+		    "path" : "pages/circle/memberList",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false
+		    }
+		}
+	    ,{
+            "path" : "pages/my/my",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+        }
+		,{
+		    "path" : "pages/personnel/personnelDetail",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false
+		    }
+		}
+		,{
+		    "path" : "pages/personnel/personnelList",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false
+		    }
+		}
+        ,{
+            "path" : "pages/photo/photo",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+        }
+        ,{
+            "path" : "pages/error/error",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
+	"tabBar": {
+		"color": "#909399",
+		"selectedColor": "#1296db",
+		"backgroundColor": "#FFFFFF",
+		"borderStyle": "black",
+		"list": [{
+				"pagePath": "pages/circle/circleList",
+				"iconPath": "static/img/circle.png",
+				"selectedIconPath": "static/img/circle-selected.png",
+				"text": "圈子"
+			},
+			{
+				"pagePath": "pages/personnel/personnelList",
+				"iconPath": "static/img/personnel.png",
+				"selectedIconPath": "static/img/personnel-selected.png",
+				"text": "人员"
+			},
+			{
+				"pagePath": "pages/my/my",
+				"iconPath": "static/img/my.png",
+				"selectedIconPath": "static/img/my-selected.png",
+				"text": "我的"
+			}
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"uniIdRouter": {}
+}

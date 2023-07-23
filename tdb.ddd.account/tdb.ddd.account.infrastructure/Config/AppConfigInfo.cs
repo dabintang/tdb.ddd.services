@@ -37,6 +37,11 @@ namespace tdb.ddd.account.infrastructure.Config
             /// 服务ID（0-127）
             /// </summary>
             public int Seq { get; set; }
+
+            /// <summary>
+            /// 环境
+            /// </summary>
+            public string Environment { get; set; }
         }
 
         /// <summary>

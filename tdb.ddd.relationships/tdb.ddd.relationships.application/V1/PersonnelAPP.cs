@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using tdb.common;
 using tdb.ddd.application.contracts;
 using tdb.ddd.contracts;
 using tdb.ddd.domain;
@@ -46,9 +47,12 @@ namespace tdb.ddd.relationships.application.V1
             {
                 return new TdbRes<GetPersonnelRes>(RelationshipsConfig.Msg.PersonnelNotExist, null);
             }
+            //获取人员照片ID
+            var lstPhotoID = await personnelAgg.GetPhotoIDsAsync();
 
             //类型转换
             var res = DTOMapper.Map<PersonnelAgg, GetPersonnelRes>(personnelAgg);
+            res.LstPhotoID = lstPhotoID;
 
             return TdbRes.Success(res);
         }
@@ -90,10 +94,10 @@ namespace tdb.ddd.relationships.application.V1
             {
                 return TdbRes.Success(new CreateMyPersonnelInfoRes() { ID = personnelAgg.ID, IsNew = false });
             }
-
+            TdbLogger.Ins.Debug(req.AuthenticationInfo.SerializeJson());
             //获取我的用户信息 
             var accountApp = TdbIOC.GetService<IAccountApp>()!;
-            var userInfo = await accountApp.GetUserInfoByIDAsync(req.OperatorID, req.AuthenticationInfo) ?? throw new TdbException("从账号微服务获取我的用户信息为空");
+            var userInfo = await accountApp.GetCurrentUserInfo(req.AuthenticationInfo) ?? throw new TdbException("从账号微服务获取我的用户信息为空");
 
             //生成人员ID
             var personnelID = RelationshipsUniqueIDHelper.CreateID();
@@ -251,7 +255,7 @@ namespace tdb.ddd.relationships.application.V1
                 var circleAgg = await circleService.GetByIDAsync(circleID);
                 if (circleAgg is not null)
                 {
-                    await circleAgg.RemoveMemberAsync(personnelAgg.ID);
+                    await circleAgg.RemoveMemberAndSaveAsync(personnelAgg.ID);
                 }
             }
 
@@ -302,10 +306,19 @@ namespace tdb.ddd.relationships.application.V1
                 return new TdbRes<bool>(RelationshipsConfig.Msg.PersonnelNotExist, false);
             }
 
+            //获取人员现有的照片ID
+            var lstHadPhotoID = await personnelAgg.GetPhotoIDsAsync();
+
             //照片聚合
             var lstPhotoAgg = new List<PhotoAgg>();
             foreach (var photoID in param.LstPhotoID)
             {
+                if (lstHadPhotoID.Contains(photoID))
+                {
+                    //已有该照片，跳过
+                    continue;
+                }
+
                 var photoAgg = new PhotoAgg()
                 {
                     ID = photoID,
@@ -326,6 +339,112 @@ namespace tdb.ddd.relationships.application.V1
                 //保存照片通知
                 PublishOperatePhotoMsg(photoAgg, PhotoOperationNotification.EnmOperationType.Save, req);
             }
+
+            //提交事务
+            TdbRepositoryTran.CommitTran();
+
+            return TdbRes.Success(true);
+        }
+
+        /// <summary>
+        /// 删除人员照片
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        public async Task<TdbRes<bool>> DeletePersonnelPhotoAsync(TdbOperateReq<DeletePersonnelPhotoReq> req)
+        {
+            //参数
+            var param = req.Param;
+
+            //人员领域服务
+            var personnelService = new PersonnelService();
+
+            //获取人员聚合
+            var personnelAgg = await personnelService.GetByIDAsync(param.PersonnelID);
+            if (personnelAgg is null)
+            {
+                return new TdbRes<bool>(RelationshipsConfig.Msg.PersonnelNotExist, false);
+            }
+
+            //获取人员现有的照片ID
+            var lstHadPhotoID = await personnelAgg.GetPhotoIDsAsync();
+
+            //照片领域服务
+            var photoService = new PhotoService();
+
+            //开启事务
+            TdbRepositoryTran.BeginTranOnAsyncFunc();
+
+            //照片聚合
+            var lstPhotoAgg = new List<PhotoAgg>();
+            foreach (var photoID in param.LstPhotoID)
+            {
+                if (lstHadPhotoID.Contains(photoID) == false)
+                {
+                    //人员无该照片，跳过
+                    continue;
+                }
+
+                var photoAgg = await photoService.GetByIDAsync(photoID);
+                if (photoAgg is not null)
+                {
+                    lstPhotoAgg.Add(photoAgg);
+                }
+            }
+
+            //删除照片
+            foreach (var photoAgg in lstPhotoAgg)
+            {
+                await photoAgg.DeleteAsync();
+
+                //保存照片通知
+                PublishOperatePhotoMsg(photoAgg, PhotoOperationNotification.EnmOperationType.Delete, req);
+            }
+
+            //提交事务
+            TdbRepositoryTran.CommitTran();
+
+            return TdbRes.Success(true);
+        }
+
+        /// <summary>
+        /// 设置人员头像照片
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        public async Task<TdbRes<bool>> SetHeadImgAsync(TdbOperateReq<SetHeadImgReq> req)
+        {
+            //参数
+            var param = req.Param;
+
+            //人员领域服务
+            var personnelService = new PersonnelService();
+
+            //开启事务
+            TdbRepositoryTran.BeginTranOnAsyncFunc();
+
+            //获取人员聚合
+            var personnelAgg = await personnelService.GetByIDAsync(param.PersonnelID);
+            if (personnelAgg is null)
+            {
+                return new TdbRes<bool>(RelationshipsConfig.Msg.PersonnelNotExist, false);
+            }
+
+            if (param.HeadImgID is not null)
+            {
+                //获取人员现有的照片ID
+                var lstHadPhotoID = await personnelAgg.GetPhotoIDsAsync();
+                if (lstHadPhotoID.Contains(param.HeadImgID.Value) == false)
+                {
+                    return new TdbRes<bool>(RelationshipsConfig.Msg.PersonnelHaveNotThePhoto, false);
+                }
+            }
+
+            //设置头像照片ID
+            personnelAgg.HeadImgID = param.HeadImgID;
+
+            //保存
+            await personnelAgg.SaveAsync();
 
             //提交事务
             TdbRepositoryTran.CommitTran();

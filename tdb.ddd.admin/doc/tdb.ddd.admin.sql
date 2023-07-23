@@ -4,7 +4,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for operation_record
 -- ----------------------------
---DROP TABLE IF EXISTS `operation_record`;
+-- DROP TABLE IF EXISTS `operation_record`;
 CREATE TABLE `operation_record`  (
   `ID` bigint NOT NULL COMMENT '记录ID',
   `OperationTypeCode` smallint NOT NULL COMMENT '操作类型编号',

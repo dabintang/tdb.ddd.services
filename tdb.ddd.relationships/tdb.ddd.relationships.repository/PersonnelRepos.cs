@@ -81,7 +81,7 @@ namespace tdb.ddd.relationships.repository
         /// <returns></returns>
         public async Task<List<long>> GetCircleIDsAsync(long personnelID)
         {
-            var list = await this.Change<CircleMemberInfo>().AsQueryable().Where(m => m.PersonnelID == personnelID).Select(m => m.ID).ToListAsync();
+            var list = await this.Change<CircleMemberInfo>().AsQueryable().Where(m => m.PersonnelID == personnelID).Select(m => m.CircleID).ToListAsync();
             return list ?? new List<long>();
         }
 

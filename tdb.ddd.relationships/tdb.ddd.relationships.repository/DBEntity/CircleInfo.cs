@@ -26,6 +26,11 @@ namespace tdb.ddd.relationships.repository.DBEntity
         public string Name { get; set; } = "";
 
         /// <summary>
+        /// 图标ID
+        /// </summary>
+        public long? ImageID { get; set; }
+
+        /// <summary>
         /// 成员数上限
         /// </summary>
         public int MaxMembers { get; set; }

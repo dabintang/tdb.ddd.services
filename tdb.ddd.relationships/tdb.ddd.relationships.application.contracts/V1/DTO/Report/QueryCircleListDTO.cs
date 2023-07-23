@@ -22,6 +22,7 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Report
         /// <summary>
         /// [可选]人际圈名称（模糊匹配）
         /// </summary>
+        [TdbStringLength("人际圈名称", 32)]
         public string? CircleName { get; set; }
 
         /// <summary>

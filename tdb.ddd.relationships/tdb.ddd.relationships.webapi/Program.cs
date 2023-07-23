@@ -26,7 +26,7 @@ builder.RunWebApp(option =>
     {
         o.UseRedis(RelationshipsConfig.Common.CAP.RedisConnStr);
         o.UseMySql(RelationshipsConfig.Common.CAP.DBConnStr);
-        o.DefaultGroupName = "account";
+        o.DefaultGroupName = "relationships";
     });
     //SqlSugar（IOC模式）
     option.SetupSqlSugar = () => builder.Services.AddTdbSqlSugar(c =>
@@ -52,7 +52,7 @@ builder.RunWebApp(option =>
     option.SwaggerOption.EnmSwagger = TdbWebAppBuilderOption.TdbEnmSwagger.ApiVer;
     option.SwaggerOption.SetupSwagger = (o) =>
     {
-        o.ServiceName = "账户服务";
+        o.ServiceName = "人际圈服务";
         o.LstXmlCommentsFileName.Add("tdb.ddd.relationships.domain.contracts.xml");
         o.LstXmlCommentsFileName.Add("tdb.ddd.relationships.application.contracts.xml");
         o.LstXmlCommentsFileName.Add("tdb.ddd.relationships.webapi.xml");
