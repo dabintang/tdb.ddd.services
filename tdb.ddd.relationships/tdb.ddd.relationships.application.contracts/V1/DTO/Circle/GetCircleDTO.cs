@@ -43,6 +43,12 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Circle
         public int MaxMembers { get; set; }
 
         /// <summary>
+        /// 人际圈图标ID
+        /// </summary>
+        [TdbHashIDJsonConverter]
+        public long? ImageID { get; set; }
+
+        /// <summary>
         /// 备注
         /// </summary>
         public string Remark { get; set; } = "";

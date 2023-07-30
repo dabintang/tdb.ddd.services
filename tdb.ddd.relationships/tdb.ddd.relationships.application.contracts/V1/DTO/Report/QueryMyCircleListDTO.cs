@@ -58,6 +58,12 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Report
         public string CircleName { get; set; } = "";
 
         /// <summary>
+        /// 人际圈图标ID
+        /// </summary>
+        [TdbHashIDJsonConverter]
+        public long? ImageID { get; set; }
+
+        /// <summary>
         /// 成员数上限
         /// </summary>
         public int MaxMembers { get; set; }

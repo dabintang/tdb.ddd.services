@@ -28,7 +28,7 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Circle
         public string Name { get; set; } = "";
 
         /// <summary>
-        /// [可选]图标ID
+        /// [可选]人际圈图标ID
         /// </summary>
         [TdbHashIDJsonConverter]
         public long? ImageID { get; set; }

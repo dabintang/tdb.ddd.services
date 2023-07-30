@@ -61,6 +61,7 @@ namespace tdb.ddd.relationships.application.V1
             {
                 ID = ci.ID,
                 CircleName = ci.Name,
+                ImageID = ci.ImageID,
                 MaxMembers = ci.MaxMembers,
                 MembersCount = SqlFunc.Subqueryable<CircleMemberInfo>().Where(subCmi => ci.ID == subCmi.CircleID).Count(),
                 CreatorID = ci.CreatorID
@@ -118,6 +119,7 @@ namespace tdb.ddd.relationships.application.V1
             {
                 ID = ci.ID,
                 CircleName = ci.Name,
+                ImageID = ci.ImageID,
                 MaxMembers = ci.MaxMembers,
                 MembersCount = SqlFunc.Subqueryable<CircleMemberInfo>().Where(subCmi => ci.ID == subCmi.CircleID).Count(),
                 CreatorID = ci.CreatorID

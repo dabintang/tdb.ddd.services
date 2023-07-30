@@ -110,9 +110,6 @@ namespace tdb.ddd.relationships.webapi.Controllers.V1
             return res;
         }
 
-        #endregion
-
-
         /// <summary>
         /// 批量添加成员
         /// </summary>
@@ -214,5 +211,7 @@ namespace tdb.ddd.relationships.webapi.Controllers.V1
             var res = await this.circleAPP.WithdrawCircleAsync(reqOpe);
             return res;
         }
+
+        #endregion
     }
 }
