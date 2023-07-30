@@ -43,7 +43,7 @@ namespace tdb.ddd.account.application.V1
             var userService = new UserService();
             //获取用户聚合
             var userAgg = await userService.GetAsync(req.LoginName);
-            if (userAgg is null || userAgg.Password != req.Password)
+            if (userAgg is null || !userAgg.Password.Equals(req.Password, StringComparison.OrdinalIgnoreCase))
             {
                 return new TdbRes<UserLoginRes>(AccountConfig.Msg.IncorrectPassword, null);
             }
@@ -269,7 +269,7 @@ namespace tdb.ddd.account.application.V1
             }
 
             //判断原密码是否正确
-            if (userAgg.Password != param.OldPassword)
+            if (!userAgg.Password.Equals(param.OldPassword, StringComparison.OrdinalIgnoreCase))
             {
                 return new TdbRes<bool>(AccountConfig.Msg.IncorrectOldPassword, false);
             }
