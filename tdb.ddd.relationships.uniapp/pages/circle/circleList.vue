@@ -1,8 +1,9 @@
+<!-- 人际圈列表页 -->
 <template>
 	<view class="container">
 		<uni-list>
-			<uni-list-item v-for="(item, index) in LstCircle" :title="item.CircleName" :note="formatMembersCount(item)" 
-				showArrow thumb="/static/img/circle-default-head.png" thumb-size="lg" />
+			<uni-list-item v-for="(item, index) in LstCircle" :title="item.CircleName" :note="formatMembersCount(item)"
+						   showArrow :thumb="showCircleImage(item)" thumb-size="lg" :clickable="true" @click="goDetailPage(item)" />
 		</uni-list>
 	</view>
 </template>
@@ -15,8 +16,11 @@
 				LstCircle: []
 			}
 		},
-		//组件创建
-		created() {
+		//挂载到实例上去之后调用
+		mounted() {
+			//监听刷新人际圈列表事件
+			uni.$on('refresh.circle.list', this.getListCircle);
+
 			//获取我加入的人际圈列表
 			this.getListCircle();
 		},
@@ -38,34 +42,35 @@
 		},
 		methods: {
 			//获取我加入的人际圈列表
-			async getListCircle(showToast=true) {
+			async getListCircle(showToast = true) {
 				let req = {
 					PageNO: 1,
 					PageSize: 100000
 				}
 				//查询我加入了的人际圈列表
-				let res = await this.$apiReport.queryMyCircleList(req,showToast);
+				let res = await this.$apiReport.queryMyCircleList(req, showToast);
 				this.LstCircle = res.Data;
 			},
-			//显示人数
+			//显示人际圈人数
 			formatMembersCount(circleInfo) {
-				return '人数：'+circleInfo.MembersCount+'/'+circleInfo.MaxMembers;
+				return '人数：' + circleInfo.MembersCount + '/' + circleInfo.MaxMembers;
 			},
-			// //跳转到详情页
-			// goDetailPage(itemDetail) {
-			// 	this.$u.route('/pages/password/detail', {
-			// 		id: itemDetail.ID
-			// 	});
-			// },
-			// //删除
-			// async deleteItem(itemDetail) {
-			// 	let req = {ID: itemDetail.ID};
-			// 	//删除
-			// 	await this.$u.apiPwd.deleteInfo(req);
-				
-			// 	//刷新页面
-			// 	this.getList();
-			// }
+			//显示人际圈图标
+			showCircleImage(circleInfo) {
+				if (circleInfo.ImageID) {
+					return this.$apiFiles.downloadImageAnonUrl(circleInfo.ImageID, 40);
+				} else {
+					return '/static/img/circle-default-head.png';
+				}
+			},
+			//跳转到详情页
+			goDetailPage(circleInfo) {
+				uni.navigateTo({
+					url: '/pages/circle/circleDetail?id=' + circleInfo.ID,
+					animationType: 'pop-in',
+					animationDuration: 300
+				});
+			}
 		}
 	}
 </script>

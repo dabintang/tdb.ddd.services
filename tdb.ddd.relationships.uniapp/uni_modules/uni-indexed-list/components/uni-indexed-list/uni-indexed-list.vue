@@ -148,7 +148,9 @@
 					let items = value.data.map(item => {
 						let obj = {}
 						obj['key'] = value.letter
-						obj['name'] = item
+                        obj['name'] = item.name //change：item->item.name
+						obj['pic'] = item.pic	//change：添加图片信息
+                        obj['id'] = item.id	//change：添加id
 						obj['itemIndex'] = index
 						index++
 						obj.checked = item.checked ? item.checked : false

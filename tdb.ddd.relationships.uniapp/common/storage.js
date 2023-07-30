@@ -29,6 +29,13 @@ const storage = {
 	getToken: () => { return uni.getStorageSync('token'); },
 	//移除token
 	removeToken: () => uni.removeStorageSync('token'),
+
+	//保存当前用户信息
+	setCurrentUser: (val) => uni.setStorageSync('currentUserInfo', val),
+	//获取当前用户信息
+	getCurrentUser: () => { return uni.getStorageSync('currentUserInfo'); },
+	//移除当前用户信息
+	removeCurrentUser: () => uni.removeStorageSync('currentUserInfo'),
 };
 
 export default storage;

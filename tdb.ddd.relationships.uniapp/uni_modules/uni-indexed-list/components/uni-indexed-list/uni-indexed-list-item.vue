@@ -10,6 +10,10 @@
 						<view v-if="showSelect" style="margin-right: 20rpx;">
 							<uni-icons :type="item.checked ? 'checkbox-filled' : 'circle'" :color="item.checked ? '#007aff' : '#C0C0C0'" size="24" />
 						</view>
+						<!-- change：添加图片展示 -->
+						<view style="margin-right: 20rpx;">
+							<image :src="item.pic" mode="" style="width:30px;height:30px;"></image>
+						</view>
 						<text class="uni-indexed-list__item-content">{{ item.name }}</text>
 					</view>
 				</view>
@@ -127,18 +131,19 @@
 		flex-direction: row;
 	}
 
-	.uni-indexed-list__title-wrapper {
-		/* #ifndef APP-NVUE */
-		display: flex;
-		width: 100%;
-		/* #endif */
-		background-color: #f7f7f7;
-	}
+    .uni-indexed-list__title-wrapper {
+        /* #ifndef APP-NVUE */
+        display: flex;
+        width: 100%;
+        /* #endif */
+        background-color: #F2F2F2; /* change：中间ABC分隔栏的背景色 #f7f7f7->#F2F2F2 */
+    }
 
-	.uni-indexed-list__title {
-		padding: 6px 12px;
-		line-height: 24px;
-		font-size: 16px;
-		font-weight: 500;
-	}
+    .uni-indexed-list__title {
+        padding: 6px 12px;
+        line-height: 16px; /* change：中间ABC分隔栏的高度 24->16 */
+        font-size: 16px;
+        font-weight: 500;
+        color: #5B5B5B; /* change：中间ABC分隔栏的字体颜色 无->#5B5B5B */
+    }
 </style>

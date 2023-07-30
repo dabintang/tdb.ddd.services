@@ -7,7 +7,7 @@ const apiCircle = {
 	//创建人际圈
 	addCircle: async (params) => api.post('/tdb.ddd.relationships/v1/Circle/AddCircle', params),
 	//更新人际圈
-	updateCircle: async (params) => api.post('/tdb.ddd.relationships/v1/Circle/UpdateCircle', params),
+	updateCircle: async (params, showToast = true) => api.post('/tdb.ddd.relationships/v1/Circle/UpdateCircle', params, showToast),
 	//解散人际圈
 	deleteCircle: async (params) => api.post('/tdb.ddd.relationships/v1/Circle/DeleteCircle', params),
 	//添加成员

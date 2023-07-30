@@ -1,14 +1,21 @@
 import storage from '@/common/storage.js';
 import resCode from '@/common/responseCode.js';
 
+var isNeedShowLoading = false; //是否需要显示加载框
+var delayShowLoading = 300; //延迟300ms显示加载框
 uni.addInterceptor('request', {
   invoke(args) {
 	//显示遮罩层
-	if (args.data.showToast) {
-		console.log('显示加载中');
-		uni.showLoading({
-			title: '加载中...'
-		});
+		if (args.data.showToast) {
+			isNeedShowLoading = true;
+			setTimeout(function () {
+				//延迟300ms，如果接口还没返回再显示加载框
+				if (isNeedShowLoading) {
+					uni.showLoading({
+						title: '加载中...'
+					});
+                }
+			}, delayShowLoading);
 	}
 	
 	//url拼接上api根路径
@@ -81,6 +88,7 @@ uni.addInterceptor('request', {
   complete(res) {
 	  console.log('interceptor-complete',res)
 	  //隐藏遮罩层
+	  isNeedShowLoading = false;
 	  uni.hideLoading();
   },
   returnValue(args) {

@@ -1,6 +1,7 @@
+<!-- 人际圈新增页 -->
 <template>
 	<view class="container">
-		<uni-section title="基本信息" type="line">
+		<uni-section title="基本信息" type="line" class="mb-10">
 			<uni-list>
 				<uni-list-item title="图标">
 					<template v-slot:footer>
@@ -17,10 +18,12 @@
 						<uni-easyinput type="textarea" v-model="circleInfo.Remark" placeholder="请输入备注" />
 					</uni-forms-item>
 				</uni-forms>
+				<view style="text-align: center;">
+					<button @click="submit('circleForm')" type="warn" plain="true" size="mini" class="form-button">提 交</button>
+					<button @click="cancel" plain="true" size="mini" class="form-button">取 消</button>
+				</view>
 			</view>
-		</uni-section>
-		<uni-section title="选择成员" type="line">
-			<!-- uni-grid -->
+			
 		</uni-section>
 	</view>
 </template>
@@ -37,10 +40,10 @@
 				},
 				// 校验规则
 				rules: {
-                    Name: {
+					Name: {
 						rules: [{
 							required: true,
-                            errorMessage: '人际圈名称不能为空'
+							errorMessage: '人际圈名称不能为空'
 						}]
 					}
 				}
@@ -50,28 +53,53 @@
 			//人际圈图标
 			circleImage() {
 				if (this.circleInfo.ImageID) {
-                    return this.$apiFiles.downloadImageAnonUrl(this.circleInfo.ImageID);
+					return this.$apiFiles.downloadImageAnonUrl(this.circleInfo.ImageID, 40);
 				} else {
 					return '/static/img/circle-default-head.png';
-                }
-            }
-        },
+				}
+			}
+		},
 		methods: {
 			//选择图标
 			async chooseImage() {
-                let res = await this.$uniCom.chooseImage();
-                if (res) {
-                    if (res.tempFilePaths.length > 0) {
-                        //上传图片
-                        let resUpload = await this.$api.uniUploadTempImg(res);
-                        console.log("resUpload：", typeof resUpload);
-                        if (resUpload.Code == this.$resCode.success && resUpload.Data.length > 0) {
-                            this.circleInfo.ImageID = resUpload.Data[0].ID;
-                            console.log("this.circleInfo.ImageID：", this.circleInfo.ImageID);
-                        }
-                    }
-                }
+				let res = await this.$uniCom.chooseImage();
+				if (res) {
+					if (res.tempFilePaths.length > 0) {
+						//上传图片
+						let resUpload = await this.$api.uniUploadTempImg(res);
+						if (resUpload.Code == this.$resCode.success && resUpload.Data.length > 0) {
+							this.circleInfo.ImageID = resUpload.Data[0].ID;
+						}
+					}
+				}
 			},
+			//保存按钮按下
+			async submit(ref) {
+				//验证输入框
+				await this.$refs[ref].validate();
+				//登录
+				let res = await this.$apiCircle.addCircle(this.circleInfo);
+				if (res.Code == this.$resCode.success) {
+					//页面跳转
+					uni.showToast({
+						title: '保存成功',
+						icon: 'none',
+						complete: () => {
+							//跳转回上一页
+							uni.navigateBack({
+								success: function () {
+									uni.$emit('refresh.circle.list'); //刷新人际圈列表
+								}
+							});
+						}
+					});
+				}
+			},
+			//取消按钮按下
+			cancel() {
+                //跳转回上一页
+                uni.navigateBack();
+            }
 		}
 	}
 </script>
@@ -79,15 +107,20 @@
 <style lang="scss" scoped>
 	.baseInfo {
 		padding: 15px;
-		background-color: #fff;
 	}
-
+    .mb-10 {
+        margin-bottom: 10px;
+    }
 	.slot-image {
 		/* #ifndef APP-NVUE */
 		display: block;
 		/* #endif */
 		margin-right: 10px;
-		width: 30px;
-		height: 30px;
+		width: 40px;
+		height: 40px;
 	}
+    .form-button {
+        margin: 0 5px;
+		width: 30%;
+    }
 </style>

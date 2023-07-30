@@ -6,7 +6,7 @@ const apiFiles = {
 	//上传为临时文件
 	uploadTempFiles: async (params) => api.post('/tdb.ddd.files/v1/Files/UploadTempFiles', params),
 	//匿名下载图片url
-	downloadImageAnonUrl: (id,width=32) => {
+	downloadImageAnonUrl: (id,width=0) => {
 		//api地址
 		return storage.getApiRoot() + '/tdb.ddd.files/v1/Files/DownloadImageAnon?ID=' + id + '&Width=' + width;
     },
