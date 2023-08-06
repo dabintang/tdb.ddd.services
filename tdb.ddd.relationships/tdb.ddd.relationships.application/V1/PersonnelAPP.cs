@@ -14,6 +14,7 @@ using tdb.ddd.relationships.application.contracts.V1.DTO.Personnel;
 using tdb.ddd.relationships.application.contracts.V1.Interface;
 using tdb.ddd.relationships.domain.BusMediatR;
 using tdb.ddd.relationships.domain.Circle;
+using tdb.ddd.relationships.domain.Circle.Aggregate;
 using tdb.ddd.relationships.domain.Personnel;
 using tdb.ddd.relationships.domain.Personnel.Aggregate;
 using tdb.ddd.relationships.domain.Photo;
@@ -159,7 +160,8 @@ namespace tdb.ddd.relationships.application.V1
             TdbRepositoryTran.BeginTranOnAsyncFunc();
 
             //保存
-            await personnelAgg.SaveAsync();
+            //await personnelAgg.SaveAsync();
+            await personnelAgg.SetHeadImgIDAndSaveAsync(param.HeadImgID);
 
             //提交事务
             TdbRepositoryTran.CommitTran();
@@ -244,6 +246,9 @@ namespace tdb.ddd.relationships.application.V1
                 return new TdbRes<bool>(TdbComResMsg.InsufficientPermissions, false);
             }
 
+            personnelAgg.UpdateInfo.UpdaterID = req.OperatorID;
+            personnelAgg.UpdateInfo.UpdateTime = req.OperationTime;
+
             //人际圈领域服务
             var circleService = new CircleService();
 
@@ -269,11 +274,11 @@ namespace tdb.ddd.relationships.application.V1
                 var photoAgg = await photoService.GetByIDAsync(photoID);
                 if (photoAgg is not null)
                 {
+                    photoAgg.UpdateInfo.UpdaterID = req.OperatorID;
+                    photoAgg.UpdateInfo.UpdateTime = req.OperationTime;
+
                     //删除照片
                     await photoAgg.DeleteAsync();
-
-                    //删除照片通知
-                    PublishOperatePhotoMsg(photoAgg, PhotoOperationNotification.EnmOperationType.Delete, req);
                 }
             }
 
@@ -323,7 +328,8 @@ namespace tdb.ddd.relationships.application.V1
                 {
                     ID = photoID,
                     PersonnelID = param.PersonnelID,
-                    CreateInfo = new CreateInfoValueObject() { CreatorID = req.OperatorID, CreateTime = DateTime.Now }
+                    CreateInfo = new CreateInfoValueObject() { CreatorID = req.OperatorID, CreateTime = DateTime.Now },
+                    UpdateInfo = new UpdateInfoValueObject() { UpdaterID = req.OperatorID, UpdateTime = DateTime.Now }
                 };
                 lstPhotoAgg.Add(photoAgg);
             }
@@ -335,9 +341,6 @@ namespace tdb.ddd.relationships.application.V1
             foreach (var photoAgg in lstPhotoAgg)
             {
                 await photoAgg.SaveAsync();
-
-                //保存照片通知
-                PublishOperatePhotoMsg(photoAgg, PhotoOperationNotification.EnmOperationType.Save, req);
             }
 
             //提交事务
@@ -396,9 +399,6 @@ namespace tdb.ddd.relationships.application.V1
             foreach (var photoAgg in lstPhotoAgg)
             {
                 await photoAgg.DeleteAsync();
-
-                //保存照片通知
-                PublishOperatePhotoMsg(photoAgg, PhotoOperationNotification.EnmOperationType.Delete, req);
             }
 
             //提交事务
@@ -430,21 +430,9 @@ namespace tdb.ddd.relationships.application.V1
                 return new TdbRes<bool>(RelationshipsConfig.Msg.PersonnelNotExist, false);
             }
 
-            if (param.HeadImgID is not null)
-            {
-                //获取人员现有的照片ID
-                var lstHadPhotoID = await personnelAgg.GetPhotoIDsAsync();
-                if (lstHadPhotoID.Contains(param.HeadImgID.Value) == false)
-                {
-                    return new TdbRes<bool>(RelationshipsConfig.Msg.PersonnelHaveNotThePhoto, false);
-                }
-            }
-
-            //设置头像照片ID
-            personnelAgg.HeadImgID = param.HeadImgID;
-
             //保存
-            await personnelAgg.SaveAsync();
+            //await personnelAgg.SaveAsync();
+            await personnelAgg.SetHeadImgIDAndSaveAsync(param.HeadImgID);
 
             //提交事务
             TdbRepositoryTran.CommitTran();
@@ -455,24 +443,6 @@ namespace tdb.ddd.relationships.application.V1
         #endregion
 
         #region 私有方法
-
-        /// <summary>
-        /// 发布操作照片消息
-        /// </summary>
-        /// <param name="photoAgg">照片聚合</param>
-        /// <param name="opeTypeCode">操作类型</param>
-        /// <param name="oper">操作人信息</param>
-        private static void PublishOperatePhotoMsg(PhotoAgg photoAgg, PhotoOperationNotification.EnmOperationType opeTypeCode, TdbOperateReq oper)
-        {
-            var msg = new PhotoOperationNotification()
-            {
-                PhotoID = photoAgg.ID,
-                OperationTypeCode = opeTypeCode,
-                OperatorID = oper.OperatorID,
-                OperationTime = oper.OperationTime
-            };
-            TdbMediatR.Publish(msg);
-        }
 
         #endregion
     }

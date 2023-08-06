@@ -354,5 +354,17 @@ namespace tdb.ddd.files.domain.Files.Aggregate
         }
 
         #endregion
+
+        /// <summary>
+        /// 析构函数
+        /// </summary>
+        ~FileAgg()
+        {
+            if (this._data is not null && this._data.Length > 10240)
+            {
+                this._data = null;
+                GC.Collect();
+            }
+        }
     }
 }

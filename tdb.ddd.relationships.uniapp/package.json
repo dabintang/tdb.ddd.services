@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "pinyin-pro": "^3.16.1"
+    "linq": "^4.0.1",
+    "pinyin-pro": "^3.16.1",
+    "qs": "^6.11.2"
   }
 }

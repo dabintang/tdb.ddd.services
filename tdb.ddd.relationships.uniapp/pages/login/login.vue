@@ -10,10 +10,8 @@
 				<uni-forms-item label="密码" required name="Password">
 					<uni-easyinput type="password" v-model="loginFormData.Password" placeholder="请输入密码" />
 				</uni-forms-item>
-				<view style="text-align: center;">
-					<button type="primary" plain="true" @click="submit('loginForm')">登录</button>
-				</view>
 			</uni-forms>
+			<button type="primary" plain="true" @click="submit('loginForm')">登录</button>
 		</view>
 	</view>
 </template>
@@ -62,18 +60,20 @@
 
 					//获取当前用户信息
 					let resUser = await this.$apiAccount.getCurrentUserInfo();
-					this.$storage.setCurrentUser(resUser.Data);
 
 					//创建我的人员信息
 					let res2 = await this.$apiPersonnel.createMyPersonnelInfo();
 					if (res2.Code == this.$resCode.success) {
+                        resUser.Data.PersonnelID = res2.Data.ID;
+                        this.$storage.setCurrentUser(resUser.Data);
+
 						//页面跳转
 						uni.showToast({
 							title: '登录成功',
 							icon: 'none',
 							complete: () => {
 								setTimeout(() => {
-									//跳转到登录页
+									//跳转到人际圈列表页
 									uni.switchTab({
 										url: '/pages/circle/circleList'
 									});

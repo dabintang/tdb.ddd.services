@@ -21,6 +21,7 @@ using tdb.ddd.relationships.domain.Personnel;
 using tdb.ddd.relationships.domain.Photo.Aggregate;
 using tdb.ddd.relationships.infrastructure;
 using tdb.ddd.relationships.infrastructure.Config;
+using tdb.ddd.relationships.repository.DBEntity;
 using tdb.ddd.repository.sqlsugar;
 
 namespace tdb.ddd.relationships.application.V1
@@ -71,7 +72,6 @@ namespace tdb.ddd.relationships.application.V1
             {
                 ID = circleID,
                 Name = param.Name,
-                ImageID = param.ImageID,
                 Remark = param.Remark ?? "",
                 CreateInfo = new CreateInfoValueObject() { CreatorID = req.OperatorID, CreateTime = DateTime.Now },
                 UpdateInfo = new UpdateInfoValueObject() { UpdaterID = req.OperatorID, UpdateTime = DateTime.Now }
@@ -81,13 +81,8 @@ namespace tdb.ddd.relationships.application.V1
             TdbRepositoryTran.BeginTranOnAsyncFunc();
 
             //保存
-            await circleAgg.SaveAsync();
-
-            if (circleAgg.ImageID is not null)
-            {
-                //保存图片通知
-                PublishOperateImageMsg(circleAgg.ImageID.Value, PhotoOperationNotification.EnmOperationType.Save, req);
-            }
+            //await circleAgg.SaveAsync();
+            await circleAgg.SetImageIDAndSaveAsync(param.ImageID);
 
             //人员领域服务
             var personnelService = new PersonnelService();
@@ -136,29 +131,15 @@ namespace tdb.ddd.relationships.application.V1
                 return new TdbRes<bool>(TdbComResMsg.InsufficientPermissions, false);
             }
 
-            //原图片ID
-            var oldImageID = circleAgg.ImageID;
-
             //更新人际圈信息
             circleAgg.Name = param.Name;
-            circleAgg.ImageID = param.ImageID;
             circleAgg.Remark = param.Remark ?? "";
             circleAgg.UpdateInfo.UpdaterID = req.OperatorID;
             circleAgg.UpdateInfo.UpdateTime = req.OperationTime;
 
             //保存
-            await circleAgg.SaveAsync();
-
-            if (oldImageID is not null)
-            {
-                //删除图片通知
-                PublishOperateImageMsg(oldImageID.Value, PhotoOperationNotification.EnmOperationType.Delete, req);
-            }
-            if (circleAgg.ImageID is not null)
-            {
-                //保存图片通知
-                PublishOperateImageMsg(circleAgg.ImageID.Value, PhotoOperationNotification.EnmOperationType.Save, req);
-            }
+            //await circleAgg.SaveAsync();
+            await circleAgg.SetImageIDAndSaveAsync(param.ImageID);
 
             //提交事务
             TdbRepositoryTran.CommitTran();
@@ -194,6 +175,9 @@ namespace tdb.ddd.relationships.application.V1
             {
                 return new TdbRes<bool>(TdbComResMsg.InsufficientPermissions, false);
             }
+
+            circleAgg.UpdateInfo.UpdaterID = req.OperatorID;
+            circleAgg.UpdateInfo.UpdateTime = req.OperationTime;
 
             //移出所有成员
             await circleAgg.RemoveAllMembersAndSaveAsync();
@@ -409,8 +393,13 @@ namespace tdb.ddd.relationships.application.V1
                 return new TdbRes<bool>(RelationshipsConfig.Msg.CircleNotExist, false);
             }
 
+            //人员领域服务
+            var personnelService = new PersonnelService();
+            //获取人员信息
+            var personnelInfo = await personnelService.GetByIDAsync(param.PersonnelID);
+
             //不能移出人际圈创建者
-            if (circleAgg.CreateInfo.CreatorID == param.PersonnelID)
+            if (personnelInfo is not null && personnelInfo.UserID is not null && circleAgg.CreateInfo.CreatorID == personnelInfo.UserID.Value)
             {
                 return new TdbRes<bool>(TdbComResMsg.InsufficientPermissions, false);
             }
@@ -418,11 +407,6 @@ namespace tdb.ddd.relationships.application.V1
             //权限判断（人际圈创建人可以移出所有其他成员、管理员可以移出自己添加的人员）
             if (circleAgg.CreateInfo.CreatorID != req.OperatorID)
             {
-                //人员领域服务
-                var personnelService = new PersonnelService();
-
-                //获取人员信息
-                var personnelInfo = await personnelService.GetByIDAsync(param.PersonnelID);
                 //管理员可以移出自己添加的人员
                 if (personnelInfo is not null && personnelInfo.CreateInfo.CreatorID != req.OperatorID)
                 {
@@ -440,6 +424,79 @@ namespace tdb.ddd.relationships.application.V1
             TdbRepositoryTran.CommitTran();
 
             return TdbRes.Success(true);
+        }
+
+        /// <summary>
+        /// 批量移出成员
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        public async Task<TdbRes<BatchRemoveMemberRes>> BatchRemoveMemberAsync(TdbOperateReq<BatchRemoveMemberReq> req)
+        {
+            //参数
+            var param = req.Param;
+
+            //人际圈领域服务
+            var circleService = new CircleService();
+
+            //获取人际圈聚合
+            var circleAgg = await circleService.GetByIDAsync(param.CircleID);
+            if (circleAgg is null)
+            {
+                return new TdbRes<BatchRemoveMemberRes>(RelationshipsConfig.Msg.CircleNotExist, null);
+            }
+
+            //批量移出成员结果
+            var res = new BatchRemoveMemberRes();
+
+            //人员领域服务
+            var personnelService = new PersonnelService();
+
+            //开启事务
+            TdbRepositoryTran.BeginTranOnAsyncFunc();
+
+            //循环添加成员
+            foreach (var personnelID in param.LstPersonnelID)
+            {
+                //获取人员信息
+                var personnelInfo = await personnelService.GetByIDAsync(personnelID);
+                if (personnelInfo is null)
+                {
+                    res.FailCount++;
+                    res.LstFailInfo.Add(new BatchRemoveMemberRes.FailInfo() { PersonnelID = personnelID, Name = "", Reason = "人员信息不存在" });
+                    continue;
+                }
+
+                //不能移出人际圈创建者
+                if (circleAgg.CreateInfo.CreatorID == personnelInfo.UserID)
+                {
+                    res.FailCount++;
+                    res.LstFailInfo.Add(new BatchRemoveMemberRes.FailInfo() { PersonnelID = personnelID, Name = personnelInfo.Name, Reason = "不能移出人际圈创建者" });
+                    continue;
+                }
+
+                //权限判断（人际圈创建人可以移出所有其他成员、管理员可以移出自己添加的人员）
+                if (circleAgg.CreateInfo.CreatorID != req.OperatorID)
+                {
+                    //管理员可以移出自己添加的人员
+                    if (personnelInfo.CreateInfo.CreatorID != req.OperatorID)
+                    {
+                        res.FailCount++;
+                        res.LstFailInfo.Add(new BatchRemoveMemberRes.FailInfo() { PersonnelID = personnelID, Name = personnelInfo.Name, Reason = "不能移出其他管理员添加的成员" });
+                        continue;
+                    }
+                }
+
+                //移出成员
+                await circleAgg.RemoveMemberAndSaveAsync(personnelID);
+
+                res.SuccessCount++;
+            }
+
+            //提交事务
+            TdbRepositoryTran.CommitTran();
+
+            return TdbRes.Success(res);
         }
 
         /// <summary>
@@ -735,24 +792,6 @@ namespace tdb.ddd.relationships.application.V1
         #endregion
 
         #region 私有方法
-
-        /// <summary>
-        /// 发布操作图片消息
-        /// </summary>
-        /// <param name="imageID">图片ID</param>
-        /// <param name="opeTypeCode">操作类型</param>
-        /// <param name="oper">操作人信息</param>
-        private static void PublishOperateImageMsg(long imageID, PhotoOperationNotification.EnmOperationType opeTypeCode, TdbOperateReq oper)
-        {
-            var msg = new PhotoOperationNotification()
-            {
-                PhotoID = imageID,
-                OperationTypeCode = opeTypeCode,
-                OperatorID = oper.OperatorID,
-                OperationTime = oper.OperationTime
-            };
-            TdbMediatR.Publish(msg);
-        }
 
         #endregion
 

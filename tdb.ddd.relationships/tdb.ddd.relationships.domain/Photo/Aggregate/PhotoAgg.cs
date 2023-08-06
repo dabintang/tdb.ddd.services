@@ -49,6 +49,11 @@ namespace tdb.ddd.relationships.domain.Photo.Aggregate
         /// </summary>
         public CreateInfoValueObject CreateInfo { get; set; } = new CreateInfoValueObject();
 
+        /// <summary>
+        /// 更新信息
+        /// </summary>
+        public UpdateInfoValueObject UpdateInfo { get; set; } = new UpdateInfoValueObject();
+
         #endregion
 
         #region 行为
@@ -60,6 +65,9 @@ namespace tdb.ddd.relationships.domain.Photo.Aggregate
         public async Task SaveAsync()
         {
             await this.Repos.SaveChangedAsync(this);
+
+            //添加图片通知
+            this.PublishOperateImageMsg(this.ID, PhotoOperationNotification.EnmOperationType.Save);
         }
 
         /// <summary>
@@ -69,11 +77,31 @@ namespace tdb.ddd.relationships.domain.Photo.Aggregate
         public async Task DeleteAsync()
         {
             await this.Repos.DeleteAsync(this);
+
+            //删除图片通知
+            this.PublishOperateImageMsg(this.ID, PhotoOperationNotification.EnmOperationType.Delete);
         }
 
         #endregion
 
         #region 私有方法
+
+        /// <summary>
+        /// 发布操作图片消息
+        /// </summary>
+        /// <param name="imageID">图片ID</param>
+        /// <param name="opeTypeCode">操作类型</param>
+        private void PublishOperateImageMsg(long imageID, PhotoOperationNotification.EnmOperationType opeTypeCode)
+        {
+            var msg = new PhotoOperationNotification()
+            {
+                PhotoID = imageID,
+                OperationTypeCode = opeTypeCode,
+                OperatorID = this.UpdateInfo.UpdaterID,
+                OperationTime = this.UpdateInfo.UpdateTime
+            };
+            TdbMediatR.Publish(msg);
+        }
 
         #endregion
     }

@@ -1,5 +1,6 @@
 import storage from '@/common/storage.js';
 import resCode from '@/common/responseCode.js';
+import qs from 'qs';
 
 var isNeedShowLoading = false; //是否需要显示加载框
 var delayShowLoading = 300; //延迟300ms显示加载框
@@ -36,11 +37,19 @@ uni.addInterceptor('request', {
 			}
 		}
 	}
-	
-	console.log('interceptor-invoke',args);
+
+		//用户qs处理get方法中的数组参数
+	if (args.method == 'GET' && args.data) {
+		//args.data = qs.stringify(args.data, { arrayFormat: 'repeat' });
+		let newData = qs.stringify(args.data, { arrayFormat: 'repeat' });
+		delete args.data;
+		args.url = `${args.url}?${newData}`;
+    }
+
+	console.log('interceptor-invoke', JSON.stringify(args));
   },
   success(args) {
-	console.log('interceptor-success',args)
+	//console.log('interceptor-success',args)
 	if (args.statusCode == 401) {
 		//弹框提示
 		uni.showToast({
@@ -79,20 +88,20 @@ uni.addInterceptor('request', {
 	}
   }, 
   fail(err) {
-    console.log('interceptor-fail',err)
+    //console.log('interceptor-fail',err)
 	//跳转到错误页
 	uni.redirectTo({
 		url: '/pages/error/error'
 	});
   }, 
   complete(res) {
-	  console.log('interceptor-complete',res)
+	  console.log('interceptor-complete', JSON.stringify(res))
 	  //隐藏遮罩层
 	  isNeedShowLoading = false;
 	  uni.hideLoading();
   },
   returnValue(args) {
-	  console.log('interceptor-returnValue',args)
+	  //console.log('interceptor-returnValue',args)
 	  if (!(!!args && (typeof args === "object" || typeof args === "function") && typeof args.then === "function")) {
 	    return args;
 	  }

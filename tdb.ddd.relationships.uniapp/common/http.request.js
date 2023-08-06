@@ -13,7 +13,7 @@ const api = {
 				});
 	},
 	//get请求
-	get: async (url,params,showToast=true) => {
+	get: async (url, params, showToast = true) => {
 		params.showToast=showToast;
 		return uni.request({
 					url: url,
@@ -24,10 +24,19 @@ const api = {
 	},
 	//使用uni.uploadFile方法上传临时文件，参数：uni.chooseImage返回值
 	uniUploadTempImg: async (chooseImageRes) => {
+		//console.log('chooseImageRes', JSON.stringify(chooseImageRes));
 		//多文件
 		let fileDatas = [];
+		let now = new Date().getTime();
 		for (let i = 0; i < chooseImageRes.tempFilePaths.length; i++) {
-			fileDatas.push({ name: chooseImageRes.tempFiles[i].name, uri: chooseImageRes.tempFilePaths[i] });
+			let name = chooseImageRes.tempFiles[i].name;
+			let uri = chooseImageRes.tempFilePaths[i];
+			if (!name) {
+				var suffix = uri.substring(uri.lastIndexOf("."));//.txt
+				name = now + '_' + i + suffix;
+			}
+
+			fileDatas.push({ name: name, uri: uri });
 		}
 
 		//api地址
@@ -39,7 +48,7 @@ const api = {
 		if (token && token.AccessToken) {
 			authorization = 'Bearer ' + token.AccessToken;
 		}
-		
+		//console.log('fileDatas', JSON.stringify(fileDatas));
 		//上传图片
 		let uploadRes = uni.uploadFile({
 					url: apiUrl,

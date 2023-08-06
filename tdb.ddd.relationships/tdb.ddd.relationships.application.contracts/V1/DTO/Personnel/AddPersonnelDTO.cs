@@ -29,6 +29,12 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Personnel
         public EnmGender GenderCode { get; set; }
 
         /// <summary>
+        /// [可选]头像图片ID
+        /// </summary>
+        [TdbHashIDJsonConverter]
+        public long? HeadImgID { get; set; }
+
+        /// <summary>
         /// [可选]生日
         /// </summary>
         public DateTime? Birthday { get; set; }

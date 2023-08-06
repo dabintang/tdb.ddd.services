@@ -75,17 +75,59 @@
 			}
 		},
 		{
+			"path": "pages/personnel/personnelAdd",
+			"style": {
+				"navigationBarTitleText": "添加人员",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
 			"path": "pages/personnel/personnelDetail",
 			"style": {
-				"navigationBarTitleText": "",
+				"navigationBarTitleText": "人员详情",
 				"enablePullDownRefresh": false
 			}
 		},
 		{
 			"path": "pages/personnel/personnelList",
 			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
+				"navigationBarTitleText": "人员",
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [
+							{
+								"text": "\ue102",
+								"tag": "plus",
+								"fontSrc": "/static/uni/uni.ttf",
+								"fontSize": "27px",
+								"color": "#2B85E4"
+							}
+						]
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/personnel/personnelSelectList",
+			"style": {
+				"navigationBarTitleText": "选择成员",
+				"enablePullDownRefresh": false,
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [
+							{
+								"text": "\ue7fa",
+								"tag": "select",
+								"fontSrc": "/static/uni/uni.ttf",
+								"fontSize": "27px",
+								"color": "#2B85E4"
+							}
+						]
+					}
+				}
 			}
 		},
 		{

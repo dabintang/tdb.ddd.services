@@ -145,6 +145,23 @@ namespace tdb.ddd.relationships.webapi.Controllers.V1
         }
 
         /// <summary>
+        /// 批量移出成员
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        [HttpPost]
+        [TdbAPILog]
+        public async Task<TdbRes<BatchRemoveMemberRes>> BatchRemoveMember([FromBody] BatchRemoveMemberReq req)
+        {
+            //参数
+            var reqOpe = this.CreateTdbOperateReq(req);
+
+            //移出成员
+            var res = await this.circleAPP.BatchRemoveMemberAsync(reqOpe);
+            return res;
+        }
+
+        /// <summary>
         /// 设置成员角色
         /// </summary>
         /// <param name="req">请求参数</param>

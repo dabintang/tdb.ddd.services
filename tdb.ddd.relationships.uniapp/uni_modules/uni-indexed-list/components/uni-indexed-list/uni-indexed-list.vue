@@ -9,7 +9,7 @@
 					<view v-for="(list, idx) in lists" :key="idx" :id="'uni-indexed-list-' + idx">
 						<!-- #endif -->
 						<indexed-list-item :list="list" :loaded="loaded" :idx="idx" :showSelect="showSelect"
-							@itemClick="onClick"></indexed-list-item>
+							@itemClick="onClick" @itemLongpress="onLongpress"></indexed-list-item>
 						<!-- #ifndef APP-NVUE -->
 					</view>
 				</scroll-view>
@@ -90,7 +90,7 @@
 		components: {
 			indexedListItem
 		},
-		emits: ['click'],
+        emits: ['click', 'longpress'], //change：添加长按事件
 		props: {
 			options: {
 				type: Array,
@@ -280,7 +280,17 @@
 					item: obj,
 					select: select
 				})
-			}
+			},
+			onLongpress(e) {
+				let {
+					item,
+                    idx
+				} = e;
+                this.$emit('longpress', {
+                    item: item,
+                    index: idx
+                })
+            }
 		}
 	}
 </script>

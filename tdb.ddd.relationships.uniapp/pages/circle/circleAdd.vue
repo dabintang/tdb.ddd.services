@@ -1,7 +1,7 @@
 <!-- 人际圈新增页 -->
 <template>
 	<view class="container">
-		<uni-section title="基本信息" type="line" class="mb-10">
+		<uni-section title="基本信息" type="line">
 			<uni-list>
 				<uni-list-item title="图标">
 					<template v-slot:footer>
@@ -23,7 +23,6 @@
 					<button @click="cancel" plain="true" size="mini" class="form-button">取 消</button>
 				</view>
 			</view>
-			
 		</uni-section>
 	</view>
 </template>
@@ -77,7 +76,7 @@
 			async submit(ref) {
 				//验证输入框
 				await this.$refs[ref].validate();
-				//登录
+				//新增人际圈
 				let res = await this.$apiCircle.addCircle(this.circleInfo);
 				if (res.Code == this.$resCode.success) {
 					//页面跳转
@@ -108,14 +107,11 @@
 	.baseInfo {
 		padding: 15px;
 	}
-    .mb-10 {
-        margin-bottom: 10px;
-    }
 	.slot-image {
 		/* #ifndef APP-NVUE */
 		display: block;
 		/* #endif */
-		margin-right: 10px;
+		margin: -7px 10px -7px 0px;
 		width: 40px;
 		height: 40px;
 	}

@@ -78,8 +78,10 @@ namespace tdb.ddd.relationships.application
         /// <param name="cfg">映射配置表达式</param>
         private static void PersonnelMapping(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<PersonnelAgg, GetPersonnelRes>();
-            cfg.CreateMap<PersonnelAgg, GetPersonnelByUserIDRes>();
+            cfg.CreateMap<PersonnelAgg, GetPersonnelRes>()
+                .ForMember(dest => dest.CreatorID, opts => opts.MapFrom(src => src.CreateInfo.CreatorID));
+            cfg.CreateMap<PersonnelAgg, GetPersonnelByUserIDRes>()
+                .ForMember(dest => dest.CreatorID, opts => opts.MapFrom(src => src.CreateInfo.CreatorID));
         }
     }
 }

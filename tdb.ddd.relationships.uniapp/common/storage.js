@@ -36,6 +36,13 @@ const storage = {
 	getCurrentUser: () => { return uni.getStorageSync('currentUserInfo'); },
 	//移除当前用户信息
 	removeCurrentUser: () => uni.removeStorageSync('currentUserInfo'),
+
+	//设置成员选择缓存
+	setPersonnelSelectList: (val) => uni.setStorageSync('personnelSelectList', val),
+	//获取成员选择缓存
+	getPersonnelSelectList: () => { return uni.getStorageSync('personnelSelectList'); },
+	//移除成员选择缓存
+	removePersonnelSelectList: () => uni.removeStorageSync('personnelSelectList'),
 };
 
 export default storage;

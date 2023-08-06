@@ -16,6 +16,8 @@ const apiCircle = {
 	batchAddMember: async (params) => api.post('/tdb.ddd.relationships/v1/Circle/BatchAddMember', params),
 	//移出成员
 	removeMember: async (params) => api.post('/tdb.ddd.relationships/v1/Circle/RemoveMember', params),
+	//批量移出成员
+	batchRemoveMember: async (params) => api.post('/tdb.ddd.relationships/v1/Circle/BatchRemoveMember', params),
 	//设置成员角色
 	setMemberRole: async (params) => api.post('/tdb.ddd.relationships/v1/Circle/SetMemberRole', params),
 	//生成加入人际圈的邀请码

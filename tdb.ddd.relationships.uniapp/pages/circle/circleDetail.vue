@@ -21,11 +21,11 @@
                 <button type="warn" class="btn" plain="true" size="mini" v-if="!isCreator" @click="withdrawCircle">退出该圈</button>
             </view>
         </uni-section>
-        <view style="height:15px;background-color:#F5F5F5;"></view>
+        <view style="height:7px;background-color:#F5F5F5;"></view>
         <uni-section title="成员" type="line">
             <view class="grid-dynamic-box">
-                <uni-grid :column="4" :show-border="false" @change="change">
-                    <uni-grid-item v-for="(item, index) in lstMember" :index="item.PersonnelID" :key="item.PersonnelID">
+                <uni-grid :column="4" :show-border="false" @change="gridClick">
+                    <uni-grid-item v-for="(item, index) in lstMember" :index="index" :key="index">
                         <view class="grid-item-box">
                             <image :src="showHeadImage(item)" class="grid-image" mode="aspectFill" />
                             <text class="text">{{ item.Name }}</text>
@@ -54,6 +54,7 @@
 </template>
 
 <script>
+    import Enumerable from "linq";
     export default {
         data() {
             return {
@@ -70,16 +71,18 @@
                 //添加成员虚拟信息
                 memberPlus: {
                     PersonnelID: 0,
-                    ImageID: 0,
+                    Name: '',
+                    HeadImgID: null,
                     ImageUrl: '/static/img/plus.png',
-                    Name: ''
+                    TypeCode: 'plus'
                 },
                 //减少成员虚拟信息
                 memberReduce: {
-                    PersonnelID: -1,
-                    ImageID: 0,
+                    PersonnelID: 0,
+                    Name: '',
+                    HeadImgID: null,
                     ImageUrl: '/static/img/reduce.png',
-                    Name: ''
+                    TypeCode: 'reduce'
                 },
                 // 是否修改过数据
                 isChanged: false
@@ -87,6 +90,11 @@
         },
         //加载页面时
         onLoad(option) { //option为object类型，会序列化上个页面传递的参数
+            //监听批量添加成员事件
+            uni.$on('batch.add.circle.member', (lstSelectedID) => { this.batchAddMember(lstSelectedID) });
+            //监听批量移除成员事件
+            uni.$on('batch.remove.circle.member', (lstSelectedID) => { this.batchRemoveMember(lstSelectedID) });
+
             //获取人际圈信息
             this.getCircle(option.id);
             //查询人际圈内成员信息列表
@@ -243,22 +251,139 @@
                 res.Data.forEach(item => {
                     list.push({
                         PersonnelID: item.PersonnelID,
-                        ImageID: item.ImageID,
-                        Name: item.Name
+                        HeadImgID: item.HeadImgID,
+                        Name: item.Name,
+                        PersonnelCreatorID: item.PersonnelCreatorID
                     });
                 });
-                list.push(this.memberPlus);
-                list.push(this.memberReduce);
+				
+				//如果当前登录用户为人际圈管理员，显示加减成员的按钮
+				//if (this.isCreator) {
+					list.push(this.memberPlus);
+					list.push(this.memberReduce);
+				//}
+               
                 this.lstMember = list;
             },
             //显示成员头像
             showHeadImage(menberInfo) {
-                if (menberInfo.ImageID) {
-                    return this.$apiFiles.downloadImageAnonUrl(menberInfo.ImageID, 50);
+                if (menberInfo.HeadImgID) {
+                    return this.$apiFiles.downloadImageAnonUrl(menberInfo.HeadImgID, 75);
                 } else if (menberInfo.ImageUrl) {
                     return menberInfo.ImageUrl;
                 } else {
                     return '/static/img/personnel-default-head.png';
+                }
+            },
+            //点击成员grid
+            gridClick(e) {
+                let index = e.detail.index;
+                let memberInfo = this.lstMember[index];
+                if (memberInfo && memberInfo.TypeCode == 'plus') {
+                    //显示添加成员选择页面
+                    this.showPlusMemberPage();
+                } else if (memberInfo && memberInfo.TypeCode == 'reduce') {
+                    //显示移除成员选择页面
+                    this.showReduceMemberPage();
+                } else {
+                    
+                }
+            },
+            //显示添加成员选择页面
+            async showPlusMemberPage() {
+                let req = {
+                    PageNO: 1,
+                    PageSize: 100000
+                }
+                //查询我创建的人员信息列表
+                let res = await this.$apiReport.queryMyPersonnelList(req);
+                let list = [];
+                if (res.Code == this.$resCode.success) {
+                    res.Data.forEach(item => {
+                        let arr = Enumerable.from(this.lstMember).where(function (x) { return x.PersonnelID == item.ID }).toArray();
+                        if (!arr || arr.length <= 0) {
+                            list.push({
+                                PersonnelID: item.ID,
+                                HeadImgID: item.HeadImgID,
+                                Name: item.Name
+                            });
+                        }
+                    });
+                }
+
+                //缓存可选人员列表
+                this.$storage.setPersonnelSelectList(list);
+
+                //跳转到成员选择页面
+                uni.navigateTo({
+                    url: '/pages/personnel/personnelSelectList?action=batch.add.circle.member',
+                    animationType: 'pop-in',
+                    animationDuration: 300
+                });
+            },
+            //批量添加成员
+            async batchAddMember(lstSelectedID) {
+                if (!lstSelectedID || lstSelectedID.length == 0) {
+                    return;
+                }
+
+                let req = {
+                    CircleID: this.circleInfo.ID,
+                    LstPersonnelID: lstSelectedID
+                };
+                //批量添加成员
+                let res = await this.$apiCircle.batchAddMember(req);
+                if (res && res.Code == this.$resCode.success) {
+                    //查询人际圈内成员信息列表
+                    await this.queryCirclePersonnelList(this.circleInfo.ID);
+					this.isChanged = true;
+                }
+            },
+            //显示移除成员选择页面
+            showReduceMemberPage() {
+                //获取当前用户信息
+                let curUser = this.$storage.getCurrentUser();
+                //console.log('curUser', JSON.stringify(curUser));
+
+                let list = [];
+                this.lstMember.forEach(item => {
+                    console.log('item', JSON.stringify(item));
+                    if (item.PersonnelID && item.PersonnelID != curUser.PersonnelID && item.PersonnelCreatorID == curUser.ID) {
+                        list.push({
+                            PersonnelID: item.PersonnelID,
+                            HeadImgID: item.HeadImgID,
+                            Name: item.Name
+                        });
+                    }
+                });
+
+                //缓存可选人员列表
+                this.$storage.setPersonnelSelectList(list);
+
+                //跳转到成员选择页面
+                uni.navigateTo({
+                    url: '/pages/personnel/personnelSelectList?action=batch.remove.circle.member',
+                    animationType: 'pop-in',
+                    animationDuration: 300
+                });
+            },
+            //批量移除成员
+            async batchRemoveMember(lstSelectedID) {
+                //console.log('batchRemoveMember', JSON.stringify(lstSelectedID));
+                if (!lstSelectedID || lstSelectedID.length == 0) {
+                    return;
+                }
+
+                let req = {
+                   CircleID: this.circleInfo.ID,
+                   LstPersonnelID: lstSelectedID
+                };
+                //批量移除成员
+                let res = await this.$apiCircle.batchRemoveMember(req);
+                if (res && res.Code == this.$resCode.success) {
+                   //查询人际圈内成员信息列表
+                   await this.queryCirclePersonnelList(this.circleInfo.ID);
+				   this.isChanged = true;
                 }
             },
         }
@@ -305,7 +430,7 @@
         padding: 15px 0;
     }
     .grid-image {
-        width: 50px;
-        height: 50px;
+        width: 75px;
+        height: 75px;
     }
 </style>

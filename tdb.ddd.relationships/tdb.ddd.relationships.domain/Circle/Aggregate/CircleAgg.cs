@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using tdb.ddd.contracts;
 using tdb.ddd.domain;
 using tdb.ddd.infrastructure;
+using tdb.ddd.infrastructure.Services;
+using tdb.ddd.relationships.domain.BusMediatR;
 using tdb.ddd.relationships.domain.contracts.Enum;
 using tdb.ddd.relationships.infrastructure.Config;
 
@@ -49,7 +51,8 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         /// <summary>
         /// 图标ID
         /// </summary>
-        public long? ImageID { get; set; }
+        [JsonInclude]
+        public long? ImageID { get; internal set; }
 
         /// <summary>
         /// 成员数上限
@@ -75,6 +78,30 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         #endregion
 
         #region 行为
+
+        /// <summary>
+        /// 设置图标ID并保存
+        /// </summary>
+        /// <param name="imageID">图标ID</param>
+        /// <returns></returns>
+        public async Task SetImageIDAndSaveAsync(long? imageID)
+        {
+            var oldImageID = this.ImageID;
+            this.ImageID = imageID;
+
+            await this.SaveAsync();
+
+            if (oldImageID is not null)
+            {
+                //删除原图标通知
+                this.PublishOperateImageMsg(oldImageID.Value, PhotoOperationNotification.EnmOperationType.Delete);
+            }
+            if (this.ImageID is not null)
+            {
+                //添加新图标通知
+                this.PublishOperateImageMsg(this.ImageID.Value, PhotoOperationNotification.EnmOperationType.Save);
+            }
+        }
 
         /// <summary>
         /// 获取圈内成员数
@@ -190,6 +217,33 @@ namespace tdb.ddd.relationships.domain.Circle.Aggregate
         public async Task DeleteAsync()
         {
             await this.Repos.DeleteCircleAsync(this);
+
+            if (this.ImageID is not null)
+            {
+                //删除图标通知
+                this.PublishOperateImageMsg(this.ImageID.Value, PhotoOperationNotification.EnmOperationType.Delete);
+            }
+        }
+
+        #endregion
+
+        #region 私有方法 
+
+        /// <summary>
+        /// 发布操作图片消息
+        /// </summary>
+        /// <param name="imageID">图片ID</param>
+        /// <param name="opeTypeCode">操作类型</param>
+        private void PublishOperateImageMsg(long imageID, PhotoOperationNotification.EnmOperationType opeTypeCode)
+        {
+            var msg = new PhotoOperationNotification()
+            {
+                PhotoID = imageID,
+                OperationTypeCode = opeTypeCode,
+                OperatorID = this.UpdateInfo.UpdaterID,
+                OperationTime = this.UpdateInfo.UpdateTime
+            };
+            TdbMediatR.Publish(msg);
         }
 
         #endregion

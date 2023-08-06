@@ -34,9 +34,9 @@
 			});
 		},
 		//下拉刷新
-		onPullDownRefresh() {
+		async onPullDownRefresh() {
 			//获取我加入的人际圈列表
-			this.getListCircle(false);
+			await this.getListCircle(false);
 			//关闭刷新动画
 			uni.stopPullDownRefresh();
 		},

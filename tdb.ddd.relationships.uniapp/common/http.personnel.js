@@ -13,7 +13,9 @@ const apiPersonnel = {
 	//删除人员
 	deletePersonnel: async (params={}) => api.post('/tdb.ddd.relationships/v1/Personnel/DeletePersonnel', params),
 	//添加人员照片
-	addPersonnelPhoto: async (params={}) => api.post('/tdb.ddd.relationships/v1/Personnel/AddPersonnelPhoto', params),
+	addPersonnelPhoto: async (params = {}) => api.post('/tdb.ddd.relationships/v1/Personnel/AddPersonnelPhoto', params),
+	//删除人员照片
+	deletePersonnelPhoto: async (params = {}) => api.post('/tdb.ddd.relationships/v1/Personnel/DeletePersonnelPhoto', params),
 	//设置人员头像照片
 	setHeadImg: async (params={}) => api.post('/tdb.ddd.relationships/v1/Personnel/SetHeadImg', params),
 };

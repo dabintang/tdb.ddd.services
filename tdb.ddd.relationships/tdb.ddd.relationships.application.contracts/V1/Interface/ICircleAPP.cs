@@ -64,6 +64,13 @@ namespace tdb.ddd.relationships.application.contracts.V1.Interface
         Task<TdbRes<bool>> RemoveMemberAsync(TdbOperateReq<RemoveMemberReq> req);
 
         /// <summary>
+        /// 批量移出成员
+        /// </summary>
+        /// <param name="req">请求参数</param>
+        /// <returns></returns>
+        Task<TdbRes<BatchRemoveMemberRes>> BatchRemoveMemberAsync(TdbOperateReq<BatchRemoveMemberReq> req);
+
+        /// <summary>
         /// 设置成员角色
         /// </summary>
         /// <param name="req">请求参数</param>
