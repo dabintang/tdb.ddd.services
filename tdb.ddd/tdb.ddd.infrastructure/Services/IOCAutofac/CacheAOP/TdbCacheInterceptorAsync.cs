@@ -292,7 +292,7 @@ namespace tdb.ddd.infrastructure.Services
                 //直接获取
                 if (string.IsNullOrWhiteSpace(attrKey.FromPropertyName))
                 {
-                    key.Append($".{param.ToStr()}");
+                    key.Append($".{ParamToStr(param)}");
                 }
                 //从属性获取
                 else
@@ -304,7 +304,7 @@ namespace tdb.ddd.infrastructure.Services
                     }
 
                     var paramValue = CommHelper.ReflectGet(param, attrKey.FromPropertyName);
-                    key.Append($".{paramValue.ToStr()}");
+                    key.Append($".{ParamToStr(paramValue)}");
                 }
             }
 
@@ -313,7 +313,29 @@ namespace tdb.ddd.infrastructure.Services
                 key.Remove(0, 1);
             }
 
+            TdbLogger.Ins.Warn($"TdbCacheInterceptorAsync获取到key：{key.ToString()}");
+
             return key.ToString();
+        }
+
+        /// <summary>
+        /// 参数转字符串
+        /// </summary>
+        /// <param name="param">参数值</param>
+        /// <returns></returns>
+        private static string ParamToStr(object? param)
+        {
+            if (param is null)
+            {
+                return string.Empty;
+            }
+
+            if (param is Enum)
+            {
+                return Convert.ToInt32(param).ToStr();
+            }
+
+            return param.ToStr();
         }
 
         #endregion

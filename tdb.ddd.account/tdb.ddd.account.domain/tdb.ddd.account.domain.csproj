@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.1" />
-    <PackageReference Include="tdb.ddd.domain" Version="7.0.0.19" />
+    <PackageReference Include="tdb.ddd.domain" Version="7.0.0.20" />
   </ItemGroup>
 
   <ItemGroup>

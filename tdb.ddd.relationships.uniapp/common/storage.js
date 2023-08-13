@@ -22,6 +22,8 @@ const storage = {
 		}
 		return fingerprint;
 	},
+	//移除是否启用指纹
+	removeFingerprint: () => uni.removeStorageSync('fingerprint'),
 	
 	//保存token
 	setToken: (val) => uni.setStorageSync('token', val),

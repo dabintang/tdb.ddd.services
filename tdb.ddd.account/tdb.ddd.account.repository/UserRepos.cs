@@ -10,11 +10,8 @@ using tdb.ddd.repository.sqlsugar;
 using tdb.ddd.infrastructure.Services;
 using tdb.ddd.account.infrastructure;
 using Autofac.Extras.DynamicProxy;
-using tdb.common;
-using Castle.DynamicProxy;
-using System.Globalization;
-using tdb.ddd.contracts;
-using tdb.ddd.infrastructure;
+using tdb.ddd.account.domain.contracts.Enum;
+using static tdb.ddd.contracts.TdbCst;
 
 namespace tdb.ddd.account.repository
 {

@@ -84,6 +84,13 @@
                     ImageUrl: '/static/img/reduce.png',
                     TypeCode: 'reduce'
                 },
+                //当前登录用户信息
+                curUser: {
+                    ID: '', //用户ID
+                    Name: '', //姓名
+                    HeadImgID: null, //头像ID
+                    PersonnelID: '', //人员ID
+                },
                 // 是否修改过数据
                 isChanged: false
             }
@@ -94,7 +101,21 @@
             uni.$on('batch.add.circle.member', (lstSelectedID) => { this.batchAddMember(lstSelectedID) });
             //监听批量移除成员事件
             uni.$on('batch.remove.circle.member', (lstSelectedID) => { this.batchRemoveMember(lstSelectedID) });
+            //设置成员角色
+            uni.$on('set.member.role', (e) => {
+                if (this.circleInfo.ID != e.CircleID) {
+                    return;
+                }
 
+                this.lstMember.forEach(item => {
+                    if (item.PersonnelID == e.PersonnelID) {
+                        item.RoleCode = e.RoleCode;
+                    }
+                });
+            });
+
+            //获取当前用户信息
+            this.curUser = this.$storage.getCurrentUser();
             //获取人际圈信息
             this.getCircle(option.id);
             //查询人际圈内成员信息列表
@@ -119,13 +140,12 @@
             isCreator() {
                 if (this.circleInfo.CreatorID) {
                     //获取当前用户信息
-                    let curUser = this.$storage.getCurrentUser();
-                    if (curUser && curUser.ID == this.circleInfo.CreatorID) {
+                    if (this.curUser && this.curUser.ID == this.circleInfo.CreatorID) {
                         return true;
                     }
                 }
                 return false;
-            }
+            },
         },
         methods: {
             //获取人际圈信息
@@ -248,20 +268,25 @@
                 //查询人际圈内成员信息列表
                 let res = await this.$apiReport.queryCirclePersonnelList(req);
                 let list = [];
+                let isAdmin = false; //当前登录用户是否人际圈的管理员
                 res.Data.forEach(item => {
                     list.push({
                         PersonnelID: item.PersonnelID,
                         HeadImgID: item.HeadImgID,
                         Name: item.Name,
-                        PersonnelCreatorID: item.PersonnelCreatorID
+                        PersonnelCreatorID: item.PersonnelCreatorID,
+                        RoleCode: item.RoleCode
                     });
+                    if (item.PersonnelID == this.curUser.PersonnelID && item.RoleCode == 2) {
+                        isAdmin = true;
+                    }
                 });
-				
+
 				//如果当前登录用户为人际圈管理员，显示加减成员的按钮
-				//if (this.isCreator) {
+                if (isAdmin) {
 					list.push(this.memberPlus);
 					list.push(this.memberReduce);
-				//}
+				}
                
                 this.lstMember = list;
             },
@@ -279,14 +304,21 @@
             gridClick(e) {
                 let index = e.detail.index;
                 let memberInfo = this.lstMember[index];
-                if (memberInfo && memberInfo.TypeCode == 'plus') {
-                    //显示添加成员选择页面
-                    this.showPlusMemberPage();
-                } else if (memberInfo && memberInfo.TypeCode == 'reduce') {
-                    //显示移除成员选择页面
-                    this.showReduceMemberPage();
-                } else {
-                    
+                if (memberInfo) {
+                    if (memberInfo.TypeCode == 'plus') {
+                        //显示添加成员选择页面
+                        this.showPlusMemberPage();
+                    } else if (memberInfo.TypeCode == 'reduce') {
+                        //显示移除成员选择页面
+                        this.showReduceMemberPage();
+                    } else {
+                        //跳转到成员详情页面
+                        uni.navigateTo({
+                            url: '/pages/circle/memberDetail?id=' + memberInfo.PersonnelID + '&circleID=' + this.circleInfo.ID + '&roleCode=' + memberInfo.RoleCode + '&isCreator=' + this.isCreator,
+                            animationType: 'pop-in',
+                            animationDuration: 300
+                        });
+                    }
                 }
             },
             //显示添加成员选择页面
@@ -341,14 +373,10 @@
             },
             //显示移除成员选择页面
             showReduceMemberPage() {
-                //获取当前用户信息
-                let curUser = this.$storage.getCurrentUser();
-                //console.log('curUser', JSON.stringify(curUser));
-
                 let list = [];
                 this.lstMember.forEach(item => {
                     console.log('item', JSON.stringify(item));
-                    if (item.PersonnelID && item.PersonnelID != curUser.PersonnelID && item.PersonnelCreatorID == curUser.ID) {
+                    if (item.PersonnelID && item.PersonnelID != this.curUser.PersonnelID && item.PersonnelCreatorID == this.curUser.ID) {
                         list.push({
                             PersonnelID: item.PersonnelID,
                             HeadImgID: item.HeadImgID,

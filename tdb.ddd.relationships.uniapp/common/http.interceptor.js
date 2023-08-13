@@ -46,7 +46,7 @@ uni.addInterceptor('request', {
 		args.url = `${args.url}?${newData}`;
     }
 
-	console.log('interceptor-invoke', JSON.stringify(args));
+	console.log('interceptor-invoke', JSON.stringify(args)); 
   },
   success(args) {
 	//console.log('interceptor-success',args)

@@ -56,6 +56,12 @@ namespace tdb.ddd.relationships.application.contracts.V1.DTO.Personnel
         public string Remark { get; set; } = "";
 
         /// <summary>
+        /// 用户账户ID
+        /// </summary>
+        [TdbHashIDJsonConverter]
+        public long? UserID { get; set; }
+
+        /// <summary>
         /// 创建者ID
         /// </summary>
         [TdbHashIDJsonConverter]

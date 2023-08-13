@@ -59,6 +59,26 @@ namespace tdb.ddd.account.infrastructure.Config
         /// </summary>
         public TdbResMsgInfo HeadImgNotExist { get; set; }
 
+        /// <summary>
+        /// 凭证已存在
+        /// </summary>
+        public TdbResMsgInfo CertificateExist { get; set; }
+
+        /// <summary>
+        /// 凭证已绑定其他用户
+        /// </summary>
+        public TdbResMsgInfo CertificateHadBindUser { get; set; }
+
+        /// <summary>
+        /// 凭证不存在
+        /// </summary>
+        public TdbResMsgInfo CertificateNotExist { get; set; }
+
+        /// <summary>
+        /// 凭证登录失败
+        /// </summary>
+        public TdbResMsgInfo CertificateLoginFailed { get; set; }
+
 #pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
     }
 }

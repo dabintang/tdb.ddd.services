@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using tdb.ddd.account.domain.Authority.Aggregate;
+using tdb.ddd.account.domain.Certificate.Aggregate;
 using tdb.ddd.account.domain.Role.Aggregate;
 using tdb.ddd.account.domain.User.Aggregate;
 using tdb.ddd.account.repository.DBEntity;
@@ -104,6 +105,13 @@ namespace tdb.ddd.account.repository
                 .ForMember(dest => dest.EmailValue, opts => opts.MapFrom(src => new EmailValueObject() { Email = src.Email, IsEmailVerified = src.IsEmailVerified }))
                 .ForMember(dest => dest.CreateInfo, opts => opts.MapFrom(src => new CreateInfoValueObject() { CreatorID = src.CreatorID, CreateTime = src.CreateTime }))
                 .ForMember(dest => dest.UpdateInfo, opts => opts.MapFrom(src => new UpdateInfoValueObject() { UpdaterID = src.UpdaterID, UpdateTime = src.UpdateTime }));
+
+            cfg.CreateMap<CertificateAgg, CertificateInfo>()
+              .ForMember(dest => dest.CreatorID, opts => opts.MapFrom(src => src.CreateInfo.CreatorID))
+              .ForMember(dest => dest.CreateTime, opts => opts.MapFrom(src => src.CreateInfo.CreateTime));
+            cfg.CreateMap<CertificateInfo, CertificateAgg>()
+                 .ForMember(dest => dest.CreateInfo, opts => opts.MapFrom(src => new CreateInfoValueObject() { CreatorID = src.CreatorID, CreateTime = src.CreateTime }));
+
         }
     }
 }

@@ -7,8 +7,8 @@
 
 <script>
     import { pinyin } from 'pinyin-pro';
-    import groupBy from "@/common/groupBy";
     import Enumerable from "linq";
+    import util from "@/common/util";
     export default {
         data() {
             return {
@@ -63,7 +63,7 @@
 
                 let lstTemp2 = [];
                 //按首字母分组
-                let group = groupBy(lstTemp, (item) => {
+                let group = util.Fun.groupBy(lstTemp, (item) => {
                     return item.letter;
                 });
                 for (var key in group) {

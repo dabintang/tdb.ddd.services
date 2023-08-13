@@ -68,7 +68,74 @@ const uniCom = {
 		}
 
 		return status;
-    }
+	},
+	//检查设备是否支持指定的生物认证方式（supportMode支持：指纹识别fingerPrint）
+	checkIsSupportSoterAuthentication: async (supportMode) => {
+		try {
+			let res = await uni.checkIsSupportSoterAuthentication();
+			console.log('uni.checkIsSupportSoterAuthentication.success', JSON.stringify(res));
+
+			if (res.supportMode.indexOf(supportMode) >= 0) {
+				return true;
+			}
+			return false;
+		} catch (err) {
+			console.log('uni.checkIsSupportSoterAuthentication.error', JSON.stringify(err));
+			return false;
+        }
+	},
+	//检查是否已录入指定的生物认证方式（checkAuthMode支持：指纹识别fingerPrint）
+	checkIsSoterEnrolledInDevice: async (checkAuthMode) => {
+		try {
+			let res = await uni.checkIsSoterEnrolledInDevice({ checkAuthMode: checkAuthMode });
+			console.log('uni.checkIsSoterEnrolledInDevice.success', JSON.stringify(res));
+
+			return res.isEnrolled;
+		} catch (err) {
+			console.log('uni.checkIsSoterEnrolledInDevice.error', JSON.stringify(err));
+			return false;
+		}
+	},
+	//生物认证
+	//（入参requestAuthModes数组支持：指纹识别fingerPrint，如：['fingerPrint']）
+    //（出参[code:msg]：[0:认证成功]、[1:设备不支持]、[2:未授权]、[3:认证失败]）
+	startSoterAuthentication: async (requestAuthModes) => {
+		try {
+			let res = await uni.startSoterAuthentication({
+				requestAuthModes: requestAuthModes,
+				challenge: '123456',
+				authContent: ''
+			});
+			console.log('uni.startSoterAuthentication.success', JSON.stringify(res));
+
+			switch (res.errCode) {
+				case 0: //0:识别成功
+					return { code: 0, msg:'识别成功'};
+				case 90001: //90001:本设备不支持生物认证
+				case 90003: //90003:请求使用的生物认证方式不支持
+					return { code: 1, msg: '设备不支持' };
+				case 90002: //90002:用户未授权使用该生物认证接口
+				case 90008: //90008:用户取消授权
+					return { code: 2, msg: '未授权' };
+				case 90004: //90004:未传入challenge或challenge长度过长（最长512字符）
+				case 90005: //90005:auth_content长度超过限制（最长42个字符）
+				case 90007: //90007:内部错误
+				case 90009: //90009:识别失败
+				case 90010: //90010:重试次数过多被冻结
+				case 90011: //90011:用户未录入所选识别方式
+					return { code: 3, msg: '认证失败' };
+            }
+			return { code: 3, msg: '认证失败' };
+		} catch (err) {
+			console.log('uni.startSoterAuthentication.error', JSON.stringify(err));
+			return { code: 3, msg: '认证失败' };
+		}
+	},
+	//获取系统信息{deviceId:123,...}
+	getSystemInfoSync: () => {
+		//获取系统信息
+		return uni.getSystemInfoSync();
+	},
 };
 
 export default uniCom;

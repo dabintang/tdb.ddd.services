@@ -46,7 +46,7 @@
                 <uni-grid :column="4" :show-border="false" @change="gridClick">
                     <uni-grid-item v-for="(item, index) in lstImage" :index="index" :key="index">
                         <view class="grid-item-box">
-                            <image :src="showImage(item,90)" class="grid-image" mode="aspectFill" />
+                            <image :src="showImage(item,85)" class="grid-image" mode="aspectFill" />
                         </view>
                     </uni-grid-item>
                 </uni-grid>
@@ -380,7 +380,7 @@
         padding: 1px;
     }
     .grid-image {
-        width: 90px;
-        height: 90px;
+        width: 85px;
+        height: 85px;
     }
 </style>

@@ -35,5 +35,21 @@
   "HeadImgNotExist": {
     "Code": 1009,
     "Msg": "头像不存在"
+  },
+  "CertificateExist": {
+    "Code": 1010,
+    "Msg": "凭证已存在"
+  },
+  "CertificateHadBindUser": {
+    "Code": 1011,
+    "Msg": "凭证已绑定其他用户"
+  },
+  "CertificateNotExist": {
+    "Code": 1012,
+    "Msg": "凭证不存在"
+  },
+  "CertificateLoginFailed": {
+    "Code": 1013,
+    "Msg": "凭证登录失败"
   }
 }

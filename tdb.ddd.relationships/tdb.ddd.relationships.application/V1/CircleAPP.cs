@@ -525,8 +525,17 @@ namespace tdb.ddd.relationships.application.V1
                 return new TdbRes<bool>(TdbComResMsg.InsufficientPermissions, false);
             }
 
+            //人员领域服务
+            var personnelService = new PersonnelService();
+            //获取人员信息
+            var personnelInfo = await personnelService.GetByIDAsync(param.PersonnelID);
+            if (personnelInfo is null)
+            {
+                return new TdbRes<bool>(RelationshipsConfig.Msg.PersonnelNotExist, false);
+            }
+
             //创建人本身为管理员角色且不能改成非管理员
-            if (circleAgg.CreateInfo.CreatorID == param.PersonnelID)
+            if (personnelInfo.UserID is not null && circleAgg.CreateInfo.CreatorID == personnelInfo.UserID)
             {
                 return new TdbRes<bool>(RelationshipsConfig.Msg.CreatorMustBeAdmin, false);
             }
@@ -574,8 +583,13 @@ namespace tdb.ddd.relationships.application.V1
 
                 //获取人员信息
                 var personnelInfo = await personnelService.GetByIDAsync(param.PersonnelID);
+                if (personnelInfo is null)
+                {
+                    return new TdbRes<bool>(RelationshipsConfig.Msg.PersonnelNotExist, false);
+                }
+
                 //是否人员创建者
-                if (personnelInfo is not null && personnelInfo.CreateInfo.CreatorID != req.OperatorID)
+                if (personnelInfo.CreateInfo.CreatorID != req.OperatorID)
                 {
                     return new TdbRes<bool>(TdbComResMsg.InsufficientPermissions, false);
                 }

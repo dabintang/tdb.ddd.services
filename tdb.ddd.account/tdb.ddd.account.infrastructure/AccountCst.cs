@@ -40,6 +40,16 @@ namespace tdb.ddd.account.infrastructure
             /// hash形式缓存的权限信息
             /// </summary>
             public const string HashAuthorityByID = "HashAuthorityByID";
+
+            /// <summary>
+            /// hash形式缓存的凭证信息
+            /// </summary>
+            public const string HashCertificateByTypeAndContext = "HashCertificateByTypeAndContext";
+
+            /// <summary>
+            /// hash形式缓存的凭证用户ID
+            /// </summary>
+            public const string HashCertificateUserIDsByCertificateID = "HashCertificateUserIDsByCertificateID";
         }
 
         /// <summary>

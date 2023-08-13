@@ -72,4 +72,28 @@ CREATE TABLE `user_role_config`  (
   PRIMARY KEY (`UserID`, `RoleID`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '用户角色配置' ROW_FORMAT = DYNAMIC;
 
+-- ----------------------------
+-- Table structure for certificate_info
+-- ----------------------------
+-- DROP TABLE IF EXISTS `certificate_info`;
+CREATE TABLE `certificate_info`  (
+  `ID` bigint NOT NULL AUTO_INCREMENT COMMENT '自增主键ID',
+  `CertificateTypeCode` tinyint NOT NULL COMMENT '凭证类型（1：指纹）',
+  `Credentials` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '凭证内容（如果超过32需MD5下）',
+  `CreatorID` bigint NOT NULL COMMENT '创建者ID',
+  `CreateTime` datetime(3) NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`ID`) USING BTREE,
+  UNIQUE INDEX `Index_UserCertificate_Certificate`(`CertificateTypeCode`, `Credentials`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '凭证信息' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for certificate_user_config
+-- ----------------------------
+-- DROP TABLE IF EXISTS `certificate_user_config`;
+CREATE TABLE `certificate_user_config`  (
+  `CertificateID` bigint NOT NULL COMMENT '凭证ID',
+  `UserID` bigint NOT NULL COMMENT '用户ID',
+  PRIMARY KEY (`CertificateID`, `UserID`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '凭证用户配置表' ROW_FORMAT = Dynamic;
+
 SET FOREIGN_KEY_CHECKS = 1;
