@@ -4,13 +4,9 @@ using Autofac.Extensions.DependencyInjection;
 using DotNetCore.CAP;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.IO.Compression;
 using System.Text;
 using tdb.common;
@@ -18,7 +14,6 @@ using tdb.ddd.contracts;
 using tdb.ddd.domain;
 using tdb.ddd.infrastructure;
 using tdb.ddd.infrastructure.Services;
-using static tdb.ddd.webapi.Common.TdbWebAppBuilderOption;
 
 namespace tdb.ddd.webapi.Common
 {
@@ -357,7 +352,7 @@ namespace tdb.ddd.webapi.Common
         /// </summary>
         /// <param name="builder"></param>
         /// <param name="capOption">DotNetCore.CAP选项</param>
-        private static void UseDotNetCoreCAP(WebApplicationBuilder builder, TdbDotNetCoreCAPOption capOption)
+        private static void UseDotNetCoreCAP(WebApplicationBuilder builder, TdbWebAppBuilderOption.TdbDotNetCoreCAPOption capOption)
         {
             builder.Services.AddTdbBusCAP(capOption.SetupDotNetCoreCAP, capOption.AssemblyModule);
 
@@ -967,10 +962,12 @@ namespace tdb.ddd.webapi.Common
                 //options.FailedThresholdCallback = null;
                 ////重试次数
                 //options.FailedRetryCount = 50;
-                ////消费者线程数，如果值大于1则不保证消息的执行顺序
-                //options.ConsumerThreadCount = 1;
-                //是否每组独立调度
-                options.UseDispatchingPerGroup = true;
+                //消费者线程数，如果值大于1则不保证消息的执行顺序
+                options.ConsumerThreadCount = 10;
+                //是否每组独立调度【[Obsolete("Use EnableConsumerPrefetch instead. Setting it to true means that each consumer is now executed concurrently by thread pool, regardless of whether they are in different groups.")]】
+                //options.UseDispatchingPerGroup = true;
+                //启用消费者预取
+                options.EnableConsumerPrefetch = true;
                 //生产者线程数，如值大于1则不保证消息的执行顺序
                 //options.ProducerThreadCount = 1;
                 //json序列号选项
