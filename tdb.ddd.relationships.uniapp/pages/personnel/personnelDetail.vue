@@ -46,7 +46,7 @@
                 <uni-grid :column="4" :show-border="false" @change="gridClick">
                     <uni-grid-item v-for="(item, index) in lstImage" :index="index" :key="index">
                         <view class="grid-item-box">
-                            <image :src="showImage(item,85)" class="grid-image" mode="aspectFill" />
+                            <image :src="showImage(item,100)" class="grid-image" mode="aspectFill" />
                         </view>
                     </uni-grid-item>
                 </uni-grid>
@@ -130,7 +130,7 @@
             //人员头像
             headImage() {
                 if (this.personnelInfo.HeadImgID) {
-                    return this.$apiFiles.downloadImageAnonUrl(this.personnelInfo.HeadImgID, 40);
+                    return this.$apiFiles.downloadImageAnonUrl(this.personnelInfo.HeadImgID, 100);
                 } else {
                     return '/static/img/personnel-default-head.png';
                 }

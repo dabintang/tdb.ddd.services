@@ -671,7 +671,7 @@ namespace tdb.ddd.relationships.application.V1
         /// </summary>
         /// <param name="req">请求参数</param>
         /// <returns></returns>
-        public async Task<TdbRes<bool>> JoinByInvitationCodeAsync(TdbOperateReq<JoinByInvitationCodeReq> req)
+        public async Task<TdbRes<JoinByInvitationCodeRes>> JoinByInvitationCodeAsync(TdbOperateReq<JoinByInvitationCodeReq> req)
         {
             //参数
             var param = req.Param;
@@ -680,13 +680,13 @@ namespace tdb.ddd.relationships.application.V1
             var invCodeInfo = InvitationCodeInfo.FromCode(param.Code);
             if (invCodeInfo is null)
             {
-                return new TdbRes<bool>(RelationshipsConfig.Msg.InvalidInvitationCode, false);
+                return new TdbRes<JoinByInvitationCodeRes>(RelationshipsConfig.Msg.InvalidInvitationCode, null);
             }
 
             //是否已过期
             if (invCodeInfo.ExpireAt < DateTime.Now)
             {
-                return new TdbRes<bool>(RelationshipsConfig.Msg.ExpiredInvitationCode, false);
+                return new TdbRes<JoinByInvitationCodeRes>(RelationshipsConfig.Msg.ExpiredInvitationCode, null);
             }
 
             //人际圈领域服务
@@ -696,7 +696,7 @@ namespace tdb.ddd.relationships.application.V1
             var circleAgg = await circleService.GetByIDAsync(invCodeInfo.CircleID);
             if (circleAgg is null)
             {
-                return new TdbRes<bool>(RelationshipsConfig.Msg.InvalidInvitationCode, false);
+                return new TdbRes<JoinByInvitationCodeRes>(RelationshipsConfig.Msg.InvalidInvitationCode, null);
             }
 
             //TODO：如果担心超员，应该加分布式锁
@@ -704,7 +704,7 @@ namespace tdb.ddd.relationships.application.V1
             var memberCount = await circleAgg.CountMembersAsync();
             if (memberCount >= circleAgg.MaxMembers)
             {
-                return new TdbRes<bool>(RelationshipsConfig.Msg.ReachedMemberLimit, false);
+                return new TdbRes<JoinByInvitationCodeRes>(RelationshipsConfig.Msg.ReachedMemberLimit, null);
             }
 
             //人员领域服务
@@ -714,34 +714,34 @@ namespace tdb.ddd.relationships.application.V1
             var inviterPersonnelInfo = await personnelService.GetByUserIDAsync(invCodeInfo.InviterID);
             if (inviterPersonnelInfo is null)
             {
-                return new TdbRes<bool>(RelationshipsConfig.Msg.InvalidInvitationCode, false);
+                return new TdbRes<JoinByInvitationCodeRes>(RelationshipsConfig.Msg.InvalidInvitationCode, null);
             }
 
             //获取邀请人的成员信息
             var inviterMemberInfo = await circleAgg.GetMemberAsync(inviterPersonnelInfo.ID);
             if (inviterMemberInfo is null)
             {
-                return new TdbRes<bool>(RelationshipsConfig.Msg.InvalidInvitationCode, false);
+                return new TdbRes<JoinByInvitationCodeRes>(RelationshipsConfig.Msg.InvalidInvitationCode, null);
             }
 
             //判断邀请者是否有管理员权限
             if (inviterMemberInfo.RoleCode != EnmRole.Admin)
             {
-                return new TdbRes<bool>(RelationshipsConfig.Msg.InvalidInvitationCode, false);
+                return new TdbRes<JoinByInvitationCodeRes>(RelationshipsConfig.Msg.InvalidInvitationCode, null);
             }
 
             //获取我的人员信息
             var myPersonnelInfo = await personnelService.GetByUserIDAsync(req.OperatorID);
             if (myPersonnelInfo is null)
             {
-                return new TdbRes<bool>(RelationshipsConfig.Msg.PersonnelNotExist.FromNewMsg("我的人员信息不存在"), false);
+                return new TdbRes<JoinByInvitationCodeRes>(RelationshipsConfig.Msg.PersonnelNotExist.FromNewMsg("我的人员信息不存在"), null);
             }
 
             //获取我的成员信息，判断我是否已在圈内
             var memberInfo = await circleAgg.GetMemberAsync(myPersonnelInfo.ID);
             if (memberInfo is not null)
             {
-                return new TdbRes<bool>(RelationshipsConfig.Msg.PersonnelHadInCircle, false);
+                return new TdbRes<JoinByInvitationCodeRes>(RelationshipsConfig.Msg.PersonnelHadInCircle, null);
             }
 
             //生成成员信息
@@ -756,7 +756,7 @@ namespace tdb.ddd.relationships.application.V1
             //提交事务
             TdbRepositoryTran.CommitTran();
 
-            return TdbRes.Success(true);
+            return TdbRes.Success(new JoinByInvitationCodeRes() { CircleID = circleAgg.ID, CircleName = circleAgg.Name });
         }
 
         /// <summary>

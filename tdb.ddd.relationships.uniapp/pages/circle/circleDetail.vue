@@ -131,7 +131,7 @@
             //人际圈图标
             circleImage() {
                 if (this.circleInfo.ImageID) {
-                    return this.$apiFiles.downloadImageAnonUrl(this.circleInfo.ImageID,40);
+                    return this.$apiFiles.downloadImageAnonUrl(this.circleInfo.ImageID,100);
                 } else {
                     return '/static/img/circle-default-head.png';
                 }
@@ -258,6 +258,36 @@
                     }
                 }
             },
+            //退出该人际圈
+            async withdrawCircle() {
+                let resAsk = await uni.showModal({
+                    title: '退出确认',
+                    content: '你确定要退出该人际圈吗？'
+                });
+                if (resAsk && resAsk.confirm) {
+                    let req = {
+                        CircleID: this.circleInfo.ID
+                    };
+                    //解散人际圈
+                    let res = await this.$apiCircle.withdrawCircle(req);
+                    if (res.Code == this.$resCode.success) {
+                        this.isChanged = true;
+                        //页面跳转
+                        uni.showToast({
+                            title: '退出成功',
+                            icon: 'none',
+                            complete: () => {
+                                //跳转到登录页
+                                uni.navigateBack({
+                                    success: function () {
+                                        uni.$emit('refresh.circle.list'); //刷新人际圈列表
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            },
             //查询人际圈内成员信息列表
             async queryCirclePersonnelList(circleID) {
                 let req = {
@@ -293,7 +323,7 @@
             //显示成员头像
             showHeadImage(menberInfo) {
                 if (menberInfo.HeadImgID) {
-                    return this.$apiFiles.downloadImageAnonUrl(menberInfo.HeadImgID, 75);
+                    return this.$apiFiles.downloadImageAnonUrl(menberInfo.HeadImgID, 100);
                 } else if (menberInfo.ImageUrl) {
                     return menberInfo.ImageUrl;
                 } else {

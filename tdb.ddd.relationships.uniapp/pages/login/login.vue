@@ -114,7 +114,7 @@
                     };
 					//指纹登录
 					let resLogin = await this.$apiAccount.certificateLogin(req);
-					console.log('指纹登录结果：', JSON.stringify(resLogin));
+					//console.log('指纹登录结果：', JSON.stringify(resLogin));
 					if (resLogin && resLogin.Code == this.$resCode.success) {
                         //保存token
 						this.$storage.setToken(resLogin.Data);

@@ -202,7 +202,7 @@ namespace tdb.ddd.relationships.webapi.Controllers.V1
         /// <returns></returns>
         [HttpPost]
         [TdbAPILog]
-        public async Task<TdbRes<bool>> JoinByInvitationCode([FromBody] JoinByInvitationCodeReq req)
+        public async Task<TdbRes<JoinByInvitationCodeRes>> JoinByInvitationCode([FromBody] JoinByInvitationCodeReq req)
         {
             //参数
             var reqOpe = this.CreateTdbOperateReq(req);

@@ -64,7 +64,23 @@
 			"path": "pages/my/my",
 			"style": {
 				"navigationBarTitleText": "个人中心",
-				"enablePullDownRefresh": true
+				"enablePullDownRefresh": true,
+				// #ifdef APP-PLUS
+				"app-plus": {
+					"bounce": "vertical",
+					"titleNView": {
+						"buttons": [
+							{
+								"text": "\ue612",
+								"tag": "scan",
+								"fontSrc": "/static/uni/uni.ttf",
+								"fontSize": "27px",
+								"color": "#2B85E4"
+							}
+						]
+					}
+				}
+				// #endif
 			}
 		},
 		{

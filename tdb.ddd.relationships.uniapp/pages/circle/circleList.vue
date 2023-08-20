@@ -58,7 +58,7 @@
 			//显示人际圈图标
 			showCircleImage(circleInfo) {
 				if (circleInfo.ImageID) {
-					return this.$apiFiles.downloadImageAnonUrl(circleInfo.ImageID, 40);
+					return this.$apiFiles.downloadImageAnonUrl(circleInfo.ImageID, 100);
 				} else {
 					return '/static/img/circle-default-head.png';
 				}

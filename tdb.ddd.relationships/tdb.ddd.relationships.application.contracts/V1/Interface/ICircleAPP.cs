@@ -96,7 +96,7 @@ namespace tdb.ddd.relationships.application.contracts.V1.Interface
         /// </summary>
         /// <param name="req">请求参数</param>
         /// <returns></returns>
-        Task<TdbRes<bool>> JoinByInvitationCodeAsync(TdbOperateReq<JoinByInvitationCodeReq> req);
+        Task<TdbRes<JoinByInvitationCodeRes>> JoinByInvitationCodeAsync(TdbOperateReq<JoinByInvitationCodeReq> req);
 
         /// <summary>
         /// 退出人际圈

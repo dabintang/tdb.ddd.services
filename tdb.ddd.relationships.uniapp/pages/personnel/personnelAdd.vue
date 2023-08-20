@@ -86,7 +86,7 @@
             //人员头像
             headImage() {
                 if (this.personnelInfo.HeadImgID) {
-                    return this.$apiFiles.downloadImageAnonUrl(this.personnelInfo.HeadImgID, 40);
+                    return this.$apiFiles.downloadImageAnonUrl(this.personnelInfo.HeadImgID, 100);
                 } else {
                     return '/static/img/personnel-default-head.png';
                 }

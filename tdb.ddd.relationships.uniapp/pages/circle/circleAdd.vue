@@ -52,7 +52,7 @@
 			//人际圈图标
 			circleImage() {
 				if (this.circleInfo.ImageID) {
-					return this.$apiFiles.downloadImageAnonUrl(this.circleInfo.ImageID, 40);
+					return this.$apiFiles.downloadImageAnonUrl(this.circleInfo.ImageID, 100);
 				} else {
 					return '/static/img/circle-default-head.png';
 				}

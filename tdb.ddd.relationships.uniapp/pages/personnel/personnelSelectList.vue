@@ -78,7 +78,7 @@
             //获取人员头像地址
             getPersonnelHeadImage(personnelInfo) {
                 if (personnelInfo.HeadImgID) {
-                    return this.$apiFiles.downloadImageAnonUrl(personnelInfo.HeadImgID, 40);
+                    return this.$apiFiles.downloadImageAnonUrl(personnelInfo.HeadImgID, 100);
                 } else {
                     return '/static/img/personnel-default-head.png';
                 }

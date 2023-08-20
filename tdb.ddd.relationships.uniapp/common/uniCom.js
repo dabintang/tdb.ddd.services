@@ -136,6 +136,42 @@ const uniCom = {
 		//获取系统信息
 		return uni.getSystemInfoSync();
 	},
+	//扫码（返回值{result:'',...}，如果result有值则是扫码成功，否则扫码失败）
+	scanCode: async () => {
+		// #ifdef APP-PLUS
+		let status = await uniCom.checkScanCodePermission();
+		if (status !== 1) {
+			return;
+		}
+		// #endif
+
+		try {
+			let res = await uni.scanCode();
+			console.log('uni.scanCode.success', JSON.stringify(res));
+			return res;
+		} catch (err) {
+			console.log('uni.scanCode.error', JSON.stringify(err));
+			return err;
+		}
+	},
+	//检查扫码权限
+	checkScanCodePermission: async () => {
+		let status = permision.isIOS ? await permision.requestIOS('camera') : await permision.requestAndroid('android.permission.CAMERA');
+		if (status === null || status === 1) {
+			status = 1;
+		} else {
+			uni.showModal({
+				content: "需要相机权限",
+				confirmText: "设置",
+				success: function (res) {
+					if (res.confirm) {
+						permision.gotoAppSetting();
+					}
+				}
+			})
+		}
+		return status;
+	},
 };
 
 export default uniCom;

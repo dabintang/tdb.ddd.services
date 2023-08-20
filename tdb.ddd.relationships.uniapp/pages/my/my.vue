@@ -1,14 +1,14 @@
 <!-- 个人中心页 -->
 <template>
-	<view>
-		<uni-card :title="curUser.Name" :thumbnail="headImage">
-			<uni-list>
-				<uni-list-item title="启用指纹登录" :rightText="supportFingerPrintText" thumb="/static/img/fingerprint.png" thumb-size="sm"
-							   :show-switch="isSupportFingerPrint" :switchChecked="fingerprintChecked" @switchChange="fingerprintChange" />
-			</uni-list>
-		</uni-card>
-		<button class="btn" @click="logout" type="warn" plain="true">退出登录</button>
-	</view>
+    <view>
+        <uni-card :title="curUser.Name" :thumbnail="headImage">
+            <uni-list>
+                <uni-list-item title="启用指纹登录" :rightText="supportFingerPrintText" thumb="/static/img/fingerprint.png" thumb-size="sm"
+                               :show-switch="isSupportFingerPrint" :switchChecked="fingerprintChecked" @switchChange="fingerprintChange" />
+            </uni-list>
+        </uni-card>
+        <button class="btn" @click="logout" type="warn" plain="true">退出登录</button>
+    </view>
 </template>
 
 <script>
@@ -36,7 +36,22 @@
 
 			//检查设备是否支持指纹识别
             await this.checkFingerPrint();
-		},
+        },
+        //导航栏按钮事件
+        async onNavigationBarButtonTap(e) {
+            let res = await this.$uniCom.scanCode();
+            console.log('扫码结果：', JSON.stringify(res));
+            if (res && res.result) {
+                //通过邀请码加入人际圈
+                await this.joinByInvitationCode(res.result);
+            } else {
+                uni.showToast({
+                    title: '未识别到有效二维码',
+                    icon: 'none',
+                    duration: 5000
+                });
+            }
+        },
         //下拉刷新
         async onPullDownRefresh() {
             //检查设备是否支持指纹识别
@@ -48,7 +63,7 @@
             //人员头像
             headImage() {
                 if (this.curUser.HeadImgID) {
-                    return this.$apiFiles.downloadImageAnonUrl(this.curUser.HeadImgID, 40);
+                    return this.$apiFiles.downloadImageAnonUrl(this.curUser.HeadImgID, 100);
                 } else {
                     return '/static/img/personnel-default-head.png';
                 }
@@ -147,14 +162,28 @@
                         complete: () => {
                             setTimeout(() => {
                                 //跳转到登录页
-                                uni.redirectTo({
+                                uni.reLaunch({
                                     url: '/pages/login/login'
                                 });
-                            }, 1000)
+                            }, 1000);
                         }
                     });
                 }
-            }
+            },
+            //通过邀请码加入人际圈
+            async joinByInvitationCode(code) {
+                let req = {
+                    Code: code
+                };
+                //通过邀请码加入人际圈
+                let res = this.$apiCircle.joinByInvitationCode(req);
+                if (res.Code == this.$resCode.success) {
+                    uni.showToast({
+                        title: '欢迎加入“' + res.CircleName+'”,',
+                        icon: 'none'
+                    });
+                }
+            },
 		}
 	}
 </script>

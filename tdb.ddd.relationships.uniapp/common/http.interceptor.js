@@ -58,7 +58,7 @@ uni.addInterceptor('request', {
 			complete: () => {
 				setTimeout(() => {
 					//跳转到登录页
-					uni.redirectTo({
+					uni.reLaunch({
 						url: '/pages/login/login'
 					});
 				}, 2000)
@@ -72,8 +72,8 @@ uni.addInterceptor('request', {
 		    icon: 'none',
 			complete: () => {
 				setTimeout(() => {
-					//跳转到登录页
-					uni.redirectTo({
+					//跳转到错误页
+					uni.reLaunch({
 						url: '/pages/error/error'
 					});
 				}, 2000)

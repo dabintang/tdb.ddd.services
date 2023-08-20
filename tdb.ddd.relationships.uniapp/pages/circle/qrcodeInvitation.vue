@@ -49,7 +49,7 @@
                 };
                 //生成加入人际圈的邀请码
                 let res = await this.$apiCircle.createInvitationCode(req);
-                console.log('邀请码', JSON.stringify(res));
+                console.log('生成加入人际圈的邀请码', JSON.stringify(res));
                 if (res.Code == this.$resCode.success) {
                     this.qrcode = res.Data;
                 }
